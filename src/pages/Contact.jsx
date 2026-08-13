@@ -29,8 +29,8 @@ export default function Contact() {
             quote — no obligation, no spam.
           </p>
 
-          <div className="flex gap-4 items-start py-[18px] border-t border-line last:border-b">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <div className="flex gap-4 items-start py-[18px] border-t border-line">
+            <svg className="w-[22px] h-[22px] text-teal shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.68 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0122 16.92z" />
             </svg>
             <div>
@@ -39,8 +39,8 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="flex gap-4 items-start py-[18px] border-t border-line last:border-b">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <div className="flex gap-4 items-start py-[18px] border-t border-line">
+            <svg className="w-[22px] h-[22px] text-teal shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M4 4h16v16H4V4z" />
               <path d="M22 6l-10 7L2 6" />
             </svg>
@@ -50,8 +50,8 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="flex gap-4 items-start py-[18px] border-t border-line last:border-b">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <div className="flex gap-4 items-start py-[18px] border-y border-line">
+            <svg className="w-[22px] h-[22px] text-teal shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
@@ -66,52 +66,64 @@ export default function Contact() {
           </div>
         </div>
 
-        <form className="form-card reveal" onSubmit={handleSubmit}>
-          <div className="mb-5">
-            <label>Full Name</label>
-            <input type="text" placeholder="Rahul Vishwakarma" required />
+        <form className="bg-paper-dim p-8 sm:p-10 rounded-sm border border-line" onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label className="block text-[12px] font-mono uppercase tracking-[0.05em] text-ink-soft mb-2">Full Name</label>
+            <input className="w-full h-[50px] px-4 rounded-[3px] border border-line bg-paper focus:outline-none focus:border-teal transition-colors" type="text" placeholder="Rahul Vishwakarma" required />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="mb-5">
-              <label>Email</label>
-              <input type="email" placeholder="you@email.com" required />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="mb-6">
+              <label className="block text-[12px] font-mono uppercase tracking-[0.05em] text-ink-soft mb-2">Email</label>
+              <input className="w-full h-[50px] px-4 rounded-[3px] border border-line bg-paper focus:outline-none focus:border-teal transition-colors" type="email" placeholder="you@email.com" required />
             </div>
-            <div className="mb-5">
-              <label>Phone</label>
-              <input type="tel" placeholder="+91" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="mb-5">
-              <label>Destination</label>
-              <select>
-                <option>Bali</option>
-                <option>Santorini</option>
-                <option>Kyoto</option>
-                <option>Machu Picchu</option>
-                <option>Marrakech</option>
-                <option>Iceland</option>
-              </select>
-            </div>
-            <div className="mb-5">
-              <label>Travelers</label>
-              <select>
-                <option>1</option>
-                <option>2</option>
-                <option>3–4</option>
-                <option>5+</option>
-              </select>
+            <div className="mb-6">
+              <label className="block text-[12px] font-mono uppercase tracking-[0.05em] text-ink-soft mb-2">Phone</label>
+              <input className="w-full h-[50px] px-4 rounded-[3px] border border-line bg-paper focus:outline-none focus:border-teal transition-colors" type="tel" placeholder="+91" />
             </div>
           </div>
-          <div className="mb-5">
-            <label>Tell us about the trip</label>
-            <textarea rows="3" placeholder="Dates, budget, occasion..."></textarea>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="mb-6">
+              <label className="block text-[12px] font-mono uppercase tracking-[0.05em] text-ink-soft mb-2">Destination</label>
+              <div className="relative">
+                <select className="w-full h-[50px] px-4 rounded-[3px] border border-line bg-paper focus:outline-none focus:border-teal transition-colors appearance-none">
+                  <option>Bali</option>
+                  <option>Santorini</option>
+                  <option>Kyoto</option>
+                  <option>Machu Picchu</option>
+                  <option>Marrakech</option>
+                  <option>Iceland</option>
+                </select>
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
+            <div className="mb-6">
+              <label className="block text-[12px] font-mono uppercase tracking-[0.05em] text-ink-soft mb-2">Travelers</label>
+              <div className="relative">
+                <select className="w-full h-[50px] px-4 rounded-[3px] border border-line bg-paper focus:outline-none focus:border-teal transition-colors appearance-none">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3–4</option>
+                  <option>5+</option>
+                </select>
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
           </div>
-          <button className="inline-flex items-center gap-2 font-mono text-[13px] uppercase font-semibold px-[22px] py-[12px] rounded-sm tracking-[0.05em] transition-[transform,box-shadow,background] duration-250 bg-gold text-ink hover:bg-gold-deep hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(232,163,61,0.35)] active:translate-y-0 active:scale-95" type="submit">
+          <div className="mb-8">
+            <label className="block text-[12px] font-mono uppercase tracking-[0.05em] text-ink-soft mb-2">Tell us about the trip</label>
+            <textarea className="w-full p-4 rounded-[3px] border border-line bg-paper focus:outline-none focus:border-teal transition-colors resize-y" rows="3" placeholder="Dates, budget, occasion..."></textarea>
+          </div>
+          <button className="inline-flex items-center justify-center w-full sm:w-auto gap-2 font-mono text-[13px] uppercase font-semibold px-[32px] py-[16px] rounded-[3px] tracking-[0.05em] transition-all duration-300 bg-gold text-ink hover:bg-gold-deep hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(232,163,61,0.35)] active:translate-y-0 active:scale-[0.98]" type="submit">
             {submitted ? 'Enquiry Sent ✓' : 'Send Enquiry'}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-            </svg>
+            {!submitted && (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+            )}
           </button>
         </form>
       </div>
