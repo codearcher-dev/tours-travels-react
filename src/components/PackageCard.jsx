@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function PackageCard({ pkg, revealDelay = '' }) {
   return (
     <article className={`bg-white border border-line rounded-[3px] overflow-hidden transition-[transform,box-shadow,border-color] duration-350 ease-out relative hover:-translate-y-[6px] hover:-rotate-[0.4deg] hover:shadow-[0_24px_40px_rgba(18,35,46,0.14)] hover:border-transparent group reveal ${revealDelay}`}>
@@ -18,12 +20,12 @@ export default function PackageCard({ pkg, revealDelay = '' }) {
             From
             <strong className="block text-[19px] text-ink font-display font-semibold normal-case mt-0.5">{pkg.price}</strong>
           </div>
-          <a className="font-mono text-[12px] uppercase font-semibold text-teal-deep flex items-center gap-1.5" href="#">
+          <Link to={`/package/${pkg.id}`} className="font-mono text-[12px] uppercase font-semibold text-teal-deep flex items-center gap-1.5">
             Details
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[13px] h-[13px] transition-transform duration-250 ease-out group-hover:translate-x-1">
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </article>
