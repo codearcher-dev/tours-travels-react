@@ -57,14 +57,10 @@ export default function Home() {
                         collect the stamps.
                     </p>
                     <div className="flex gap-4 mt-9">
-                        <Link
-                            className="inline-flex items-center gap-2 font-mono text-[13px] uppercase font-semibold px-[22px] py-[12px] rounded-sm tracking-[0.05em] transition-[transform,box-shadow,background] duration-250 bg-gold text-ink hover:bg-gold-deep hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(232,163,61,0.35)] active:translate-y-0 active:scale-95"
-                            to="/packages">
+                        <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/packages">
                             Browse Packages
                         </Link>
-                        <Link
-                            className="inline-flex items-center gap-2 font-mono text-[13px] uppercase font-semibold px-[22px] py-[12px] rounded-sm tracking-[0.05em] transition-[transform,box-shadow,background] duration-250 border border-ink text-ink hover:bg-ink hover:text-paper hover:-translate-y-[2px] active:translate-y-0 active:scale-95"
-                            to="/contact">
+                        <Link className="btn btn-secondary rounded-sm px-[22px] py-[12px]" to="/contact">
                             Plan a Trip
                         </Link>
                     </div>
@@ -128,7 +124,7 @@ export default function Home() {
                 </div>
                 <div className="flex gap-[18px] overflow-x-auto pb-2.5 scrollbar-thin">
                     {destinations.map((d, i) => (
-                        <DestinationChip key={d.id} dest={d} revealDelay={`reveal-delay-${i % 4 || ""}`} />
+                        <DestinationChip key={d.id} dest={d} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />
                     ))}
                 </div>
             </section>
@@ -152,7 +148,7 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                     {packages.slice(0, 3).map((p, i) => (
-                        <PackageCard key={p.id} pkg={p} revealDelay={i ? `reveal-delay-${i}` : ""} />
+                        <PackageCard key={p.id} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />
                     ))}
                 </div>
             </section>
@@ -173,7 +169,8 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-line">
                     {steps.map((s, i) => (
                         <div
-                            className={`pt-8 lg:px-6 lg:border-r border-line md:border-b-0 border-b pb-6 lg:pb-0 last:border-r-0 last:border-b-0 reveal ${i ? "reveal-delay-" + i : ""}`}
+                            className="pt-8 lg:px-6 lg:border-r border-line md:border-b-0 border-b pb-6 lg:pb-0 last:border-r-0 last:border-b-0 reveal"
+                            style={{ "--reveal-delay": `${Math.min(i * 0.08, 1.2)}s` }}
                             key={s.num}>
                             <div className="font-display italic text-[34px] text-gold-deep mb-3.5">{s.num}</div>
                             <h4>{s.title}</h4>
@@ -194,18 +191,18 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                     {testimonials.map((t, i) => (
-                        <div
-                            className={`bg-paper-dim rounded-sm p-7 relative transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_16px_30px_rgba(18,35,46,0.1)] reveal ${i ? "reveal-delay-" + i : ""}`}
-                            key={t.initials}>
-                            <span className="font-display text-[44px] text-gold-deep italic leading-[0.5] mb-2.5 block">"</span>
-                            <p>{t.quote}</p>
-                            <div className="flex items-center gap-3">
-                                <div className="w-[38px] h-[38px] rounded-full bg-teal text-white flex items-center justify-center text-[13px] font-semibold font-mono">
-                                    {t.initials}
-                                </div>
-                                <div>
-                                    <div className="text-[13.5px] font-semibold">{t.name}</div>
-                                    <div className="text-[11.5px] text-ink-soft">{t.trip}</div>
+                        <div className="testimonial-card reveal" style={{ "--reveal-delay": `${Math.min(i * 0.08, 1.2)}s` }} key={t.initials}>
+                            <div className="testimonial-card-shell">
+                                <span className="font-display text-[44px] text-gold-deep italic leading-[0.5] mb-2.5 block">"</span>
+                                <p>{t.quote}</p>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-[38px] h-[38px] rounded-full bg-teal text-white flex items-center justify-center text-[13px] font-semibold font-mono">
+                                        {t.initials}
+                                    </div>
+                                    <div>
+                                        <div className="text-[13.5px] font-semibold">{t.name}</div>
+                                        <div className="text-[11.5px] text-ink-soft">{t.trip}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -218,9 +215,7 @@ export default function Home() {
                     <h2 className="font-display text-[clamp(26px,3vw,36px)] font-medium max-w-[480px] relative">
                         Ready for <em className="italic font-normal text-teal-deep">takeoff?</em> Tell us your dream coordinates.
                     </h2>
-                    <Link
-                        className="inline-flex items-center gap-2 font-mono text-[13px] uppercase font-semibold px-[22px] py-[12px] rounded-sm tracking-[0.05em] transition-[transform,box-shadow,background] duration-250 bg-gold text-ink hover:bg-gold-deep hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(232,163,61,0.35)] active:translate-y-0 active:scale-95"
-                        to="/contact">
+                    <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/contact">
                         Start an Enquiry
                     </Link>
                 </div>

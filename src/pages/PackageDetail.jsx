@@ -16,9 +16,7 @@ export default function PackageDetail() {
             <main className="page-fade min-h-[60vh] flex flex-col items-center justify-center px-8">
                 <h1 className="font-display text-4xl mb-4">Package not found</h1>
                 <p className="text-ink-soft mb-8">The route you're looking for doesn't exist.</p>
-                <Link
-                    to="/packages"
-                    className="inline-flex items-center justify-center gap-2 font-mono text-[13px] uppercase font-semibold px-[32px] py-[16px] rounded-[3px] tracking-[0.05em] transition-all duration-300 bg-gold text-ink hover:bg-gold-deep hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(232,163,61,0.35)] active:translate-y-0 active:scale-[0.98]">
+                <Link to="/packages" className="btn btn-primary px-[32px] py-[16px]">
                     Back to Packages
                 </Link>
             </main>
@@ -104,11 +102,15 @@ export default function PackageDetail() {
                     <span className="w-1.5 h-1.5 rounded-full bg-rust"></span> {pkg.location.name}
                 </span>
 
-                <h1 className="font-display text-[clamp(40px,5vw,64px)] font-medium leading-[1.05] tracking-[-0.01em] mb-8 reveal reveal-delay-1">
+                <h1
+                    className="font-display text-[clamp(40px,5vw,64px)] font-medium leading-[1.05] tracking-[-0.01em] mb-8 reveal"
+                    style={{ "--reveal-delay": "0.08s" }}>
                     {pkg.name}
                 </h1>
 
-                <div className="flex flex-col sm:flex-row sm:items-center gap-8 sm:gap-12 border-y border-line py-8 mb-12 reveal reveal-delay-2">
+                <div
+                    className="flex flex-col sm:flex-row sm:items-center gap-8 sm:gap-12 border-y border-line py-8 mb-12 reveal"
+                    style={{ "--reveal-delay": "0.16s" }}>
                     <div>
                         <div className="text-[11px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Duration</div>
                         <div className="text-[17px] font-medium">
@@ -128,22 +130,18 @@ export default function PackageDetail() {
                     </div>
                 </div>
 
-                <div className="text-[18px] text-ink-soft leading-[1.7] max-w-[640px] reveal reveal-delay-3 mb-16">
+                <div className="text-[18px] text-ink-soft leading-[1.7] max-w-[640px] reveal mb-16" style={{ "--reveal-delay": "0.24s" }}>
                     <p>{pkg.description}</p>
                 </div>
 
-                <div className="reveal reveal-delay-4 flex flex-wrap gap-4">
-                    <Link
-                        to="/contact"
-                        className="inline-flex items-center justify-center gap-2 font-mono text-[13px] uppercase font-semibold px-[32px] py-[16px] rounded-[3px] tracking-[0.05em] transition-all duration-300 bg-gold text-ink hover:bg-gold-deep hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(232,163,61,0.35)] active:translate-y-0 active:scale-[0.98]">
+                <div className="reveal flex flex-wrap gap-4" style={{ "--reveal-delay": "0.32s" }}>
+                    <Link to="/contact" className="btn btn-primary px-[32px] py-[16px]">
                         Enquire Now
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                         </svg>
                     </Link>
-                    <Link
-                        to="/packages"
-                        className="inline-flex items-center justify-center gap-2 font-mono text-[13px] uppercase font-semibold px-[32px] py-[16px] rounded-[3px] tracking-[0.05em] transition-all duration-300 bg-transparent text-ink border border-line hover:border-teal hover:text-teal active:scale-[0.98]">
+                    <Link to="/packages" className="btn btn-secondary px-[32px] py-[16px]">
                         All Packages
                     </Link>
                 </div>
