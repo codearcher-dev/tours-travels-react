@@ -19,7 +19,7 @@ export default function Navbar() {
     return (
         <>
             <div className="bg-ink text-paper text-[12px] py-[7px] text-center tracking-[0.08em] font-mono">
-                FLAT <b className="text-gold">12% OFF</b> ON ALL 2026 EARLY-BIRD BOOKINGS &nbsp;·&nbsp; MADE WITH MERIDIAN JOURNEYS
+                FLAT <b className="text-gold">12% OFF</b> ON ALL 2026 EARLY-BIRD BOOKINGS &nbsp;·&nbsp; MADE WITH PRIME TRAVELLER
             </div>
 
             <header
@@ -30,7 +30,7 @@ export default function Navbar() {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-[26px] h-[26px]">
                             <path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5L12 2z" />
                         </svg>
-                        Meridian Journeys
+                        Prime Traveller
                     </NavLink>
 
                     <nav className="hidden lg:flex gap-[6px] items-center">

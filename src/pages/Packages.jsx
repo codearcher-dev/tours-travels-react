@@ -1,11 +1,14 @@
 import { useRef, useState } from "react";
 import useScrollReveal from "../hooks/useScrollReveal";
-import packages from "../data/packages";
+// import packages from "../data/packages";
 import PackageCard from "../components/PackageCard";
+import { usePackages } from "../context/PackageContext";
+import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 
 const filters = ["All", "Asia", "Europe", "Americas", "Africa", "Under 7 Days", "Under ₹80,000"];
 
 export default function Packages() {
+    const { packages, loading } = usePackages();
     const containerRef = useRef(null);
     useScrollReveal(containerRef);
 
@@ -28,24 +31,12 @@ export default function Packages() {
                 </p>
             </div>
 
-            <div className="max-w-[1200px] mx-auto mt-9 px-8 pb-7 flex gap-3.5 flex-wrap items-center border-b border-line">
-                {filters.map((f) => (
-                    <span
-                        key={f}
-                        className={"filter-pill" + (activeFilter === f ? " active" : "")}
-                        onClick={() => setActiveFilter(f)}
-                        role="button"
-                        tabIndex={0}>
-                        {f}
-                    </span>
-                ))}
-                <span className="ml-auto text-[12.5px] text-ink-soft uppercase">{packages.length * 4} itineraries</span>
-            </div>
+            <div className="max-w-[1200px] mx-auto px-8 pb-7 flex gap-3.5 flex-wrap items-center border-b border-line"></div>
 
             <div className="max-w-[1200px] mx-auto mt-10 px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                {packages.map((p, i) => (
-                    <PackageCard key={p.id} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />
-                ))}
+                {packages.map((p, i) =>
+                    loading ? <SkeletonPackageCard /> : <PackageCard key={p.id} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />,
+                )}
             </div>
 
             <div className="flex justify-center gap-2.5 pt-[50px] px-8 pb-[80px]">
