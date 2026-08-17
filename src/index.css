@@ -1,92 +1,174 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #12232E;
-  --color-ink-soft: #4A5A63;
-  --color-paper: #F7F4EE;
-  --color-paper-dim: #EFEAE0;
-  --color-gold: #E8A33D;
-  --color-gold-deep: #C9852A;
-  --color-teal: #2E6E6E;
-  --color-teal-deep: #1F4F4F;
-  --color-rust: #B8582F;
-  --color-line: rgba(18, 35, 46, 0.12);
-  --font-display: 'Fraunces', serif;
-  --font-mono: 'Space Grotesk', sans-serif;
-  --font-sans: 'Inter', sans-serif;
+    --color-ink: #12232E;
+    --color-ink-soft: #4A5A63;
+    --color-paper: #F7F4EE;
+    --color-paper-dim: #EFEAE0;
+    --color-gold: #E8A33D;
+    --color-gold-deep: #C9852A;
+    --color-teal: #2E6E6E;
+    --color-teal-deep: #1F4F4F;
+    --color-rust: #B8582F;
+    --color-line: rgba(18, 35, 46, 0.12);
+    --font-display: 'Fraunces', serif;
+    --font-mono: 'Space Grotesk', sans-serif;
+    --font-sans: 'Inter', sans-serif;
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  body {
-    @apply bg-paper text-ink font-sans overflow-x-hidden m-0 antialiased;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
     html {
-      scroll-behavior: auto;
+        scroll-behavior: smooth;
     }
-  }
+
+    body {
+        @apply bg-paper text-ink font-sans overflow-x-hidden m-0 antialiased;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+
+        html {
+            scroll-behavior: auto;
+        }
+    }
 }
 
 @layer utilities {
-  /* ---------- perforation divider ---------- */
-  .perforation{
-    height:18px;
-    background-image:radial-gradient(circle at 9px 9px, var(--color-paper) 5px, transparent 5.5px);
-    background-size:18px 18px;
-    background-repeat:repeat-x;
-    background-position:top;
-    position:relative;
-  }
-  .perforation::before{
-    content:"";
-    position:absolute; top:0; left:0; right:0; height:1px;
-    background:repeating-linear-gradient(to right, var(--color-line) 0 6px, transparent 6px 12px);
-  }
-  .perforation.on-ink{background-image:radial-gradient(circle at 9px 9px, var(--color-ink) 5px, transparent 5.5px);}
-  .perforation.on-gold{background-image:radial-gradient(circle at 9px 9px, var(--color-gold) 5px, transparent 5.5px);}
 
-  /* ---------- page transition ---------- */
-  .page-fade{animation:screenIn .5s cubic-bezier(.2,.8,.2,1);}
-  @keyframes screenIn{
-    from{opacity:0; transform:translateY(14px);}
-    to{opacity:1; transform:translateY(0);}
-  }
+    /* ---------- perforation divider ---------- */
+    .perforation {
+        height: 18px;
+        background-image: radial-gradient(circle at 9px 9px, var(--color-paper) 5px, transparent 5.5px);
+        background-size: 18px 18px;
+        background-repeat: repeat-x;
+        background-position: top;
+        position: relative;
+    }
 
-  /* ---------- reveal on scroll ---------- */
-  .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);}
-  .reveal.in{opacity:1; transform:translateY(0);}
-  .reveal-delay-1{transition-delay:.08s;} .reveal-delay-2{transition-delay:.16s;} .reveal-delay-3{transition-delay:.24s;} .reveal-delay-4{transition-delay:.32s;}
+    .perforation::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: repeating-linear-gradient(to right, var(--color-line) 0 6px, transparent 6px 12px);
+    }
 
-  /* ---------- custom animations ---------- */
-  .floaty { animation: floaty 6s ease-in-out infinite; }
-  @keyframes floaty { 0%, 100% { transform: rotate(2deg) translateY(0); } 50% { transform: rotate(2deg) translateY(-10px); } }
-  
-  .ping-anim { animation: ping 2.4s ease-out infinite; }
-  @keyframes ping { 0% { transform: scale(0.4); opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
+    .perforation.on-ink {
+        background-image: radial-gradient(circle at 9px 9px, var(--color-ink) 5px, transparent 5.5px);
+    }
 
-  .ticket-barcode {
-    height: 34px;
-    background: repeating-linear-gradient(to right, var(--color-paper) 0 2px, transparent 2px 5px, var(--color-paper) 5px 6px, transparent 6px 9px, var(--color-paper) 9px 12px, transparent 12px 14px);
-    opacity: .85;
-  }
-  
-  .map-mock {
-    background:
-      linear-gradient(var(--color-paper-dim) 1px, transparent 1px) 0 0/28px 28px,
-      linear-gradient(90deg, var(--color-paper-dim) 1px, transparent 1px) 0 0/28px 28px,
-      #fff;
-  }
-  
-  .path-divider path {
-    fill: none; stroke: var(--color-teal); stroke-width: 2; stroke-dasharray: 6 8; stroke-linecap: round;
-    stroke-dashoffset: 400; transition: stroke-dashoffset 1.4s ease;
-  }
-  .path-divider.in path { stroke-dashoffset: 0; }
+    .perforation.on-gold {
+        background-image: radial-gradient(circle at 9px 9px, var(--color-gold) 5px, transparent 5.5px);
+    }
+
+    /* ---------- page transition ---------- */
+    .page-fade {
+        animation: screenIn .5s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    @keyframes screenIn {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ---------- reveal on scroll ---------- */
+    .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity .7s cubic-bezier(.2, .8, .2, 1), transform .7s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+        transition-delay: .08s;
+    }
+
+    .reveal-delay-2 {
+        transition-delay: .16s;
+    }
+
+    .reveal-delay-3 {
+        transition-delay: .24s;
+    }
+
+    .reveal-delay-4 {
+        transition-delay: .32s;
+    }
+
+    /* ---------- custom animations ---------- */
+    .floaty {
+        animation: floaty 6s ease-in-out infinite;
+    }
+
+    @keyframes floaty {
+
+        0%,
+        100% {
+            transform: rotate(2deg) translateY(0);
+        }
+
+        50% {
+            transform: rotate(2deg) translateY(-10px);
+        }
+    }
+
+    .ping-anim {
+        animation: ping 2.4s ease-out infinite;
+    }
+
+    @keyframes ping {
+        0% {
+            transform: scale(0.4);
+            opacity: .9;
+        }
+
+        100% {
+            transform: scale(1.6);
+            opacity: 0;
+        }
+    }
+
+    .ticket-barcode {
+        height: 34px;
+        background: repeating-linear-gradient(to right, var(--color-paper) 0 2px, transparent 2px 5px, var(--color-paper) 5px 6px, transparent 6px 9px, var(--color-paper) 9px 12px, transparent 12px 14px);
+        opacity: .85;
+    }
+
+    .map-mock {
+        background:
+            linear-gradient(var(--color-paper-dim) 1px, transparent 1px) 0 0/28px 28px,
+            linear-gradient(90deg, var(--color-paper-dim) 1px, transparent 1px) 0 0/28px 28px,
+            #fff;
+    }
+
+    .path-divider path {
+        fill: none;
+        stroke: var(--color-teal);
+        stroke-width: 2;
+        stroke-dasharray: 6 8;
+        stroke-linecap: round;
+        stroke-dashoffset: 400;
+        transition: stroke-dashoffset 1.4s ease;
+    }
+
+    .path-divider.in path {
+        stroke-dashoffset: 0;
+    }
 }

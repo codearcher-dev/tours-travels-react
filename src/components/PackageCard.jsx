@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 export default function PackageCard({ pkg, revealDelay = "" }) {
     return (
         <article
-            className={`bg-white border border-line rounded-[3px] overflow-hidden transition-[transform,box-shadow,border-color] duration-350 ease-out relative hover:-translate-y-[6px] hover:-rotate-[0.4deg] hover:shadow-[0_24px_40px_rgba(18,35,46,0.14)] hover:border-transparent group reveal ${revealDelay}`}>
-            <div className="h-[190px] relative overflow-hidden">
+            className={`bg-white border border-line rounded-[3px] overflow-hidden transition-[transform,box-shadow,border-color] duration-350 ease-out relative hover:-translate-y-1.5 hover:rotate-[-0.4deg] hover:shadow-[0_24px_40px_rgba(18,35,46,0.14)] hover:border-transparent group reveal ${revealDelay}`}>
+            <div className="h-48 relative overflow-hidden">
                 <img
                     src={pkg.img}
                     alt={pkg.name}
@@ -20,7 +20,7 @@ export default function PackageCard({ pkg, revealDelay = "" }) {
                 <div className="font-mono text-[10.5px] text-teal-deep mb-2 uppercase">{pkg.coord}</div>
                 <h3 className="font-display text-[20px] font-medium mb-2">{pkg.name}</h3>
                 <p className="text-[13.5px] text-ink-soft leading-[1.55] mb-4">{pkg.description}</p>
-                <div className="flex justify-between items-center border-t border-dashed border-line pt-[14px]">
+                <div className="flex justify-between items-center border-t border-dashed border-line pt-3.5">
                     <div className="font-mono text-[11px] text-ink-soft uppercase">
                         From
                         <strong className="block text-[19px] text-ink font-display font-semibold normal-case mt-0.5">
@@ -37,7 +37,7 @@ export default function PackageCard({ pkg, revealDelay = "" }) {
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
-                            className="w-[13px] h-[13px] transition-transform duration-250 ease-out group-hover:translate-x-1">
+                            className="w-3.25 h-3.25 transition-transform duration-250 ease-out group-hover:translate-x-1">
                             <path d="M5 12h14M13 6l6 6-6 6" />
                         </svg>
                     </Link>
