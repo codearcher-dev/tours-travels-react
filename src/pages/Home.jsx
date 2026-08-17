@@ -2,9 +2,11 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import useScrollReveal from "../hooks/useScrollReveal";
 import destinations from "../data/destinations";
-import packages from "../data/packages";
+// import packages from "../data/packages";
 import DestinationChip from "../components/DestinationChip";
 import PackageCard from "../components/PackageCard";
+import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
+import { usePackages } from "../context/PackageContext";
 
 const testimonials = [
     {
@@ -35,8 +37,9 @@ const steps = [
 ];
 
 export default function Home() {
+    const { packages, loading } = usePackages();
     const containerRef = useRef(null);
-    useScrollReveal(containerRef);
+    useScrollReveal(containerRef, [loading, packages]);
 
     return (
         <main ref={containerRef} className="page-fade">
@@ -71,31 +74,24 @@ export default function Home() {
                         <div className="pt-[26px] px-[28px] pb-5 flex justify-between items-start">
                             <div>
                                 <div className="text-[22px] font-semibold">
-                                    DEL <span className="text-gold mx-2">✈</span> DPS
+                                    NJP <span className="text-gold mx-2">✈</span>NORTH SIKKIM
                                 </div>
-                                <div className="text-[11px] opacity-60 mt-1.5 uppercase">Delhi — Denpasar · Bali Bliss</div>
+                                <div className="text-[11px] opacity-60 mt-1.5 uppercase">NJP — North Sikkim</div>
                             </div>
                             <span className="bg-gold text-ink text-[11px] font-bold py-1 px-2.5 rounded-[20px] uppercase">Best Seller</span>
                         </div>
-                        <div className="grid grid-cols-3 gap-0 px-[28px] pb-[22px] text-[10px] opacity-55 uppercase">
+                        <div className="flex gap-0 justify-between px-[28px] pb-[22px] text-[10px] opacity-60 uppercase">
                             <div>
-                                Departs<strong> 12 Oct</strong>
+                                Departs<strong> 5 Sept</strong>
                             </div>
                             <div>
-                                Duration<strong> 7 Days</strong>
+                                Duration<strong> 4 Days</strong>
                             </div>
                             <div>
-                                Traveler<strong> R. Vishwakarma</strong>
+                                <strong> Prime Traveller</strong>
                             </div>
                         </div>
                         <div className="ticket-barcode mx-[28px] mb-[26px]"></div>
-                    </div>
-                    <div className="stamp-float">
-                        27.1751°N
-                        <br />
-                        78.0421°E
-                        <br />
-                        ITINERARY
                     </div>
                 </div>
             </section>
@@ -123,8 +119,12 @@ export default function Home() {
                     </p>
                 </div>
                 <div className="flex gap-[18px] overflow-x-auto pb-2.5 scrollbar-thin">
-                    {destinations.map((d, i) => (
-                        <DestinationChip key={d.id} dest={d} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />
+                    {packages.map((p, i) => (
+                        <DestinationChip
+                            key={i}
+                            dest={{ name: p.location.name, img: p.img, desc: p.description }}
+                            revealDelay={`${Math.min(i * 0.08, 1.2)}s`}
+                        />
                     ))}
                 </div>
             </section>
@@ -147,9 +147,7 @@ export default function Home() {
                     </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                    {packages.slice(0, 3).map((p, i) => (
-                        <PackageCard key={p.id} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />
-                    ))}
+                    {!loading && packages.slice(0, 3).map((p, i) => <PackageCard key={i} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />)}
                 </div>
             </section>
 
@@ -213,7 +211,7 @@ export default function Home() {
             <section className="max-w-[1200px] mx-auto py-[70px] px-8" style={{ paddingTop: 10 }}>
                 <div className="bg-ink text-paper rounded-md mx-8 lg:mx-auto max-w-[1136px] py-[56px] px-[48px] flex flex-col md:flex-row justify-between items-center md:text-left text-center gap-8 relative overflow-hidden before:content-[''] before:absolute before:-right-[60px] before:-top-[60px] before:w-[220px] before:h-[220px] before:rounded-full before:border before:border-dashed before:border-[rgba(232,163,61,0.4)] reveal">
                     <h2 className="font-display text-[clamp(26px,3vw,36px)] font-medium max-w-[480px] relative">
-                        Ready for <em className="italic font-normal text-teal-deep">takeoff?</em> Tell us your dream coordinates.
+                        Ready for <em className="italic font-normal text-yellow-500/90">takeoff?</em> Tell us your dream coordinates.
                     </h2>
                     <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/contact">
                         Start an Enquiry

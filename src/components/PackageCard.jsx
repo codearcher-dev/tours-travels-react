@@ -13,19 +13,23 @@ export default function PackageCard({ pkg, revealDelay = "0s" }) {
                     </span>
                 </div>
                 <div className="p-[20px_22px_24px]">
-                    <div className="font-mono text-[10.5px] text-teal-deep mb-2 uppercase">{pkg.coord}</div>
+                    {/* <div className="font-mono text-[10.5px] text-teal-deep mb-2 uppercase">{pkg.coord}</div> */}
                     <h3 className="font-display text-[20px] font-medium mb-2">{pkg.name}</h3>
                     <p className="text-[13.5px] text-ink-soft leading-[1.55] mb-4">{pkg.description}</p>
                     <div className="flex justify-between items-center border-t border-dashed border-line pt-3.5">
                         <div className="font-mono text-[11px] text-ink-soft uppercase">
-                            From
-                            <strong className="block text-[19px] text-ink font-display font-semibold normal-case mt-0.5">
-                                {pkg.price.symbol}
-                                {pkg.price.discountedPrice.toLocaleString()}
-                            </strong>
+                            <span className="font-display text-[15px] normal-case">Starting From</span>
+                            <div className="flex gap-4 items-center">
+                                <span className="block text-[15px] text-ink font-mono font-light normal-case mt-0.5 line-through">
+                                    ₹ {pkg.price.actual}
+                                </span>
+                                <strong className="block text-[20px] text-ink font-mono font-semibold normal-case mt-0.5">
+                                    ₹ {pkg.price.discounted.toLocaleString()}
+                                </strong>
+                            </div>
                         </div>
                         <Link
-                            to={`/package/${pkg.id}`}
+                            to={`/package/${pkg._id}`}
                             className="font-mono text-[12px] uppercase font-semibold text-teal-deep flex items-center gap-1.5">
                             Details
                             <svg
