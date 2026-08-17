@@ -11,19 +11,22 @@ export default function PackageCard({ pkg, revealDelay = "" }) {
                     className="w-full h-full object-cover transition-transform duration-600 ease-out group-hover:scale-[1.07]"
                 />
                 <span className="absolute top-3.5 right-3.5 w-16 h-16 rounded-full border-[1.5px] border-dashed border-[rgba(247,244,238,0.9)] bg-[rgba(18,35,46,0.55)] backdrop-blur-[3px] text-white flex items-center justify-center text-center text-[9px] uppercase font-bold leading-[1.3] rotate-[-10deg]">
-                    {pkg.days}
+                    {pkg.duration.days} Days
                     <br />
-                    DAYS
+                    {pkg.duration.nights} Nights
                 </span>
             </div>
             <div className="p-[20px_22px_24px]">
                 <div className="font-mono text-[10.5px] text-teal-deep mb-2 uppercase">{pkg.coord}</div>
                 <h3 className="font-display text-[20px] font-medium mb-2">{pkg.name}</h3>
-                <p className="text-[13.5px] text-ink-soft leading-[1.55] mb-4">{pkg.desc}</p>
+                <p className="text-[13.5px] text-ink-soft leading-[1.55] mb-4">{pkg.description}</p>
                 <div className="flex justify-between items-center border-t border-dashed border-line pt-[14px]">
                     <div className="font-mono text-[11px] text-ink-soft uppercase">
                         From
-                        <strong className="block text-[19px] text-ink font-display font-semibold normal-case mt-0.5">{pkg.price}</strong>
+                        <strong className="block text-[19px] text-ink font-display font-semibold normal-case mt-0.5">
+                            {pkg.price.symbol}
+                            {pkg.price.discountedPrice.toLocaleString()}
+                        </strong>
                     </div>
                     <Link
                         to={`/package/${pkg.id}`}
