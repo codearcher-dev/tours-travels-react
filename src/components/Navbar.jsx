@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 export default function Navbar() {
     const [shrink, setShrink] = useState(false);
@@ -26,11 +27,8 @@ export default function Navbar() {
                 className={`sticky top-0 z-[100] bg-[rgba(247,244,238,0.92)] backdrop-blur-[10px] border-b border-line transition-[padding,box-shadow] duration-350 ease-out ${shrink ? "shadow-[0_6px_24px_rgba(18,35,46,0.06)]" : ""}`}>
                 <div
                     className={`max-w-[1200px] mx-auto flex items-center justify-between px-8 transition-[padding] duration-350 ease-out ${shrink ? "py-3" : "py-[22px]"}`}>
-                    <NavLink to="/" className="flex items-center gap-[10px] text-[19px] font-semibold">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-[26px] h-[26px]">
-                            <path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5L12 2z" />
-                        </svg>
-                        Prime Traveller
+                    <NavLink to="/" className="flex items-center font-semibold">
+                        <img src={logo} alt="" className="h-[52px] " />
                     </NavLink>
 
                     <nav className="hidden lg:flex gap-[6px] items-center">
