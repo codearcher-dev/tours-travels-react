@@ -1,13 +1,13 @@
 import React from "react";
 import { usePackages } from "../context/PackageContext";
 
-export const Timeline = ({ itinerary }) => {
+export const Timeline = ({ itinerary, className, style }) => {
     const { packages } = usePackages();
 
     return (
-        <div className="w-full min-h-screen text-[#121212] px-8 py-12 lg:py-33">
+        <div className={`w-full text-[#121212] px-8 pt-12 lg:pt-33 ${className}`} style={{ style }}>
             <div>
-                <h2 className="font-display text-black text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] mb-[28px]">Itinerary</h2>
+                <h2 className="font-display text-ink-soft text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] mb-[28px]">Itinerary</h2>
             </div>
             <div className="flex flex-col">
                 {itinerary?.map((item, index) => {
@@ -46,11 +46,15 @@ export const Timeline = ({ itinerary }) => {
                                 {item.activities && item.activities.length > 0 && (
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500 font-bold">Activities</p>
-                                        {item.activities.map((activity, actIdx) => (
-                                            <p key={activity._id || activity.name || actIdx} className="text-gray-400 text-sm mt-1">
-                                                • {activity.name}
-                                            </p>
-                                        ))}
+                                        <ul className="list-disc pl-4 text-ink-soft">
+                                            {item.activities.map((activity, actIdx) => (
+                                                <li>
+                                                    <p key={activity._id || activity.name || actIdx} className="text-sm mt-1">
+                                                        {activity.name}
+                                                    </p>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
                                 )}
                             </div>

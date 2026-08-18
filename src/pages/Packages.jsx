@@ -4,6 +4,7 @@ import useScrollReveal from "../hooks/useScrollReveal";
 import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
+import coverImage from "../assets/package-cover.png";
 
 const filters = ["All", "Asia", "Europe", "Americas", "Africa", "Under 7 Days", "Under ₹80,000"];
 
@@ -17,25 +18,37 @@ export default function Packages() {
 
     return (
         <main ref={containerRef} className="page-fade">
-            <div className="max-w-[1200px] mx-auto pt-[56px] px-8 pb-5">
-                <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rust"></span> ALL PACKAGES
-                </span>
-                <h1 className="font-display text-[clamp(40px,5.4vw,68px)] font-medium leading-[1.04] tracking-[-0.01em]">
-                    Forty routes.
-                    <br />
-                    One departure board.
-                </h1>
-                <p>
-                    Filter by continent, budget or trip length — every package below includes stays, local transfers and a dedicated trip coordinator.
-                </p>
+            <div
+                className="w-full lg:h-[600px] md:h-[500px] h-[400px]"
+                style={{
+                    backgroundImage: `url(${coverImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}>
+                <div className="max-w-[1200px] mx-auto pt-[56px] px-8 pb-5">
+                    <h1 className="font-display text-[clamp(30px,5.4vw,68px)] font-medium leading-[1.04] tracking-[-0.01em] text-gray-200">
+                        Forty routes.
+                        <br />
+                        One departure board.
+                    </h1>
+                    <p className="font-mono text-gray-300">
+                        Filter by continent, budget or trip length — every package below includes stays, local transfers and a dedicated trip
+                        coordinator.
+                    </p>
+                </div>
             </div>
 
-            <div className="max-w-[1200px] mx-auto px-8 pb-7 flex gap-3.5 flex-wrap items-center border-b border-line"></div>
+            <div className="mx-auto px-8 pb-7 flex gap-3.5 flex-wrap items-center border-b border-line"></div>
+            <div className="max-w-[1200px] mx-auto px-8 mt-5 flex gap-3.5 flex-wrap items-center">
+                <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-sans tracking-[0.02em]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rust"></span> ALL PACKAGES
+                </span>
+            </div>
 
-            <div className="max-w-[1200px] mx-auto mt-10 px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+            <div className="max-w-[1200px] mx-auto mt-5 px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 {packages.map((p, i) =>
-                    loading ? <SkeletonPackageCard /> : <PackageCard key={p.id} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />,
+                    loading ? <SkeletonPackageCard key={i} /> : <PackageCard key={p._id} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />,
                 )}
             </div>
 

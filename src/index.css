@@ -10,6 +10,7 @@
     --color-teal: #2E6E6E;
     --color-teal-deep: #1F4F4F;
     --color-rust: #B8582F;
+    --color-white: #fff;
     --color-line: rgba(18, 35, 46, 0.12);
     --font-display: 'Fraunces', serif;
     --font-mono: 'Space Grotesk', sans-serif;
@@ -134,14 +135,14 @@
     }
 
     .btn-secondary {
-        background: transparent;
-        color: var(--color-ink);
-        border: 1px solid var(--color-line);
+        background: var(--color-white);
+        color: var(--color-teal);
+        border: 1px solid var(--color-white);
     }
 
     .btn-secondary:hover {
-        border-color: var(--color-teal);
-        color: var(--color-teal);
+        border-color: var(--color-white);
+        color: var(--color-gold);
     }
 
     .package-card {

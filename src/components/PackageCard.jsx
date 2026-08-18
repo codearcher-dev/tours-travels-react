@@ -20,16 +20,16 @@ export default function PackageCard({ pkg, revealDelay = "0s" }) {
                         <div className="font-mono text-[11px] text-ink-soft uppercase">
                             <span className="font-display text-[15px] normal-case">Starting From</span>
                             <div className="flex gap-4 items-center">
-                                <span className="block text-[15px] text-ink font-mono font-light normal-case mt-0.5 line-through">
-                                    ₹ {pkg.price.actual}
-                                </span>
-                                <strong className="block text-[20px] text-ink font-mono font-semibold normal-case mt-0.5">
+                                <strong className="block text-[20px] text-green-600 font-mono font-semibold normal-case mt-0.5">
                                     ₹ {pkg.price.discounted.toLocaleString()}
                                 </strong>
+                                <span className="block text-[15px] text-red-600 font-mono font-light normal-case mt-0.5 line-through">
+                                    ₹ {pkg.price.actual}
+                                </span>
                             </div>
                         </div>
                         <Link
-                            to={`/package/${pkg._id}`}
+                            to={`/package/${pkg.slug}`}
                             className="font-mono text-[12px] uppercase font-semibold text-teal-deep flex items-center gap-1.5">
                             Details
                             <svg

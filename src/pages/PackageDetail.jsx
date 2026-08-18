@@ -1,11 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import useScrollReveal from "../hooks/useScrollReveal";
-import packages from "../data/packages";
+import { usePackages } from "../context/PackageContext";
+import Timeline from "../components/Itinerary";
+import { MapPin } from "lucide-react";
 
 export default function PackageDetail() {
-    const { id } = useParams();
-    const pkg = packages.find((p) => p.id === id);
+    const { packages } = usePackages();
+    const { slug } = useParams();
+    const pkg = packages.find((p) => p.slug === slug);
     const containerRef = useRef(null);
     useScrollReveal(containerRef);
 
@@ -42,7 +45,7 @@ export default function PackageDetail() {
                     style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
                     {images.map((img, idx) => (
                         <div key={idx} className="min-w-full h-full relative">
-                            <img src={img} alt={`${pkg.name} - ${idx + 1}`} className="w-full h-full object-cover opacity-90" />
+                            <img src={img} alt={`${pkg.name} - ${idx + 1}`} className="w-full h-full object-cover opacity-60" />
                         </div>
                     ))}
                 </div>
@@ -97,54 +100,100 @@ export default function PackageDetail() {
             </div>
 
             {/* Content */}
-            <div className="max-w-[800px] mx-auto px-8 py-16 lg:py-24">
-                <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em] reveal">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rust"></span> {pkg.location.name}
-                </span>
+            <div className="flex flex-col lg:flex-row lg:gap-10">
+                <div className="w-full px-8 pt-12 lg:pt-16">
+                    <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em] reveal">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rust"></span> {pkg.location.name}
+                    </span>
 
-                <h1
-                    className="font-display text-[clamp(40px,5vw,64px)] font-medium leading-[1.05] tracking-[-0.01em] mb-8 reveal"
-                    style={{ "--reveal-delay": "0.08s" }}>
-                    {pkg.name}
-                </h1>
+                    <h1
+                        className="font-display text-[clamp(40px,5vw,64px)] text-ink-soft font-medium leading-[1.05] tracking-[-0.01em] mb-8 reveal"
+                        style={{ "--reveal-delay": "0.08s" }}>
+                        {pkg.name}
+                    </h1>
 
-                <div
-                    className="flex flex-col sm:flex-row sm:items-center gap-8 sm:gap-12 border-y border-line py-8 mb-12 reveal"
-                    style={{ "--reveal-delay": "0.16s" }}>
-                    <div>
-                        <div className="text-[11px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Duration</div>
-                        <div className="text-[17px] font-medium">
-                            {pkg.duration.days} Days {pkg.duration.nights} Nights
+                    <div className=" text-ink-soft leading-[1.7] max-w-[640px] reveal mb-16" style={{ "--reveal-delay": "0.24s" }}>
+                        <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Overview</div>
+                        <p>{pkg.description}</p>
+                    </div>
+
+                    <div
+                        className="flex flex-col sm:flex-row sm:items-center gap-8 sm:gap-12 border-y border-line py-8 mb-12 reveal"
+                        style={{ "--reveal-delay": "0.16s" }}>
+                        <div>
+                            <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Duration</div>
+                            <div className="text-[17px] font-medium text-ink-soft">
+                                {pkg.duration.days} Days {pkg.duration.nights} Nights
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Starting From</div>
+                            <div className="flex gap-4 items-center">
+                                <strong className="block text-[20px] text-green-600 font-mono font-semibold normal-case mt-0.5">
+                                    ₹ {pkg.price.discounted.toLocaleString()}
+                                </strong>
+                                <span className="block text-[15px] text-red-600 font-mono font-light normal-case mt-0.5 line-through">
+                                    ₹ {pkg.price.actual}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Explore</div>
+                            <button className="text-[17px] font-medium btn-primary transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 rounded-sm px-4 py-1">
+                                <a href={pkg.location.url} target="blank" className="flex items-center justify-center gap-2 font-mono">
+                                    <MapPin className="w-5 h-5 " />
+                                    Map
+                                </a>
+                            </button>
                         </div>
                     </div>
-                    <div>
-                        <div className="text-[11px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Starting From</div>
-                        <div className="text-[17px] font-medium">
-                            {pkg.price.symbol}
-                            {pkg.price.discountedPrice.toLocaleString()}
+
+                    <div className=" text-ink-soft leading-[1.7] max-w-[640px] reveal mb-16" style={{ "--reveal-delay": "0.24s" }}>
+                        <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Places</div>
+                        <ul className="list-disc pl-4">
+                            {pkg.destinations.map((dest, index) => (
+                                <li key={index}>{dest}</li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div
+                        className="flex flex-col text-ink-soft sm:flex-row  gap-8 sm:gap-12 border-y border-line py-8 reveal"
+                        style={{ "--reveal-delay": "0.32s" }}>
+                        <div>
+                            <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Included</div>
+                            <div className="">
+                                <ul className="list-disc pl-4">
+                                    {pkg.inclusions.map((inc, index) => (
+                                        <li key={index}>{inc}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-[14px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Excluded</div>
+                            <div className="">
+                                <ul className="list-disc pl-4">
+                                    {pkg.exclusions.map((exc, index) => (
+                                        <li key={index}>{exc}</li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="text-[11px] font-mono uppercase tracking-widest text-ink-soft mb-1.5">Coordinates</div>
-                        <div className="text-[17px] font-medium">{pkg.coord}</div>
-                    </div>
                 </div>
-
-                <div className="text-[18px] text-ink-soft leading-[1.7] max-w-[640px] reveal mb-16" style={{ "--reveal-delay": "0.24s" }}>
-                    <p>{pkg.description}</p>
-                </div>
-
-                <div className="reveal flex flex-wrap gap-4" style={{ "--reveal-delay": "0.32s" }}>
-                    <Link to="/contact" className="btn btn-primary px-[32px] py-[16px]">
-                        Enquire Now
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                        </svg>
-                    </Link>
-                    <Link to="/packages" className="btn btn-secondary px-[32px] py-[16px]">
-                        All Packages
-                    </Link>
-                </div>
+                <Timeline itinerary={pkg.itinerary} className="reveal" style={{ "--reveal-delay": "0.08" }} />
+            </div>
+            <div className="reveal flex justify-center lg:justify-start gap-4 m-8" style={{ "--reveal-delay": "0.40s" }}>
+                <Link to="/contact" className="btn btn-primary px-[32px] py-[16px]">
+                    Enquire Now
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                    </svg>
+                </Link>
+                <Link to="/packages" className="btn btn-secondary px-[32px] py-[16px]">
+                    All Packages
+                </Link>
             </div>
         </main>
     );
