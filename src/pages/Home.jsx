@@ -7,6 +7,7 @@ import DestinationChip from "../components/DestinationChip";
 import PackageCard from "../components/PackageCard";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 import { usePackages } from "../context/PackageContext";
+import coverImage from "../assets/package-cover.png";
 
 const testimonials = [
     {
@@ -43,58 +44,68 @@ export default function Home() {
 
     return (
         <main ref={containerRef} className="page-fade">
-            <section className="max-w-[1200px] mx-auto pt-16 px-8 grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
-                <div>
-                    <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-rust"></span> BOARDING PASS TO ADVENTURE
-                    </span>
-                    <h1 className="font-display text-[clamp(40px,5.4vw,68px)] font-medium leading-[1.04] tracking-[-0.01em]">
-                        Every journey
-                        <br />
-                        has a line.
-                        <br />
-                        <em className="italic font-normal text-teal-deep">This one's yours.</em>
-                    </h1>
-                    <p className="mt-6 text-[17px] text-ink-soft max-w-[460px] leading-[1.65]">
-                        Hand-plotted itineraries across 40+ destinations — from Bali's rice terraces to Iceland's ring road. We chart the route, you
-                        collect the stamps.
-                    </p>
-                    <div className="flex gap-4 mt-9">
-                        <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/packages">
-                            Browse Packages
-                        </Link>
-                        <Link className="btn btn-secondary rounded-sm px-[22px] py-[12px]" to="/contact">
-                            Plan a Trip
-                        </Link>
+            <div
+                className="w-full max-h-screen h-[700px]"
+                style={{
+                    backgroundImage: `url(${coverImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}>
+                <section className="max-w-[1200px] mx-auto pt-8 px-8 grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
+                    <div>
+                        <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal-900 px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rust"></span>
+                            <span className="text-[#F5F3EC]">BOARDING PASS TO ADVENTURE</span>
+                        </span>
+                        <h1 className="font-display text-[#f5f3ec] text-[clamp(30px,5.4vw,68px)] font-medium leading-[1.04] tracking-[-0.01em] ">
+                            Every journey
+                            <br />
+                            has a line.
+                            <br />
+                            <em className="italic font-normal text-[#d8af31]">This one's yours.</em>
+                        </h1>
+                        <p className="mt-6 text-[clamp(12px, 5.4vh, 17px)] text-[#ecebe5] max-w-[460px] leading-[1.65]">
+                            Hand-plotted itineraries across 40+ destinations — from Bali's rice terraces to Iceland's ring road. We chart the route,
+                            you collect the stamps.
+                        </p>
+                        <div className="flex gap-4 mt-9">
+                            <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/packages">
+                                Browse Packages
+                            </Link>
+                            <Link className="btn btn-secondary rounded-sm px-[22px] py-[12px]" to="/contact">
+                                Plan a Trip
+                            </Link>
+                        </div>
                     </div>
-                </div>
 
-                <div className="relative">
-                    <div className="bg-ink text-paper rounded-md relative overflow-hidden shadow-[0_30px_60px_rgba(18,35,46,0.28)] rotate-2 floaty">
-                        <div className="pt-[26px] px-[28px] pb-5 flex justify-between items-start">
-                            <div>
-                                <div className="text-[22px] font-semibold">
-                                    NJP <span className="text-gold mx-2">✈</span>NORTH SIKKIM
+                    <div className="relative">
+                        <div className="bg-ink text-paper rounded-md relative overflow-hidden shadow-[0_30px_60px_rgba(18,35,46,0.28)] rotate-2 floaty">
+                            <div className="pt-[26px] px-[28px] pb-5 flex justify-between items-start">
+                                <div>
+                                    <div className="text-[22px] font-semibold">
+                                        NJP <span className="text-gold mx-2">✈</span>NORTH SIKKIM
+                                    </div>
+                                    <div className="text-[11px] opacity-60 mt-1.5 uppercase">NJP — North Sikkim</div>
                                 </div>
-                                <div className="text-[11px] opacity-60 mt-1.5 uppercase">NJP — North Sikkim</div>
+                                <span className="bg-gold text-ink text-[11px] font-bold py-1 px-2.5 rounded-[20px] uppercase">Best Seller</span>
                             </div>
-                            <span className="bg-gold text-ink text-[11px] font-bold py-1 px-2.5 rounded-[20px] uppercase">Best Seller</span>
+                            <div className="flex gap-0 justify-between px-[28px] pb-[22px] text-[10px] opacity-60 uppercase">
+                                <div>
+                                    Departs<strong> 5 Sept</strong>
+                                </div>
+                                <div>
+                                    Duration<strong> 4 Days</strong>
+                                </div>
+                                <div>
+                                    <strong> Prime Traveller</strong>
+                                </div>
+                            </div>
+                            <div className="ticket-barcode mx-[28px] mb-[26px]"></div>
                         </div>
-                        <div className="flex gap-0 justify-between px-[28px] pb-[22px] text-[10px] opacity-60 uppercase">
-                            <div>
-                                Departs<strong> 5 Sept</strong>
-                            </div>
-                            <div>
-                                Duration<strong> 4 Days</strong>
-                            </div>
-                            <div>
-                                <strong> Prime Traveller</strong>
-                            </div>
-                        </div>
-                        <div className="ticket-barcode mx-[28px] mb-[26px]"></div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <div className="path-divider max-w-[1200px] mx-auto pt-10 px-8">
                 <svg viewBox="0 0 1136 60" preserveAspectRatio="none">
@@ -108,15 +119,8 @@ export default function Home() {
                         <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
                             PLOTTED DESTINATIONS
                         </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">
-                            Where the map
-                            <br />
-                            bends toward you
-                        </h2>
+                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Top Destinations</h2>
                     </div>
-                    <p className="reveal">
-                        Six coordinates our travelers return to, season after season — each with its own light, language and pace.
-                    </p>
                 </div>
                 <div className="flex gap-[18px] overflow-x-auto pb-2.5 scrollbar-thin">
                     {packages.map((p, i) => (
@@ -135,10 +139,7 @@ export default function Home() {
                         <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
                             FEATURED PACKAGES
                         </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">
-                            Itineraries worth
-                            <br />a stamp in your passport
-                        </h2>
+                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Best Selling Packages</h2>
                     </div>
                     <Link
                         className="inline-flex items-center gap-2 font-mono text-[13px] uppercase font-semibold pb-1 tracking-[0.05em] transition-[transform,box-shadow,background] duration-250 border-b border-ink active:translate-y-0 active:scale-95"
@@ -157,11 +158,7 @@ export default function Home() {
                         <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
                             HOW IT WORKS
                         </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">
-                            Four stops
-                            <br />
-                            to takeoff
-                        </h2>
+                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Four stops to takeoff</h2>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-line">
