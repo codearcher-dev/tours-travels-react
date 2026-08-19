@@ -1,8 +1,10 @@
 import { useState } from "react";
 import icon from "../assets/whatsapp-icon.png";
+import { usePackages } from "../context/PackageContext";
 
 export default function Contact() {
     const [submitted, setSubmitted] = useState(false);
+    const { packages } = usePackages();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -31,7 +33,7 @@ export default function Contact() {
                                 <div>
                                     <div className="text-xs uppercase text-rust font-mono tracking-widest mb-2">Call the desk</div>
                                     <a href="tel:+919876543210" className="text-xl font-medium text-ink hover:text-rust transition-colors">
-                                        +91 98765 43210
+                                        +91 91422 34213
                                     </a>
                                 </div>
                                 <div>
@@ -39,15 +41,15 @@ export default function Contact() {
                                     <a
                                         href="mailto:fly@meridianjourneys.com"
                                         className="text-xl font-medium text-ink hover:text-rust transition-colors">
-                                        fly@meridianjourneys.com
+                                        primetraveler2773@gmail.com
                                     </a>
                                 </div>
                                 <div>
                                     <div className="text-xs uppercase text-rust font-mono tracking-widest mb-2">Studio</div>
                                     <div className="text-xl font-medium text-ink leading-snug">
-                                        4th Floor, Meridian House
+                                        Maithon, Dhanbad
                                         <br />
-                                        Bengaluru, India
+                                        Jharkhand, India
                                     </div>
                                 </div>
                             </div>
@@ -111,14 +113,17 @@ export default function Contact() {
                                             id="destination"
                                             className="w-full bg-transparent border-b border-zinc-300 py-2 text-lg text-ink focus:outline-none focus:border-ink transition-colors appearance-none cursor-pointer">
                                             <option value="" disabled selected>
-                                                Select Destination
+                                                Select Package
                                             </option>
-                                            <option>Bali</option>
+                                            {packages.map((pkg, idx) => (
+                                                <option>{pkg.name}</option>
+                                            ))}
+                                            {/* <option>Bali</option>
                                             <option>Santorini</option>
                                             <option>Kyoto</option>
                                             <option>Machu Picchu</option>
                                             <option>Marrakech</option>
-                                            <option>Iceland</option>
+                                            <option>Iceland</option> */}
                                         </select>
                                         <div className="absolute right-0 top-3 pointer-events-none text-zinc-400">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

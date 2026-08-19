@@ -587,7 +587,7 @@ export default function CircularGallery({
     }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase]);
     return (
         <div
-            className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+            className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-4"
             tabIndex={0}
             role="region"
             aria-label="Circular image gallery. Use Left and Right Arrow keys to navigate."
