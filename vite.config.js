@@ -5,12 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
     plugins: [react(), tailwindcss()],
     server: {
+        allowedHosts: true, // Allow ngrok tunneling
         proxy: {
             '/api': {
                 target: "http://localhost:3000",
                 changeOrigin: true,
                 secure: false
             }
-        }
+        },
+        host: '0.0.0.0'
     }
 })

@@ -12,7 +12,7 @@ export const PackageProvider = ({ children }) => {
         const fetchPackages = async () => {
             try {
                 const data = await getAllPackages();
-                console.log(data.packages);
+                console.log(data.packages[4]);
                 setPackages(data.packages);
             } catch (error) {
                 setError(error.response.data.message || "Failed to fetch packages");

@@ -1,31 +1,29 @@
-import { useRef } from "react";
 import { Link } from "react-router-dom";
-import useScrollReveal from "../hooks/useScrollReveal";
-import destinations from "../data/destinations";
-// import packages from "../data/packages";
 import DestinationChip from "../components/DestinationChip";
 import PackageCard from "../components/PackageCard";
-import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 import { usePackages } from "../context/PackageContext";
 import coverImage from "../assets/package-cover.png";
+import StrokeText from "../components/ui/animations/StrokeText";
+import TextType from "../components/ui/animations/TextType";
+import BounceCards from "../components/ui/animations/BounceCards";
 
 const testimonials = [
     {
-        initials: "AS",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
         name: "Ananya Sharma",
-        trip: "Kyoto in Bloom, Mar 2026",
+        trip: "Kyoto in Bloom",
         quote: "The Kyoto itinerary felt hand-written for us — not a single wasted afternoon, and the machiya stay was the highlight of the year.",
     },
     {
-        initials: "RK",
+        avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop",
         name: "Rohan Kapoor",
-        trip: "Andes Explorer, Jan 2026",
+        trip: "Andes Explorer",
         quote: "Enquiry to boarding pass took four days. Every hotel matched the photos, every guide showed up early.",
     },
     {
-        initials: "PM",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
         name: "Priya Mehta",
-        trip: "Sunset Escape, Feb 2026",
+        trip: "Sunset Escape",
         quote: "Booked the Santorini escape for our anniversary. The catamaran sunset sail alone was worth the trip.",
     },
 ];
@@ -37,180 +35,230 @@ const steps = [
     { num: "04", title: "Collect the stamp", desc: "We handle logistics — you just show up with a passport." },
 ];
 
+const pageVariants = {
+    initial: { opacity: 0 },
+    in: { opacity: 1, transition: { duration: 0.2, ease: "easeOut", staggerChildren: 0.025 } },
+    out: { opacity: 0, transition: { duration: 0.125 } },
+};
+
+const sectionVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut", staggerChildren: 0.1 } },
+};
+
+const childVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.15, ease: "easeOut" } },
+};
+
+const images = [
+    "https://picsum.photos/400/400?grayscale",
+    "https://picsum.photos/500/500?grayscale",
+    "https://picsum.photos/600/600?grayscale",
+    "https://picsum.photos/700/700?grayscale",
+    "https://picsum.photos/300/300?grayscale",
+];
+const transformStyles = [
+    "rotate(10deg) translate(-180px)",
+    "rotate(5deg) translate(-90px)",
+    "rotate(0deg)",
+    "rotate(-5deg)translate(90px)",
+    "rotate(-10deg) translate(180px)",
+];
+
 export default function Home() {
     const { packages, loading } = usePackages();
-    const containerRef = useRef(null);
-    useScrollReveal(containerRef, [loading, packages]);
 
     return (
-        <main ref={containerRef} className="page-fade">
-            <div
-                className="w-full max-h-screen h-[700px]"
-                style={{
-                    backgroundImage: `url(${coverImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                }}>
-                <section className="max-w-[1200px] mx-auto pt-8 px-8 grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
-                    <div>
-                        <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal-900 px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rust"></span>
-                            <span className="text-[#F5F3EC]">BOARDING PASS TO ADVENTURE</span>
-                        </span>
-                        <h1 className="font-display text-[#f5f3ec] text-[clamp(30px,5.4vw,68px)] font-medium leading-[1.04] tracking-[-0.01em] ">
-                            Every journey
-                            <br />
-                            has a line.
-                            <br />
-                            <em className="italic font-normal text-[#d8af31]">This one's yours.</em>
-                        </h1>
-                        <p className="mt-6 text-[clamp(12px, 5.4vh, 17px)] text-[#ecebe5] max-w-[460px] leading-[1.65]">
-                            Hand-plotted itineraries across 40+ destinations — from Bali's rice terraces to Iceland's ring road. We chart the route,
-                            you collect the stamps.
-                        </p>
-                        <div className="flex gap-4 mt-9">
-                            <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/packages">
-                                Browse Packages
-                            </Link>
-                            <Link className="btn btn-secondary rounded-sm px-[22px] py-[12px]" to="/contact">
-                                Plan a Trip
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="relative">
-                        <div className="bg-ink text-paper rounded-md relative overflow-hidden shadow-[0_30px_60px_rgba(18,35,46,0.28)] rotate-2 floaty">
-                            <div className="pt-[26px] px-[28px] pb-5 flex justify-between items-start">
-                                <div>
-                                    <div className="text-[22px] font-semibold">
-                                        NJP <span className="text-gold mx-2">✈</span>NORTH SIKKIM
-                                    </div>
-                                    <div className="text-[11px] opacity-60 mt-1.5 uppercase">NJP — North Sikkim</div>
-                                </div>
-                                <span className="bg-gold text-ink text-[11px] font-bold py-1 px-2.5 rounded-[20px] uppercase">Best Seller</span>
-                            </div>
-                            <div className="flex gap-0 justify-between px-[28px] pb-[22px] text-[10px] opacity-60 uppercase">
-                                <div>
-                                    Departs<strong> 5 Sept</strong>
-                                </div>
-                                <div>
-                                    Duration<strong> 4 Days</strong>
-                                </div>
-                                <div>
-                                    <strong> Prime Traveller</strong>
-                                </div>
-                            </div>
-                            <div className="ticket-barcode mx-[28px] mb-[26px]"></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <div className="path-divider max-w-[1200px] mx-auto pt-10 px-8">
-                <svg viewBox="0 0 1136 60" preserveAspectRatio="none">
-                    <path d="M0,10 C 250,60 350,0 568,30 C 780,58 900,5 1136,40" />
-                </svg>
-            </div>
-
-            <section className="max-w-[1200px] mx-auto py-[70px] px-8">
-                <div className="flex justify-between items-end mb-10 gap-6 flex-wrap">
-                    <div>
-                        <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                            PLOTTED DESTINATIONS
-                        </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Top Destinations</h2>
+        <main>
+            {/* HERO SECTION - IMMERSIVE FULL BLEED */}
+            <section className="relative w-full h-screen min-h-[700px] flex pt-16 justify-center overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <div className="w-full h-full">
+                        <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+                        {/* Gradient overlay for text legibility */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                     </div>
                 </div>
-                <div className="flex gap-[18px] overflow-x-auto pb-2.5 scrollbar-thin">
-                    {packages.map((p, i) => (
-                        <DestinationChip
-                            key={i}
-                            dest={{ name: p.location.name, img: p.img, desc: p.description }}
-                            revealDelay={`${Math.min(i * 0.08, 1.2)}s`}
+
+                <div className="relative z-10 text-center px-6 mx-auto mt-8">
+                    <h1 data-aos="fade-up" data-aos-delay="100" className="font-display text-white drop-shadow-lg">
+                        {/* <StrokeText
+                            text="Find your best journey."
+                            strokeColor="#F8FAFC"
+                            fillColor="#F8FAFC"
+                            className="text-sm"
+                            strokeWidth={1.4}
+                            drawDuration={1.6}
+                            fillDelay={0.2}
+                            stagger={0.05}
+                            ease="power2.out"
+                            trigger="mount"
+                            fillMode="wipe"
+                            fontSize={45}
+                            fontWeight={400}
+                            letterSpacing={-2}
+                            reverse={false}
                         />
+                        <br /> */}
+                        <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/90 font-light flex flex-col">
+                            <span className="text-paper-dim">Explore the beauty of </span>
+                            <TextType
+                                text={["Darjeeling", "North Sikkim", "Kalimpong", "Mirik"]}
+                                className="text-yellow-500 italic"
+                                typingSpeed={75}
+                                pauseDuration={1500}
+                                showCursor
+                                cursorCharacter="_"
+                                texts={["Welcome to React Bits! Good to see you!", "Build some amazing experiences!"]}
+                                deletingSpeed={50}
+                                variableSpeedEnabled={false}
+                                variableSpeedMin={60}
+                                variableSpeedMax={120}
+                                cursorBlinkDuration={0.5}
+                            />
+                        </div>
+                    </h1>
+
+                    <div data-aos="fade-up" data-aos-delay="200" className="flex gap-4 justify-center">
+                        <BounceCards images={images} enableHover={true} transformStyles={transformStyles} />
+                    </div>
+
+                    <div data-aos="fade-up" data-aos-delay="200" className="flex gap-4 justify-center">
+                        <Link
+                            className="px-2 md:px-4 lg:px-8 py-4 bg-white text-ink text-xs md:text-sm font-medium tracking-wide uppercase hover:bg-zinc-200 transition-colors"
+                            to="/packages">
+                            Explore Destinations
+                        </Link>
+                        <Link
+                            className="px-2 md:px-4 lg:px-8 py-4 bg-transparent border border-white text-white text-xs md:text-sm font-medium tracking-wide uppercase hover:bg-white hover:text-ink transition-colors"
+                            to="/contact">
+                            Plan A Custom Route
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* TOP DESTINATIONS (Sleek Horizontal Gallery) */}
+            <section className="max-w-[1400px] mx-auto pt-12 md:pt-20 pb-8 px-4 md:px-8 overflow-hidden">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
+                    <div className="max-w-xl" data-aos="fade-right">
+                        <h2 className="font-display text-4xl md:text-5xl font-medium mb-4">Trending Coordinates</h2>
+                        <p className="text-zinc-500 font-sans leading-relaxed">
+                            Discover our most sought-after locations this season. Hand-picked stays and exclusive experiences await.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar">
+                    {packages.map((p, i) => (
+                        <div data-aos="fade-left" data-aos-delay={i * 100} key={i} className="snap-start shrink-0 w-[280px] md:w-[350px]">
+                            <DestinationChip dest={{ name: p.location.name, img: p.img, desc: p.description }} />
+                        </div>
                     ))}
                 </div>
             </section>
 
-            <section className="max-w-[1200px] mx-auto py-[70px] px-8" style={{ paddingTop: 0 }}>
-                <div className="flex justify-between items-end mb-10 gap-6 flex-wrap">
-                    <div>
-                        <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                            FEATURED PACKAGES
-                        </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Best Selling Packages</h2>
+            {/* BEST SELLING PACKAGES */}
+            <section className="bg-paper-dim py-12 md:py-20 px-4 md:px-8">
+                <div className="max-w-[1200px] mx-auto">
+                    <div className="text-center mb-8" data-aos="fade-up">
+                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Curated For You</span>
+                        <h2 className="font-display text-4xl md:text-5xl font-medium">Signature Journeys</h2>
                     </div>
-                    <Link
-                        className="inline-flex items-center gap-2 font-mono text-[13px] uppercase font-semibold pb-1 tracking-[0.05em] transition-[transform,box-shadow,background] duration-250 border-b border-ink active:translate-y-0 active:scale-95"
-                        to="/packages">
-                        View All Packages →
-                    </Link>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                    {!loading && packages.slice(0, 3).map((p, i) => <PackageCard key={i} pkg={p} revealDelay={`${Math.min(i * 0.08, 1.2)}s`} />)}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {!loading &&
+                            packages.slice(0, 3).map((p, i) => (
+                                <div data-aos="fade-up" data-aos-delay={i * 100} key={i}>
+                                    <PackageCard pkg={p} />
+                                </div>
+                            ))}
+                    </div>
+
+                    <div className="mt-16 text-center">
+                        <Link
+                            className="inline-flex items-center gap-2 font-mono text-xs uppercase font-semibold tracking-widest transition-colors hover:text-rust border-b border-ink pb-1 hover:border-rust"
+                            to="/packages">
+                            View All Journeys
+                        </Link>
+                    </div>
                 </div>
             </section>
 
-            <section className="max-w-[1200px] mx-auto py-[70px] px-8" style={{ paddingTop: 0 }}>
-                <div className="flex justify-between items-end mb-10 gap-6 flex-wrap">
-                    <div>
-                        <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                            HOW IT WORKS
-                        </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Four stops to takeoff</h2>
-                    </div>
+            {/* HOW IT WORKS - Minimalist Timeline */}
+            <section className="max-w-[1200px] mx-auto py-12 md:py-20 px-4 md:px-8">
+                <div className="mb-10 text-center max-w-2xl mx-auto" data-aos="fade-up">
+                    <h2 className="font-display text-4xl md:text-5xl font-medium mb-6">The Process</h2>
+                    <p className="text-zinc-500 font-sans leading-relaxed">
+                        From your first spark of inspiration to your final flight home, we handle the complexities so you can focus on the experience.
+                    </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-line">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                    {/* Horizontal connecting line (desktop only) */}
+                    <div className="hidden lg:block absolute top-6 left-12 right-12 h-px bg-zinc-200"></div>
+
                     {steps.map((s, i) => (
                         <div
-                            className="pt-8 lg:px-6 lg:border-r border-line md:border-b-0 border-b pb-6 lg:pb-0 last:border-r-0 last:border-b-0 reveal"
-                            style={{ "--reveal-delay": `${Math.min(i * 0.08, 1.2)}s` }}
+                            data-aos="fade-up"
+                            data-aos-delay={i * 100}
+                            className="relative flex flex-col items-center text-center group"
                             key={s.num}>
-                            <div className="font-display italic text-[34px] text-gold-deep mb-3.5">{s.num}</div>
-                            <h4>{s.title}</h4>
-                            <p>{s.desc}</p>
+                            <div className="w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center font-mono text-xs text-zinc-400 mb-8 relative z-10 group-hover:border-rust group-hover:text-rust transition-colors duration-500">
+                                {s.num}
+                            </div>
+                            <h4 className="font-display text-xl mb-3">{s.title}</h4>
+                            <p className="text-sm text-zinc-500 leading-relaxed font-sans">{s.desc}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
-            <section className="max-w-[1200px] mx-auto py-[70px] px-8" style={{ paddingTop: 0 }}>
-                <div className="flex justify-between items-end mb-10 gap-6 flex-wrap">
-                    <div>
-                        <span className="inline-flex items-center gap-2.5 text-[12px] uppercase text-teal-deep border border-teal px-3.5 py-1.5 rounded-[20px] mb-[26px] font-mono tracking-[0.02em]">
-                            FROM THE FIELD
-                        </span>
-                        <h2 className="font-display text-[clamp(28px,3.4vw,40px)] font-medium tracking-[-0.01em] reveal">Postcards from travelers</h2>
+            {/* TESTIMONIALS */}
+            <section className="bg-paper-dim py-12 md:py-20 overflow-hidden px-4 md:px-8">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="text-center mb-8" data-aos="fade-up">
+                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-4 block">From The Field</span>
+                        <h2 className="font-display text-4xl md:text-5xl font-medium">Traveler Stories</h2>
                     </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                    {testimonials.map((t, i) => (
-                        <div className="testimonial-card reveal" style={{ "--reveal-delay": `${Math.min(i * 0.08, 1.2)}s` }} key={t.initials}>
-                            <div className="testimonial-card-shell">
-                                <span className="font-display text-[44px] text-gold-deep italic leading-[0.5] mb-2.5 block">"</span>
-                                <p>{t.quote}</p>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-[38px] h-[38px] rounded-full bg-teal text-white flex items-center justify-center text-[13px] font-semibold font-mono">
-                                        {t.initials}
-                                    </div>
+
+                    <div className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory hide-scrollbar">
+                        {testimonials.map((t, i) => (
+                            <div
+                                data-aos="fade-up"
+                                data-aos-delay={i * 100}
+                                className="snap-start shrink-0 w-[300px] md:w-[400px] bg-paper border border-zinc-100 p-8 md:p-10 shadow-sm flex flex-col"
+                                key={t.name}>
+                                <div className="text-gold/30 mb-6">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                    </svg>
+                                </div>
+                                <p className="text-base leading-[1.7] font-sans font-light mb-10 text-ink-soft flex-grow">"{t.quote}"</p>
+                                <div className="flex items-center gap-4 border-t border-zinc-100 pt-6">
+                                    <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full object-cover grayscale opacity-90" />
                                     <div>
-                                        <div className="text-[13.5px] font-semibold">{t.name}</div>
-                                        <div className="text-[11.5px] text-ink-soft">{t.trip}</div>
+                                        <div className="text-sm font-medium font-sans text-ink">{t.name}</div>
+                                        <div className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase mt-1">{t.trip}</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </section>
 
-            <section className="max-w-[1200px] mx-auto py-[70px] px-8" style={{ paddingTop: 10 }}>
-                <div className="bg-ink text-paper rounded-md mx-8 lg:mx-auto max-w-[1136px] py-[56px] px-[48px] flex flex-col md:flex-row justify-between items-center md:text-left text-center gap-8 relative overflow-hidden before:content-[''] before:absolute before:-right-[60px] before:-top-[60px] before:w-[220px] before:h-[220px] before:rounded-full before:border before:border-dashed before:border-[rgba(232,163,61,0.4)] reveal">
-                    <h2 className="font-display text-[clamp(26px,3vw,36px)] font-medium max-w-[480px] relative">
-                        Ready for <em className="italic font-normal text-yellow-500/90">takeoff?</em> Tell us your dream coordinates.
-                    </h2>
-                    <Link className="btn btn-primary rounded-sm px-[22px] py-[12px]" to="/contact">
+            {/* CALL TO ACTION */}
+            <section className="max-w-[1200px] mx-auto py-12 md:py-20 px-4 md:px-8 text-center">
+                <h2 data-aos="fade-up" className="font-display text-4xl sm:text-5xl md:text-7xl font-medium max-w-4xl mx-auto leading-tight mb-10">
+                    Ready for takeoff? <br />
+                    <span className="italic text-zinc-400">Tell us your dream coordinates.</span>
+                </h2>
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <Link
+                        className="inline-block px-10 py-5 bg-ink text-white font-mono text-sm uppercase tracking-widest hover:bg-rust transition-colors duration-300"
+                        to="/contact">
                         Start an Enquiry
                     </Link>
                 </div>

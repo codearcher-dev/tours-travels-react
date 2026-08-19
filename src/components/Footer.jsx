@@ -3,87 +3,61 @@ import logo from "../assets/logo.png";
 
 export default function Footer() {
     return (
-        <footer className="bg-ink text-paper mt-0">
-            <div className="max-w-[1200px] mx-auto px-8 pt-16 pb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
-                <div>
-                    <Link to="/" className="flex items-center gap-2.5 text-[19px] font-semibold text-paper mb-[14px]">
-                        <img src={logo} alt="" className="h-[52px] " />
-                        Prime Traveller
-                    </Link>
-                    <p className="text-[13.5px] text-[rgba(247,244,238,0.6)] leading-[1.6] max-w-[260px]">
-                        Hand-plotted tour itineraries across India. Route design, ground logistics and traveler support, in one desk.
-                    </p>
-                    <div className="flex mt-[14px] border-b border-[rgba(247,244,238,0.35)] pb-2">
-                        <input
-                            type="email"
-                            placeholder="Your email for route drops"
-                            className="bg-transparent border-none text-paper text-[13.5px] flex-1 outline-none font-sans placeholder-[rgba(247,244,238,0.4)]"
-                        />
-                        <button aria-label="Subscribe">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-gold">
-                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                            </svg>
-                        </button>
+        <footer className="bg-ink text-white pt-10 md:pt-16 pb-8 overflow-hidden relative">
+            <div className="max-w-[1200px] mx-auto px-6 md:px-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-12">
+                    
+                    <div className="lg:col-span-5 flex flex-col justify-between md:col-span-2 lg:col-span-5">
+                        <div>
+                            <div className="flex items-center gap-3 mb-6">
+                                <img src={logo} alt="Prime Traveller Logo" className="h-10 md:h-12 invert" />
+                                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl">Prime<br/><span className="text-gold italic">Traveller.</span></h2>
+                            </div>
+                            <p className="text-zinc-400 text-lg max-w-md font-sans font-light leading-relaxed">
+                                Hand-plotted tour itineraries across the globe. Route design, ground logistics and traveler support, handled with care.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="lg:col-span-2">
+                        <h3 className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-6">Explore</h3>
+                        <ul className="flex flex-col gap-4 font-sans text-sm text-zinc-300">
+                            <li><Link to="/" className="hover:text-gold transition-colors">Home</Link></li>
+                            <li><Link to="/packages" className="hover:text-gold transition-colors">Journeys</Link></li>
+                            <li><Link to="/about" className="hover:text-gold transition-colors">Story</Link></li>
+                            <li><Link to="/contact" className="hover:text-gold transition-colors">Contact</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className="lg:col-span-2">
+                        <h3 className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-6">Destinations</h3>
+                        <ul className="flex flex-col gap-4 font-sans text-sm text-zinc-300">
+                            <li><span className="cursor-pointer hover:text-gold transition-colors">Bali, IDN</span></li>
+                            <li><span className="cursor-pointer hover:text-gold transition-colors">Santorini, GRC</span></li>
+                            <li><span className="cursor-pointer hover:text-gold transition-colors">Kyoto, JPN</span></li>
+                            <li><span className="cursor-pointer hover:text-gold transition-colors">Reykjavik, ISL</span></li>
+                        </ul>
+                    </div>
+
+                    <div className="lg:col-span-3">
+                        <h3 className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-6">Studio</h3>
+                        <ul className="flex flex-col gap-4 font-sans text-sm text-zinc-300">
+                            <li>4th Floor, Meridian House</li>
+                            <li>Bengaluru, India</li>
+                            <li className="mt-4"><a href="mailto:fly@meridianjourneys.com" className="hover:text-gold transition-colors">fly@meridianjourneys.com</a></li>
+                            <li>+91 98765 43210</li>
+                        </ul>
                     </div>
                 </div>
 
-                <div>
-                    <div className="text-[12px] uppercase text-gold mb-4 tracking-[0.1em] font-mono">Explore</div>
-                    <ul className="list-none m-0 p-0">
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            <Link to="/packages">Packages</Link>
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            <Link to="/about">About</Link>
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            <Link to="/contact">Contact</Link>
-                        </li>
-                    </ul>
+                <div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono tracking-widest text-zinc-600 uppercase">
+                    <span>© {new Date().getFullYear()} Meridian Journeys</span>
+                    <div className="flex gap-6">
+                        <span className="cursor-pointer hover:text-zinc-400">Instagram</span>
+                        <span className="cursor-pointer hover:text-zinc-400">Twitter</span>
+                        <span className="cursor-pointer hover:text-zinc-400">Journal</span>
+                    </div>
                 </div>
-
-                <div>
-                    <div className="text-[12px] uppercase text-gold mb-4 tracking-[0.1em] font-mono">Destinations</div>
-                    <ul className="list-none m-0 p-0">
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            Bali
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            Santorini
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            Kyoto
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            Iceland
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <div className="text-[12px] uppercase text-gold mb-4 tracking-[0.1em] font-mono">Studio</div>
-                    <ul className="list-none m-0 p-0">
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            4th Floor, Meridian House
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            Bengaluru, India
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            fly@meridianjourneys.com
-                        </li>
-                        <li className="mb-2.5 text-[13.5px] text-[rgba(247,244,238,0.75)] transition-colors duration-200 cursor-pointer hover:text-gold">
-                            +91 98765 43210
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className="border-t border-[rgba(247,244,238,0.14)] px-8 py-5 flex flex-col sm:flex-row justify-between max-w-[1200px] mx-auto text-[11.5px] text-[rgba(247,244,238,0.45)] uppercase">
-                <span>© 2026 Prime Traveller</span>
             </div>
         </footer>
     );
