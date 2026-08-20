@@ -6,6 +6,7 @@ import coverImage from "../assets/package-cover.png";
 import StrokeText from "../components/ui/animations/StrokeText";
 import TextType from "../components/ui/animations/TextType";
 import BounceCards from "../components/ui/animations/BounceCards";
+import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 
 const testimonials = [
     {
@@ -66,11 +67,29 @@ const transformStyles = [
     "rotate(-10deg) translate(180px)",
 ];
 
+function PackageErrorState({ error, loading, retry }) {
+    return (
+        <div className="w-full border border-rust/30 bg-white px-6 py-8 md:px-10 md:py-10 text-center">
+            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full border border-red-500/40 text-red-500">
+                <span className="font-display text-xl" aria-hidden="true">
+                    !
+                </span>
+            </div>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-2">Unable to load packages</p>
+            <h3 className="font-display text-2xl text-ink mb-2">The departure board is taking a pause.</h3>
+            <p className="mx-auto max-w-md text-sm leading-relaxed text-zinc-500">{error}</p>
+            <button type="button" onClick={retry} disabled={loading} className="btn btn-primary mt-5 disabled:cursor-not-allowed disabled:opacity-50">
+                {loading ? "Retrying..." : "Try again"}
+            </button>
+        </div>
+    );
+}
+
 export default function Home() {
-    const { packages, loading } = usePackages();
+    const { packages, loading, error, retry } = usePackages();
 
     return (
-        <main>
+        <main className="select-none">
             {/* HERO SECTION - IMMERSIVE FULL BLEED */}
             <section className="relative w-full h-screen min-h-[700px] flex pt-16 justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
@@ -148,11 +167,23 @@ export default function Home() {
                 </div>
 
                 <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar">
-                    {packages.map((p, i) => (
-                        <div data-aos="fade-left" data-aos-delay={i * 100} key={i} className="snap-start shrink-0 w-[280px] md:w-[350px]">
-                            <DestinationChip dest={{ name: p.location.name, img: p.img, desc: p.description }} />
-                        </div>
-                    ))}
+                    {error ? (
+                        <PackageErrorState error={error} loading={loading} retry={retry} />
+                    ) : loading ? (
+                        Array(3)
+                            .fill(0)
+                            .map((_, i) => (
+                                <div key={i} className="h-[400px] w-[280px] md:w-[350px] shrink-0 animate-pulse bg-white/60">
+                                    <div className="h-full w-full bg-zinc-200/70" />
+                                </div>
+                            ))
+                    ) : (
+                        packages.map((p, i) => (
+                            <div data-aos="fade-left" key={p._id || i} className="snap-start shrink-0 w-[280px] md:w-[350px]">
+                                <DestinationChip dest={{ name: p.location.name, img: p.img, desc: p.description }} />
+                            </div>
+                        ))
+                    )}
                 </div>
             </section>
 
@@ -165,12 +196,25 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {!loading &&
+                        {error ? (
+                            <div className="col-span-full">
+                                <PackageErrorState error={error} loading={loading} retry={retry} />
+                            </div>
+                        ) : loading ? (
+                            Array(3)
+                                .fill(0)
+                                .map((_, i) => (
+                                    <div data-aos="fade-up" key={i}>
+                                        <SkeletonPackageCard />
+                                    </div>
+                                ))
+                        ) : (
                             packages.slice(0, 3).map((p, i) => (
-                                <div data-aos="fade-up" data-aos-delay={i * 100} key={i}>
+                                <div data-aos="fade-up" key={p._id || i}>
                                     <PackageCard pkg={p} />
                                 </div>
-                            ))}
+                            ))
+                        )}
                     </div>
 
                     <div className="mt-16 text-center">

@@ -3,7 +3,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const SkeletonPackageCard = () => {
     return (
-        <article className="package-card">
+        <article className="package-card border border-slate-300">
             <div className="package-card-shell">
                 {/* Image Placeholder */}
                 <div className="h-48 relative overflow-hidden leading-none">

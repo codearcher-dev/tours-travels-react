@@ -32,7 +32,7 @@ export default function Navbar() {
     return (
         <>
             <header
-                className={`fixed left-0 right-0 z-[100] transition-all duration-500 ease-out flex justify-center ${scrolled ? "top-1" : "top-0"}`}>
+                className={`fixed left-0 right-0 z-[100] transition-all duration-500 ease-out flex justify-center select-none ${scrolled ? "top-1" : "top-0"}`}>
                 <div
                     className={`flex items-center justify-between transition-all duration-500 ease-out px-4 md:px-6 py-3 ${
                         scrolled
@@ -89,7 +89,7 @@ export default function Navbar() {
             </header>
 
             {mobileOpen && (
-                <div className="fixed inset-0 z-[99] bg-paper pt-28 px-8 md:hidden">
+                <div className="fixed inset-0 z-[99] bg-paper pt-28 px-8 md:hidden select-none">
                     <nav className="flex flex-col gap-6">
                         {navLinks.map((link) => (
                             <NavLink

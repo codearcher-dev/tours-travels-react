@@ -6,7 +6,7 @@ export default function Footer() {
         <footer className="bg-ink text-white pt-10 md:pt-16 pb-8 overflow-hidden relative">
             <div className="max-w-[1200px] mx-auto px-6 md:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-12">
-                    <div className="lg:col-span-5 flex flex-col justify-between md:col-span-2">
+                    <div className="lg:col-span-5 flex flex-col justify-between md:col-span-2 select-none">
                         <div>
                             <div className="flex items-center gap-3 mb-6">
                                 <img src={logo} alt="Prime Traveller Logo" className="h-10 md:h-12 invert" />

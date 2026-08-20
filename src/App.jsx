@@ -26,8 +26,8 @@ export default function App() {
         AOS.init({
             once: true,
             offset: 50,
-            duration: 800,
-            easing: 'ease-out-cubic',
+            duration: 400,
+            easing: "ease-out-cubic",
         });
     }, []);
 
@@ -42,13 +42,13 @@ export default function App() {
         <>
             <ScrollToTop />
             <Navbar />
-                <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/packages" element={<Packages />} />
-                    <Route path="/package/:slug" element={<PackageDetail />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                </Routes>
+            <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Home />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/package/:slug" element={<PackageDetail />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+            </Routes>
             <Footer />
             <WhatsAppSticky />
         </>

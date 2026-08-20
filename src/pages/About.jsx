@@ -16,7 +16,7 @@ const timeline = [
 
 export default function About() {
     return (
-        <main className="pt-20 pb-16">
+        <main className="pt-20 pb-16 select-none">
             {/* HERO / STORY */}
             <section className="max-w-[1200px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center mb-16 md:mb-24">
                 <div className="lg:col-span-7">

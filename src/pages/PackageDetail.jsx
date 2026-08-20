@@ -38,7 +38,7 @@ export default function PackageDetail() {
                     key={currentImageIndex}
                     src={images[currentImageIndex]}
                     alt={`${pkg.name} - ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover absolute inset-0"
+                    className="w-full h-full object-cover absolute inset-0 opacity-50"
                 />
 
                 {images.length > 1 && (
