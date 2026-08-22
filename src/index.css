@@ -105,4 +105,33 @@
     .clip-image {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     }
+
+    .whatsapp-sticky {
+        animation: whatsapp-bounce 3s ease-in-out infinite;
+    }
+
+    @keyframes whatsapp-bounce {
+
+        0%,
+        70%,
+        100% {
+            transform: translateY(0);
+        }
+
+        76% {
+            transform: translateY(-8px);
+        }
+
+        82% {
+            transform: translateY(0);
+        }
+
+        88% {
+            transform: translateY(-4px);
+        }
+
+        94% {
+            transform: translateY(0);
+        }
+    }
 }

@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import DestinationChip from "../components/DestinationChip";
 import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
-import coverImage from "../assets/package-cover.png";
+import coverImage from "../assets/home-cover.png";
 import StrokeText from "../components/ui/animations/StrokeText";
 import TextType from "../components/ui/animations/TextType";
-import BounceCards from "../components/ui/animations/BounceCards";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
+import PhotoAlbum from "react-photo-album";
+import "react-photo-album/styles.css";
+import Verified from "../components/ui/icons/Verified";
 
 const testimonials = [
     {
@@ -33,7 +35,7 @@ const steps = [
     { num: "01", title: "Pick a coordinate", desc: "Browse packages by destination, budget or trip length." },
     { num: "02", title: "Customize the route", desc: "Adjust nights, add excursions, or tell us what to remove." },
     { num: "03", title: "Send an enquiry", desc: "Our travel desk replies within a working day with a quote." },
-    { num: "04", title: "Collect the stamp", desc: "We handle logistics — you just show up with a passport." },
+    { num: "04", title: "Book your slot", desc: "We handle logistics — you just go ahead." },
 ];
 
 const pageVariants = {
@@ -53,19 +55,19 @@ const childVariants = {
 };
 
 const images = [
-    "https://picsum.photos/400/400?grayscale",
-    "https://picsum.photos/500/500?grayscale",
-    "https://picsum.photos/600/600?grayscale",
-    "https://picsum.photos/700/700?grayscale",
-    "https://picsum.photos/300/300?grayscale",
+    "https://images.unsplash.com/photo-1660626006688-409a10536e2b?q=80&w=939&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1650552859763-8ef50317abc5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fE1vdXRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1731800747251-539ad71a4205?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fE1vdXRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1587997794221-e8070e197de6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fE1vdXRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1671984247482-1acf238bba0c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8TW91bnRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
 ];
-const transformStyles = [
-    "rotate(10deg) translate(-180px)",
-    "rotate(5deg) translate(-90px)",
-    "rotate(0deg)",
-    "rotate(-5deg)translate(90px)",
-    "rotate(-10deg) translate(180px)",
-];
+const galleryPhotos = images.map((src, index) => ({
+    src,
+    width: 1200,
+    height: 800,
+    alt: `Mountain destination ${index + 1}`,
+}));
+const galleryFadeDirections = ["fade-left", "fade-up", "fade-down", "fade-right"];
 
 function PackageErrorState({ error, loading, retry }) {
     return (
@@ -91,7 +93,7 @@ export default function Home() {
     return (
         <main className="select-none">
             {/* HERO SECTION - IMMERSIVE FULL BLEED */}
-            <section className="relative w-full h-screen min-h-[700px] flex pt-16 justify-center overflow-hidden">
+            <section className="relative w-full h-screen min-h-[700px] flex pt-16 pb-8 md:pb-0 justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <div className="w-full h-full">
                         <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
@@ -100,26 +102,8 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="relative z-10 text-center px-6 mx-auto mt-8">
+                <div className="relative z-10 text-center px-6 mx-auto mt-8 flex flex-col gap-4">
                     <h1 data-aos="fade-up" data-aos-delay="100" className="font-display text-white drop-shadow-lg">
-                        {/* <StrokeText
-                            text="Find your best journey."
-                            strokeColor="#F8FAFC"
-                            fillColor="#F8FAFC"
-                            className="text-sm"
-                            strokeWidth={1.4}
-                            drawDuration={1.6}
-                            fillDelay={0.2}
-                            stagger={0.05}
-                            ease="power2.out"
-                            trigger="mount"
-                            fillMode="wipe"
-                            fontSize={45}
-                            fontWeight={400}
-                            letterSpacing={-2}
-                            reverse={false}
-                        />
-                        <br /> */}
                         <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/90 font-light flex flex-col">
                             <span className="text-paper-dim">Explore the beauty of </span>
                             <TextType
@@ -136,8 +120,26 @@ export default function Home() {
                         </div>
                     </h1>
 
-                    <div data-aos="fade-up" data-aos-delay="200" className="flex gap-4 justify-center">
-                        <BounceCards images={images} enableHover={true} transformStyles={transformStyles} />
+                    <div className="w-[min(92vw,720px)] mx-auto" aria-label="Featured mountain destinations">
+                        <PhotoAlbum
+                            layout="columns"
+                            photos={galleryPhotos}
+                            columns={(containerWidth) => (containerWidth < 480 ? 2 : containerWidth < 768 ? 3 : 2)}
+                            spacing={8}
+                            componentsProps={{
+                                wrapper: ({ index }) => ({
+                                    "data-aos": galleryFadeDirections[index % galleryFadeDirections.length],
+                                    "data-aos-delay": index * 100,
+                                }),
+                            }}
+                        />
+                    </div>
+
+                    <div
+                        data-aos="fade-up"
+                        className="px-6 py-4 bg-linear-to-r from-orange-400/70 to-green-400/70 via-white/70 flex justify-center gap-2">
+                        <Verified stroke={"white"} fill={"oklch(70.7% 0.165 254.624)"} />
+                        <h3 className="font-bold font-mono text-[#51A2FF]">Verified By SIKKIM Government</h3>
                     </div>
 
                     <div data-aos="fade-up" data-aos-delay="200" className="flex gap-4 justify-center">

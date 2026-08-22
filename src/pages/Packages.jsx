@@ -2,6 +2,7 @@ import { useState } from "react";
 import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
+import coverImage from "../assets/package-cover.png";
 
 export default function Packages() {
     const { packages, loading, error, retry } = usePackages();
@@ -44,21 +45,32 @@ export default function Packages() {
     };
 
     return (
-        <main className="pt-20 pb-16 min-h-screen bg-paper select-none">
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 mb-10 text-center md:text-left ">
-                <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-6 block">The Collection</span>
-                <h1 className="font-display text-4xl md:text-5xl lg:text-7xl font-medium mb-6">
-                    Forty routes.
-                    <br />
-                    <span className="italic text-zinc-400">One departure board.</span>
-                </h1>
-                <p className="font-sans text-zinc-500 max-w-lg leading-relaxed md:ml-0 mx-auto">
-                    Filter by continent, budget or trip length — every journey below includes handpicked stays, local transfers, and a dedicated trip
-                    coordinator.
-                </p>
+        <main className="pb-16 min-h-screen bg-paper select-non">
+            <div className="relative w-full h-screen min-h-[700px] flex flex-col justify-center overflow-hidden bg-ink">
+                <div className="absolute inset-0 z-0">
+                    <div className="w-full h-full">
+                        <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-80 inset-0" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
+                    </div>
+                </div>
+
+                <div
+                    data-aos="fade-up"
+                    className="relative z-10 max-w-[1200px] w-full pt-16 mx-auto px-4 sm:px-6 md:px-8 mb-10 text-center md:text-left">
+                    <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.2em] text-rust mt-6 block">Curated journeys</span>
+                    <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-medium leading-[1.05] tracking-[-0.01em] mb-6 text-rust">
+                        Find the route
+                        <br />
+                        <span className="italic text-zinc-200">that feels like yours.</span>
+                    </h1>
+                    <p className="font-sans text-sm sm:text-base text-white/80 max-w-lg leading-relaxed md:ml-0 mx-auto">
+                        Browse handpicked escapes by destination, budget, or travel style. Every route includes thoughtful stays, local transfers, and
+                        a dedicated trip coordinator.
+                    </p>
+                </div>
             </div>
 
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto mb-8 px-4 md:px-8 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
+            <div data-aos="fade-up" className="max-w-[1200px] mx-auto my-8 px-4 md:px-8 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
                 <h2 className="font-display text-3xl text-rust">All Packages</h2>
             </div>
 

@@ -37,7 +37,7 @@ export const Timeline = ({ itinerary, className, style }) => {
                                                 ))}
                                                 <p className="font-mono text-xs uppercase tracking-widest text-rust">Additional Info</p>
                                                 {item.mealsIncluded && (
-                                                    <li className="flex items-start gap-3 text-zinc-700 text-sm">
+                                                    <li className="flex flex-wrap items-start gap-3 text-zinc-700 text-sm">
                                                         <span className="w-1 h-1 bg-rust rounded-full mt-2 shrink-0"></span>
                                                         Breakfast {item.mealsIncluded.breakfast ? <Tick /> : <Cross />}
                                                         Lunch {item.mealsIncluded.lunch ? <Tick /> : <Cross />}

@@ -25,22 +25,20 @@ export default function Navbar() {
         { path: "/contact", label: "Contact" },
     ];
 
-    // Determine if the current page has a dark hero section at the top
-    const isDarkHero = location.pathname === "/" || (location.pathname.startsWith("/packages/") && location.pathname !== "/packages");
-    const useLightText = !scrolled && isDarkHero;
+    const useLightText = !scrolled;
 
     return (
         <>
             <header
                 className={`fixed left-0 right-0 z-[100] transition-all duration-500 ease-out flex justify-center select-none ${scrolled ? "top-1" : "top-0"}`}>
                 <div
-                    className={`flex items-center justify-between transition-all duration-500 ease-out px-4 md:px-6 py-3 ${
+                    className={`flex items-center justify-between transition-all duration-500 ease-out px-4 md:px-6 py-2 ${
                         scrolled
                             ? "bg-white backdrop-blur-md shadow-md w-[95%] md:w-[90%] max-w-[1000px] rounded-full"
                             : "bg-transparent w-full max-w-[1200px]"
                     }`}>
                     <NavLink to="/" className="flex items-center gap-2">
-                        <img src={logo} alt="Prime Traveller Logo" className="h-8" />
+                        <img src={logo} alt="Prime Traveller Logo" className="h-12" />
                         <span
                             className={`font-display italic font-semibold text-xl tracking-tight hidden sm:block ${useLightText ? "text-white" : "text-ink"}`}>
                             Prime Traveller

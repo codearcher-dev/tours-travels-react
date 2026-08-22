@@ -4,6 +4,8 @@ import { usePackages } from "../context/PackageContext";
 import Timeline from "../components/Itinerary";
 import { MapPin, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import PhotoAlbum from "react-photo-album";
+import "react-photo-album/styles.css";
 import Tick from "../components/ui/icons/Tick.jsx";
 import Cross from "../components/ui/icons/Cross.jsx";
 
@@ -26,14 +28,20 @@ export default function PackageDetail() {
     }
 
     const images = pkg.images || [pkg.img];
+    const galleryPhotos = images.map((src, index) => ({
+        src,
+        width: 1200,
+        height: 800,
+        alt: `${pkg.name} - gallery image ${index + 1}`,
+    }));
 
     const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
     const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
 
     return (
-        <main className="bg-paper-dim min-h-screen pb-16">
+        <main className="bg-paper-dim min-h-screen pb-16 select-none">
             {/* FULL BLEED EDITORIAL HERO */}
-            <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
+            <div className="w-full h-[70vh] relative overf bg-ink">
                 <img
                     key={currentImageIndex}
                     src={images[currentImageIndex]}
@@ -154,17 +162,18 @@ export default function PackageDetail() {
                     {images.length > 1 && (
                         <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
                             <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Gallery</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {images.map((img, idx) => (
-                                    <img
-                                        key={idx}
-                                        src={img}
-                                        alt={`Gallery ${idx + 1}`}
-                                        onClick={() => setSelectedGalleryImage(img)}
-                                        className="w-full h-48 md:h-64 object-cover rounded-sm hover:opacity-90 transition-opacity cursor-pointer"
-                                    />
-                                ))}
-                            </div>
+                            <PhotoAlbum
+                                layout="rows"
+                                photos={galleryPhotos}
+                                targetRowHeight={220}
+                                spacing={16}
+                                onClick={({ photo }) => setSelectedGalleryImage(photo.src)}
+                                componentsProps={{
+                                    image: {
+                                        className: "rounded-sm hover:opacity-90 transition-opacity cursor-zoom-in",
+                                    },
+                                }}
+                            />
                         </div>
                     )}
                 </div>

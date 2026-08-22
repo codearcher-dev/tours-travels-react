@@ -1,6 +1,7 @@
 import { useState } from "react";
 import icon from "../assets/whatsapp-icon.png";
 import { usePackages } from "../context/PackageContext";
+import coverImage from "../assets/contact-cover.png";
 
 export default function Contact() {
     const [submitted, setSubmitted] = useState(false);
@@ -12,21 +13,27 @@ export default function Contact() {
     };
 
     return (
-        <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none">
-            <div className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-8">
+        <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative">
+            <div className="absolute inset-0 z-0 w-full bg-ink">
+                <div className="w-full h-full">
+                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-70" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
+                </div>
+            </div>
+            <div className="relative z-10 max-w-[1040px] mx-auto px-4 sm:px-6 md:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                     {/* LEFT COLUMN: Title and Info */}
                     <div className="lg:col-span-4" data-aos="fade-right">
                         <div className="flex flex-col gap-6 lg:sticky lg:top-24">
                             <div className="flex flex-col gap-3">
                                 <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-rust block">Contact Us</span>
-                                <h1 className="font-display text-4xl sm:text-5xl font-medium leading-[1.05] text-ink">
+                                <h1 className="font-display text-4xl sm:text-5xl font-medium leading-[1.05] text-white">
                                     Start the
                                     <br />
                                     <span className="italic text-rust">conversation.</span>
                                 </h1>
 
-                                <p className="text-zinc-600 font-sans text-sm font-light leading-relaxed max-w-sm">
+                                <p className="text-white font-sans text-sm font-light leading-relaxed max-w-sm">
                                     Reach out to our travel designers for a tailored itinerary, expert guidance, or any questions about your next
                                     journey.
                                 </p>
@@ -35,7 +42,7 @@ export default function Contact() {
                             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 border-t border-zinc-300/70 pt-5">
                                 <div>
                                     <div className="text-[10px] uppercase text-rust font-mono tracking-widest mb-1">Call the desk</div>
-                                    <a href="tel:+919876543210" className="text-sm font-medium text-ink hover:text-rust transition-colors">
+                                    <a href="tel:+919876543210" className="text-sm font-medium text-white hover:text-rust transition-colors">
                                         +91 91422 34213
                                     </a>
                                 </div>
@@ -43,13 +50,13 @@ export default function Contact() {
                                     <div className="text-[10px] uppercase text-rust font-mono tracking-widest mb-1">Email</div>
                                     <a
                                         href="mailto:fly@meridianjourneys.com"
-                                        className="text-sm font-medium text-ink hover:text-rust transition-colors break-words">
+                                        className="text-sm font-medium text-white hover:text-rust transition-colors break-words">
                                         primetraveler2773@gmail.com
                                     </a>
                                 </div>
                                 <div>
                                     <div className="text-[10px] uppercase text-rust font-mono tracking-widest mb-1">Studio</div>
-                                    <div className="text-sm font-medium text-ink leading-snug">
+                                    <div className="text-sm font-medium text-white leading-snug">
                                         Maithon, Dhanbad
                                         <br />
                                         Jharkhand, India
@@ -61,7 +68,7 @@ export default function Contact() {
 
                     {/* RIGHT COLUMN: The Form */}
                     <div className="lg:col-span-8" data-aos="fade-left" data-aos-delay="200">
-                        <div className="bg-white rounded-xl p-5 sm:p-8 shadow-sm border border-zinc-100">
+                        <div className="bg-white/80 rounded-xl p-5 sm:p-8 shadow-sm border border-zinc-100">
                             <div className="flex items-end justify-between gap-4 mb-7">
                                 <div>
                                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-rust mb-2">Plan your escape</p>
