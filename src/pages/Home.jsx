@@ -88,7 +88,7 @@ function PackageErrorState({ error, loading, retry }) {
 }
 
 export default function Home() {
-    const { packages, loading, error, retry } = usePackages();
+    const { packages, destinations, loading, error, retry } = usePackages();
 
     return (
         <main className="select-none">
@@ -180,11 +180,14 @@ export default function Home() {
                                 </div>
                             ))
                     ) : (
-                        packages.map((p, i) => (
-                            <div data-aos="fade-left" key={p._id || i} className="snap-start shrink-0 w-[280px] md:w-[350px]">
-                                <DestinationChip dest={{ name: p.location.name, img: p.img, desc: p.description }} />
-                            </div>
-                        ))
+                        destinations.map(
+                            (d, i) =>
+                                i < 4 && (
+                                    <div data-aos="fade-left" key={d._id || i} className="snap-start shrink-0 w-[280px] md:w-[350px]">
+                                        <DestinationChip dest={{ name: d.name, img: d.images?.[0].url, desc: d.description }} />
+                                    </div>
+                                ),
+                        )
                     )}
                 </div>
             </section>
