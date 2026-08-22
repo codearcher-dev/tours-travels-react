@@ -9,6 +9,7 @@ import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageC
 import PhotoAlbum from "react-photo-album";
 import "react-photo-album/styles.css";
 import Verified from "../components/ui/icons/Verified";
+import ShinyText from "../components/ui/animations/ShinyText";
 
 const testimonials = [
     {
@@ -135,11 +136,14 @@ export default function Home() {
                         />
                     </div>
 
-                    <div
-                        data-aos="fade-up"
-                        className="px-6 py-4 bg-linear-to-r from-orange-400/70 to-green-400/70 via-white/70 flex justify-center gap-2">
-                        <Verified stroke={"white"} fill={"oklch(70.7% 0.165 254.624)"} />
-                        <h3 className="font-bold font-mono text-[#51A2FF]">Verified By SIKKIM Government</h3>
+                    <div data-aos="fade-up" className="px-6 py-4 flex justify-center items-center gap-2">
+                        <Verified stroke={"white"} fill={"#60a5fa"} />
+                        <ShinyText
+                            text={"Verified by SIKKIM Government"}
+                            color="#bcbcbc"
+                            shineColor="#ffffff"
+                            className="font-extrabold text-xl font-mono"
+                        />
                     </div>
 
                     <div data-aos="fade-up" data-aos-delay="200" className="flex gap-4 justify-center">

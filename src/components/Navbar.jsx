@@ -81,7 +81,7 @@ export default function Navbar() {
                     </div>
 
                     <button className={`md:hidden p-2 ${useLightText ? "text-white" : "text-ink"}`} onClick={() => setMobileOpen(!mobileOpen)}>
-                        {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+                        {mobileOpen ? <X size={24} color="black" className="cursor-pointer" /> : <Menu size={24} className="cursor-pointer" />}
                     </button>
                 </div>
             </header>
