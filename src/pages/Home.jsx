@@ -108,7 +108,7 @@ export default function Home() {
                         <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/90 font-light flex flex-col">
                             <span className="text-paper-dim">Explore the beauty of </span>
                             <TextType
-                                text={["Darjeeling", "North Sikkim", "Kalimpong", "Mirik"]}
+                                text={["Darjeeling", "North Sikkim", "Kalimpong", "Mirik", "Gangtok"]}
                                 className="text-yellow-500 italic"
                                 typingSpeed={75}
                                 pauseDuration={1500}
