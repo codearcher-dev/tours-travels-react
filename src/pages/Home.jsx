@@ -136,7 +136,7 @@ export default function Home() {
                         />
                     </div>
 
-                    <div data-aos="fade-up" className="px-6 py-4 flex justify-center items-center gap-2">
+                    <div data-aos="fade-up" className="py-4 flex justify-center items-center gap-2">
                         <Verified stroke={"white"} fill={"#60a5fa"} />
                         <ShinyText
                             text={"Verified by SIKKIM Government"}

@@ -39,9 +39,9 @@ export default function PackageDetail() {
     const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
 
     return (
-        <main className="bg-paper-dim min-h-screen pb-16 select-none">
+        <main className="bg-paper-dim min-h-screen pb-16 overflow-x-clip select-none">
             {/* FULL BLEED EDITORIAL HERO */}
-            <div className="w-full h-[70vh] relative overf bg-ink">
+            <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
                 <img
                     key={currentImageIndex}
                     src={images[currentImageIndex]}
@@ -79,7 +79,7 @@ export default function PackageDetail() {
             {/* EDITORIAL LAYOUT: Content (Left) + Sticky Booking (Right) */}
             <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 md:pt-12 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
                 {/* Main Narrative (Left) */}
-                <div className="flex-1 lg:max-w-3xl flex flex-col gap-6 md:gap-4">
+                <div className="min-w-0 flex-1 lg:max-w-3xl flex flex-col gap-6 md:gap-4">
                     <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
                         <h2 className="font-mono text-md mb-3 uppercase text-rust">Overview</h2>
                         <p className="text-zinc-600 font-sans leading-relaxed text-lg font-light first-letter:text-5xl first-letter:font-display first-letter:mr-1 first-letter:float-left first-letter:text-ink">
@@ -179,7 +179,7 @@ export default function PackageDetail() {
                 </div>
 
                 {/* Sticky Sidebar (Right) */}
-                <div className="lg:w-[380px] shrink-0">
+                <div className="min-w-0 lg:w-[380px] shrink-0">
                     <div
                         data-aos="fade-left"
                         className="sticky top-32 bg-white rounded-2xl border border-zinc-200 p-6 md:p-8 shadow-xl shadow-zinc-200/50">
@@ -195,7 +195,7 @@ export default function PackageDetail() {
                         </p>
 
                         <Link
-                            to="/contact"
+                            to={`/contact?for=${pkg.slug}`}
                             className="block w-full text-center bg-ink text-white py-4 px-6 font-mono text-xs uppercase tracking-widest hover:bg-rust transition-colors mb-4">
                             Request Quote
                         </Link>

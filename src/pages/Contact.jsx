@@ -1,16 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import icon from "../assets/whatsapp-icon.png";
 import { usePackages } from "../context/PackageContext";
 import coverImage from "../assets/contact-cover.png";
+import { useSearchParams } from "react-router-dom";
 
 export default function Contact() {
     const [submitted, setSubmitted] = useState(false);
-    const { packages } = usePackages();
+    const { packages, loading } = usePackages();
+
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get("for");
+    const p = packages.find((item) => item.slug === id);
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [adults, setAdults] = useState();
+    const [kids, setKids] = useState();
+    const [packageName, setPackageName] = useState("");
+    const [message, setMessage] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const formData = {
+            name,
+            email,
+            phone,
+            package: packageName,
+            adults,
+            kids,
+            message,
+        };
+        console.log(formData);
         setSubmitted(true);
     };
+    useEffect(() => {
+        console.log("Setting ", p);
+        setPackageName(p?.name);
+    }, [p]);
 
     return (
         <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative">
@@ -81,6 +108,8 @@ export default function Contact() {
                                 <div className="relative">
                                     <input
                                         id="name"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
                                         className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                         type="text"
                                         placeholder="Your Name"
@@ -97,6 +126,8 @@ export default function Contact() {
                                     <div className="relative">
                                         <input
                                             id="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
                                             className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                             type="email"
                                             placeholder="Email Address"
@@ -111,6 +142,8 @@ export default function Contact() {
                                     <div className="relative">
                                         <input
                                             id="phone"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
                                             className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                             type="tel"
                                             placeholder="Phone Number"
@@ -127,12 +160,17 @@ export default function Contact() {
                                     <div className="relative">
                                         <select
                                             id="destination"
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors appearance-none cursor-pointer">
-                                            <option value="None" disabled selected>
+                                            value={packageName}
+                                            disabled={id && p ? true : false}
+                                            onChange={(e) => setPackageName(e.target.value)}
+                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors appearance-none cursor-pointer disabled:bg-gray-300">
+                                            <option value="" disabled selected>
                                                 Select Package
                                             </option>
                                             {packages.map((pkg, idx) => (
-                                                <option key={idx}>{pkg.name}</option>
+                                                <option value={pkg.name} key={idx}>
+                                                    {pkg.name}
+                                                </option>
                                             ))}
                                         </select>
                                         <div className="absolute right-3 top-3.5 pointer-events-none text-zinc-400">
@@ -145,6 +183,8 @@ export default function Contact() {
                                         <div className="relative">
                                             <input
                                                 id="adults"
+                                                value={adults}
+                                                onChange={(e) => setAdults(e.target.value)}
                                                 className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                                 type="number"
                                                 min="1"
@@ -159,6 +199,8 @@ export default function Contact() {
                                         <div className="relative">
                                             <input
                                                 id="kids"
+                                                value={kids}
+                                                onChange={(e) => setKids(e.target.value)}
                                                 className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                                 type="number"
                                                 min="0"
@@ -176,6 +218,8 @@ export default function Contact() {
                                 <div className="relative">
                                     <textarea
                                         id="message"
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
                                         className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent resize-y"
                                         rows="3"
                                         placeholder="Tell us about the trip"></textarea>
@@ -188,7 +232,7 @@ export default function Contact() {
 
                                 <div className="flex flex-col gap-3 pt-1">
                                     <button
-                                        className="w-full bg-ink text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest hover:bg-rust transition-colors flex items-center justify-center gap-3 rounded-md"
+                                        className="w-full bg-ink text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest hover:bg-rust transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer"
                                         type="submit">
                                         {submitted ? "Enquiry Sent ✓" : "Submit Enquiry"}
                                         {!submitted && (
@@ -208,7 +252,7 @@ export default function Contact() {
                                         href="https://wa.me/919142234213?text=Hello!%20I'm%20interested%20in%20booking%20a%20journey%20with%20Prime%20Traveller."
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
+                                        className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest bg-white hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
                                         Enquire via WhatsApp
                                         <img src={icon} alt="" className="w-6 h-6" />
                                     </a>
