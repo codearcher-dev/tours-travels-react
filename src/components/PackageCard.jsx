@@ -14,7 +14,7 @@ export default function PackageCard({ pkg }) {
 
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
-                <img src={pkg.img} alt={pkg.name} className="w-full h-full object-cover" />
+                <img src={pkg.img.url} alt={pkg.name} className="w-full h-full object-cover" />
             </div>
 
             {/* Gradient Overlay */}

@@ -56,10 +56,10 @@ const childVariants = {
 };
 
 const images = [
-    "https://images.unsplash.com/photo-1660626006688-409a10536e2b?q=80&w=939&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1650552859763-8ef50317abc5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fE1vdXRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
-    "https://images.unsplash.com/photo-1731800747251-539ad71a4205?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fE1vdXRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
-    "https://images.unsplash.com/photo-1587997794221-e8070e197de6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fE1vdXRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1600402808924-9c591a6dace8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8U2lra2ltfGVufDB8fDB8fHww",
+    "https://images.unsplash.com/photo-1632726823875-43dd9adad495?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fFNpa2tpbXxlbnwwfHwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1620903376453-25f5a6fd533e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fERhcmplZWxpbmd8ZW58MHx8MHx8fDA%3D",
+    "https://images.unsplash.com/photo-1671711847762-b8308b444a42?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1671984247482-1acf238bba0c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8TW91bnRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
 ];
 const galleryPhotos = images.map((src, index) => ({
@@ -95,9 +95,9 @@ export default function Home() {
         <main className="select-none">
             {/* HERO SECTION - IMMERSIVE FULL BLEED */}
             <section className="relative w-full h-screen min-h-[700px] flex pt-16 pb-8 md:pb-0 justify-center overflow-hidden">
-                <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 z-0 bg-ink">
                     <div className="w-full h-full">
-                        <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+                        <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-70" />
                         {/* Gradient overlay for text legibility */}
                         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                     </div>
@@ -139,7 +139,7 @@ export default function Home() {
                     <div data-aos="fade-up" className="py-4 flex justify-center items-center gap-2">
                         <Verified stroke={"white"} fill={"#60a5fa"} />
                         <ShinyText
-                            text={"Verified by SIKKIM Government"}
+                            text={"VERIFIED BY SIKKIM GOVERNMENT"}
                             color="#bcbcbc"
                             shineColor="#ffffff"
                             className="font-extrabold text-xl font-mono"

@@ -39,9 +39,9 @@ export default function Navbar() {
                     }`}>
                     <NavLink to="/" className="flex items-center gap-2">
                         <img src={logo} alt="Prime Traveller Logo" className="h-12" />
-                        <span
-                            className={`font-display italic font-semibold text-xl tracking-tight whitespace-nowrap ${useLightText ? "text-white" : "text-ink"}`}>
-                            Prime Traveller
+                        <span className={`tracking-tight whitespace-nowrap ${useLightText ? "text-white" : "text-ink"}`}>
+                            <p className="font-sans font-bold uppercase text-xl">Prime Traveller</p>
+                            <p className="font-display font-semibold italic text-xs text-center">All over India tour package</p>
                         </span>
                     </NavLink>
 

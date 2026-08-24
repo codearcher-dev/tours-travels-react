@@ -44,7 +44,7 @@ export default function PackageDetail() {
             <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
                 <img
                     key={currentImageIndex}
-                    src={images[currentImageIndex]}
+                    src={images[currentImageIndex].url}
                     alt={`${pkg.name} - ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover absolute inset-0 opacity-50"
                 />

@@ -1,7 +1,7 @@
 import icon from "../assets/whatsapp-icon.png";
 export default function WhatsAppSticky() {
     const phoneNumber = "919142234213";
-    const message = encodeURIComponent("Hello! I'm interested in booking a journey with Prime Traveller.");
+    const message = encodeURIComponent("Hello! I just saw a package in your site and I'm interested in booking a package.");
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
     return (
