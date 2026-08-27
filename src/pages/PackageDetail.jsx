@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePackages } from "../context/PackageContext";
 import Timeline from "../components/Itinerary";
 import { MapPin, ArrowLeft, ArrowRight, X } from "lucide-react";
@@ -15,6 +15,33 @@ export default function PackageDetail() {
     const pkg = packages.find((p) => p.slug === slug);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
+    const [galleryPhotos, setGalleryPhotos] = useState([]);
+
+    const images = pkg ? pkg.images || [pkg.img] : [];
+
+    useEffect(() => {
+        const getImageDimensions = (src) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    resolve({
+                        src,
+                        width: img.naturalWidth,
+                        height: img.naturalHeight,
+                    });
+                };
+                img.src = src;
+            });
+        };
+
+        Promise.all(images.map((src) => getImageDimensions(src.url))).then((data) => {
+            setGalleryPhotos(data);
+            // Yahan aapko har image ki width aur height mil jayegi
+        });
+    }, []);
+
+    const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
 
     if (!pkg) {
         return (
@@ -27,19 +54,8 @@ export default function PackageDetail() {
         );
     }
 
-    const images = pkg.images || [pkg.img];
-    const galleryPhotos = images.map((src, index) => ({
-        src,
-        width: 1200,
-        height: 800,
-        alt: `${pkg.name} - gallery image ${index + 1}`,
-    }));
-
-    const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-
     return (
-        <main className="bg-paper-dim min-h-screen pb-16 overflow-x-clip select-none">
+        <main className="bg-paper min-h-screen pb-16 overflow-x-clip select-none">
             {/* FULL BLEED EDITORIAL HERO */}
             <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
                 <img
@@ -81,17 +97,15 @@ export default function PackageDetail() {
                 {/* Main Narrative (Left) */}
                 <div className="min-w-0 flex-1 lg:max-w-3xl flex flex-col gap-6 md:gap-4">
                     <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
-                        <h2 className="font-mono text-md mb-3 uppercase text-rust">Overview</h2>
-                        <p className="text-zinc-600 font-sans leading-relaxed text-lg font-light first-letter:text-5xl first-letter:font-display first-letter:mr-1 first-letter:float-left first-letter:text-ink">
-                            {pkg.description}
-                        </p>
+                        <h2 className="font-mono text-xs mb-3 uppercase text-rust">Overview</h2>
+                        <p className="text-zinc-600 font-sans leading-relaxed text-md font-light">{pkg.description}</p>
                     </div>
 
                     <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 gap-8 bg-white rounded-2xl p-6 md:p-8 shadow-sm">
                         <div>
                             <div className="font-mono text-xs uppercase tracking-widest text-rust mb-2">Duration</div>
-                            <div className="font-display text-2xl">
-                                {pkg.duration.days} Days / {pkg.duration.nights} Nights
+                            <div className="font-light text-lgl">
+                                {pkg.duration.nights} Nights / {pkg.duration.days} Days
                             </div>
                         </div>
                         {/* <div>
