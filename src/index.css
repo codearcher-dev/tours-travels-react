@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-    --color-ink: #022c22;
-    --color-ink-soft: #064e3b;
-    --color-paper: #f0f5f3;
-    --color-paper-dim: #d4d9d8;
-    --color-gold: #c45e3b;
-    --color-gold-deep: #9c4729;
-    --color-teal: #059669;
-    --color-teal-deep: #064e3b;
-    --color-rust: #c45e3b;
-    --color-white: #f0fdf4;
-    --color-line: #a7f3d0;
+    --color-ink: #0a192f;
+    --color-ink-soft: #112240;
+    --color-paper: #f8f5f2;
+    --color-paper-dim: #eae3d9;
+    --color-gold: #d4af37;
+    --color-gold-deep: #b5952f;
+    --color-teal: #4a90e2;
+    --color-teal-deep: #357abd;
+    --color-rust: #e07a5f;
+    --color-white: #ffffff;
+    --color-line: #cbd5e1;
     --font-display: 'Playfair Display', serif;
     --font-mono: 'Space Grotesk', sans-serif;
     --font-sans: 'Inter', sans-serif;
@@ -34,7 +34,7 @@
     }
 
     body {
-        @apply bg-paper text-ink font-sans m-0 antialiased selection:bg-gold selection:text-white;
+        @apply bg-paper text-ink m-0 antialiased selection:bg-gold selection:text-white;
     }
 
     h1,
@@ -43,7 +43,7 @@
     h4,
     h5,
     h6 {
-        @apply font-display tracking-tight;
+        @apply tracking-tight;
     }
 
     @media (prefers-reduced-motion: reduce) {

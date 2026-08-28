@@ -74,12 +74,11 @@ export default function Contact() {
     };
 
     useEffect(() => {
-        console.log("Setting ", p);
         setPkg(p?.name);
     }, [p]);
 
     return (
-        <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative">
+        <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative overflow-x-clip">
             <div className="absolute inset-0 z-0 w-full bg-ink">
                 <div className="w-full h-full">
                     <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-70" />
@@ -121,7 +120,7 @@ export default function Contact() {
                                     </a>
                                 </div>
                                 <div>
-                                    <div className="text-[10px] uppercase text-rust font-mono tracking-widest mb-1">Studio</div>
+                                    <div className="text-[10px] uppercase text-rust tracking-widest mb-1">Studio</div>
                                     <div className="text-sm font-medium text-white leading-snug">
                                         Maithon, Dhanbad
                                         <br />
@@ -137,8 +136,8 @@ export default function Contact() {
                         <div className="bg-white/80 rounded-xl p-5 sm:p-8 shadow-sm border border-zinc-100">
                             <div className="flex items-end justify-between gap-4 mb-7">
                                 <div>
-                                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-rust mb-2">Plan your escape</p>
-                                    <h3 className="font-display text-2xl sm:text-3xl font-medium text-ink">Send an enquiry</h3>
+                                    <p className="text-[10px] uppercase tracking-[0.2em] text-rust mb-2">Plan your escape</p>
+                                    <h3 className="text-2xl sm:text-3xl font-medium text-ink">Send an enquiry</h3>
                                 </div>
                                 <span className="hidden sm:block text-xs text-zinc-400">We reply within one working day.</span>
                             </div>
@@ -156,7 +155,7 @@ export default function Contact() {
                                     />
                                     <label
                                         htmlFor="name"
-                                        className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                        className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
                                         Full Name
                                     </label>
                                 </div>
@@ -173,7 +172,7 @@ export default function Contact() {
                                         />
                                         <label
                                             htmlFor="email"
-                                            className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                            className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
                                             Email Address {"(Optional)"}
                                         </label>
                                     </div>
@@ -189,7 +188,7 @@ export default function Contact() {
                                         />
                                         <label
                                             htmlFor="phone"
-                                            className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                            className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
                                             Phone Number
                                         </label>
                                     </div>
@@ -233,7 +232,7 @@ export default function Contact() {
                                             />
                                             <label
                                                 htmlFor="adults"
-                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
                                                 Adults
                                             </label>
                                         </div>
@@ -249,7 +248,7 @@ export default function Contact() {
                                             />
                                             <label
                                                 htmlFor="kids"
-                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
                                                 Kids
                                             </label>
                                         </div>
@@ -266,14 +265,14 @@ export default function Contact() {
                                         placeholder="Tell us about the trip"></textarea>
                                     <label
                                         htmlFor="message"
-                                        className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                        className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
                                         Tell us about the trip (Dates, occasion, budget...)
                                     </label>
                                 </div>
 
                                 <div className="flex flex-col gap-3 pt-1">
                                     <button
-                                        className={`w-full text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
+                                        className={`w-full text-white py-3.5 px-6 text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
                                         type="submit"
                                         disabled={submitted}>
                                         {submitted ? "Enquiry Completed ✓" : "Submit Enquiry"}
@@ -286,14 +285,14 @@ export default function Contact() {
 
                                     <div className="flex items-center gap-4">
                                         <div className="h-px bg-zinc-200 flex-1"></div>
-                                        <span className="text-xs uppercase tracking-widest font-mono text-zinc-400">Or</span>
+                                        <span className="text-xs uppercase tracking-widest text-zinc-400">Or</span>
                                         <div className="h-px bg-zinc-200 flex-1"></div>
                                     </div>
 
                                     <button
                                         onClick={handleWhatsAppEnquiry}
                                         rel="noopener noreferrer"
-                                        className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest bg-white hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
+                                        className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 text-xs uppercase tracking-widest bg-white hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
                                         <img src={icon} alt="" className="w-6 h-6" />
                                         Enquire via WhatsApp
                                     </button>

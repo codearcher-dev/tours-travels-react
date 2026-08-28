@@ -24,23 +24,23 @@ export default function PackageCard({ pkg }) {
             <div className="absolute inset-0 z-10 flex flex-col justify-between p-6 md:p-8">
                 {/* Top: Duration Badge */}
                 <div className="flex justify-end">
-                    <div className="bg-white text-ink px-5 py-2 rounded-full text-sm font-display font-extrabold tracking-wide shadow-xl transform translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500">
+                    <div className="bg-white text-ink px-5 py-2 rounded-full text-sm font-extrabold tracking-wide shadow-xl transform translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500">
                         {pkg.duration.days} Days / {pkg.duration.nights} Nights
                     </div>
                 </div>
 
                 {/* Bottom: Text & Price */}
                 <div className="flex flex-col">
-                    <h3 className="font-display text-white text-3xl mb-2 group-hover:-translate-y-2 transition-transform duration-500">{pkg.name}</h3>
+                    <h3 className="text-white text-2xl mb-2 group-hover:-translate-y-2 transition-transform duration-500">{pkg.name}</h3>
 
                     {/* Expandable description on hover */}
                     <div className="overflow-hidden h-0 group-hover:h-auto opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out mb-4">
-                        <p className="text-white/80 text-sm leading-relaxed line-clamp-2 font-sans font-light">{pkg.description}</p>
+                        <p className="text-white/80 text-sm leading-relaxed line-clamp-2 font-light">{pkg.description}</p>
                     </div>
 
                     <div className="flex items-end justify-between pt-4 border-t border-white/20 group-hover:border-white/40 transition-colors duration-500">
                         <div>
-                            <span className="block text-[10px] text-white/60 font-mono uppercase tracking-widest mb-1">Starting From</span>
+                            <span className="block text-[10px] text-white/60 uppercase tracking-widest mb-1">Starting From</span>
                             <div className="flex items-center gap-3">
                                 <span className="text-white text-xl font-medium tracking-tight">₹{pkg.price.discounted.toLocaleString()}</span>
                                 <span className="text-white/40 text-sm line-through">₹{pkg.price.actual}</span>

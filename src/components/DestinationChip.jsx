@@ -27,8 +27,8 @@ export default function DestinationChip({ dest }) {
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 
             <div className="absolute inset-x-0 bottom-0 z-20 p-6 flex flex-col justify-end">
-                <div className="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-2">Featured</div>
-                <h3 className="font-display text-white text-3xl font-medium mb-1">{dest.name}</h3>
+                <div className="text-[10px] text-white/60 uppercase tracking-widest mb-2">Featured</div>
+                <h3 className="text-white text-3xl font-medium mb-1">{dest.name}</h3>
             </div>
         </button>
     );

@@ -47,7 +47,7 @@ export default function PackageDetail() {
     if (!pkg) {
         return (
             <main className="min-h-screen flex flex-col items-center justify-center px-4 md:px-8">
-                <h1 className="font-display text-4xl mb-4">Journey not found</h1>
+                <h1 className="text-4xl mb-4">Journey not found</h1>
                 <Link to="/packages" className="btn btn-primary">
                     Return to Collection
                 </Link>
@@ -90,7 +90,7 @@ export default function PackageDetail() {
             </div>
 
             <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 md:pt-12 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
-                <h2 className="font-display text-3xl text-rust">Package Detail</h2>
+                <h2 className="text-3xl text-rust">Package Detail</h2>
             </div>
 
             {/* EDITORIAL LAYOUT: Content (Left) + Sticky Booking (Right) */}
@@ -98,31 +98,21 @@ export default function PackageDetail() {
                 {/* Main Narrative (Left) */}
                 <div className="min-w-0 flex-1 lg:max-w-3xl flex flex-col gap-6 md:gap-4">
                     <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                        <h2 className="font-mono text-xs mb-3 uppercase text-rust">Overview</h2>
-                        <p className="text-zinc-600 font-sans leading-relaxed text-md font-light">{pkg.description}</p>
+                        <h2 className="text-xs mb-3 uppercase text-rust">Overview</h2>
+                        <p className="text-zinc-600 leading-relaxed text-md font-light">{pkg.description}</p>
                     </div>
 
                     <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <div>
-                            <div className="font-mono text-xs uppercase tracking-widest text-rust mb-2">Duration</div>
+                            <div className="text-xs uppercase tracking-widest text-rust mb-2">Duration</div>
                             <div className="font-light text-lgl">
                                 {pkg.duration.nights} Nights / {pkg.duration.days} Days
                             </div>
                         </div>
-                        {/* <div>
-                            <div className="font-mono text-xs uppercase tracking-widest text-zinc-400 mb-2">Map</div>
-                            <a
-                                href={pkg.location.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-2 font-display text-xl hover:text-rust transition-colors">
-                                <MapPin className="w-5 h-5 text-rust" /> Open Coordinates
-                            </a>
-                        </div> */}
                     </div>
 
                     <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                        <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6">Destinations Covered</h3>
+                        <h3 className="text-xs uppercase tracking-widest text-rust mb-6">Destinations Covered</h3>
                         <div className="flex flex-wrap gap-3">
                             {pkg.destinations.map((dest, index) => (
                                 <span
@@ -136,7 +126,7 @@ export default function PackageDetail() {
 
                     <div data-aos="fade-up" className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <div>
-                            <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">
+                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">
                                 What's Included
                             </h3>
                             <ul className="flex flex-col gap-3">
@@ -153,7 +143,7 @@ export default function PackageDetail() {
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Not Included</h3>
+                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Not Included</h3>
                             <ul className="flex flex-col gap-3">
                                 {pkg.exclusions && pkg.exclusions.length > 0 ? (
                                     pkg.exclusions.map((exc, index) => (
@@ -176,7 +166,7 @@ export default function PackageDetail() {
                     {/* Image Gallery */}
                     {images.length > 1 && (
                         <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                            <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Gallery</h3>
+                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Gallery</h3>
                             <PhotoAlbum
                                 layout="rows"
                                 photos={galleryPhotos}
@@ -198,11 +188,11 @@ export default function PackageDetail() {
                     <div
                         data-aos="fade-left"
                         className="sticky top-32 bg-paper-dim rounded-2xl border border-zinc-200 p-6 md:p-8 shadow-xl shadow-zinc-200/50">
-                        <div className="font-mono text-xs uppercase tracking-widest text-rust mb-2">Starting Price</div>
+                        <div className="text-xs uppercase tracking-widest text-rust mb-2">Starting Price</div>
                         <div className="flex items-baseline gap-3 mb-8 border-b border-zinc-100 pb-6">
-                            <span className="font-display text-4xl">₹{pkg.price.discounted.toLocaleString()}</span>
+                            <span className="text-4xl">₹{pkg.price.discounted.toLocaleString()}</span>
                             <span className="text-red-600 line-through text-sm">₹{pkg.price.actual}</span>
-                            <span className="text-xs text-zinc-400 ml-auto uppercase font-mono">/ Person</span>
+                            <span className="text-xs text-zinc-400 ml-auto uppercase">/ Person</span>
                         </div>
 
                         <p className="text-sm text-zinc-500 mb-8 font-light">
@@ -211,11 +201,11 @@ export default function PackageDetail() {
 
                         <Link
                             to={`/contact?enq=${pkg.slug}`}
-                            className="block w-full text-center bg-ink text-white py-4 px-6 font-mono text-xs uppercase tracking-widest hover:bg-rust transition-colors mb-4">
+                            className="block w-full text-center bg-ink text-white py-4 px-6 text-xs uppercase tracking-widest hover:bg-rust transition-colors mb-4">
                             Request Quote
                         </Link>
 
-                        <div className="text-center text-xs text-zinc-400 font-mono">No commitment required.</div>
+                        <div className="text-center text-xs text-zinc-400">No commitment required.</div>
                     </div>
                 </div>
             </div>

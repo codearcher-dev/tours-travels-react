@@ -1,11 +1,12 @@
-import team from "../data/team";
+import images from "../data/customerImages.js";
 import coverImage from "../assets/about-cover.png";
+import photo6 from "../assets/about/photo6.jpeg";
 
 const stats = [
-    { num: "4,120", label: "Itineraries Drawn" },
-    { num: "42", label: "Places Covered" },
-    { num: "9.4", label: "Avg. Traveler Rating" },
-    { num: "10", label: "Years Plotting Routes" },
+    { num: "1000+", label: "Happy Customers" },
+    { num: "700+", label: "Tours Completed" },
+    { num: "4.6/5.0", label: "Avg. Traveler Rating" },
+    // { num: "10", label: "Years Plotting Routes" },
 ];
 
 const whyUs = [
@@ -17,7 +18,7 @@ const whyUs = [
 
 export default function About() {
     return (
-        <main className="select-none">
+        <main className="select-none overflow-x-clip">
             {/* HERO / STORY */}
             <div className="relative w-full min-h-screen flex items-center pt-28 pb-20">
                 <div className="absolute inset-0 z-0 bg-ink">
@@ -43,33 +44,29 @@ export default function About() {
                         </p>
                     </div>
                     <div data-aos="fade-left" className="lg:col-span-5 relative h-[300px] md:h-[400px] w-full">
-                        <img
-                            src="https://images.unsplash.com/photo-1670020112207-0e3592080eac?q=80&w=711&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="Team planning a route"
-                            className="w-full h-full object-cover rounded-md"
-                        />
+                        <img src={photo6} alt="group image" className="w-full h-full object-cover rounded-md" />
                     </div>
                 </section>
             </div>
 
             {/* STATS STRIP */}
             <section className="border-y border-zinc-200 bg-paper-dim">
-                <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-10 grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+                <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-10 grid grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
                     {stats.map((s, i) => (
-                        <div data-aos="fade-up" data-aos-delay={i * 100} className="text-center" key={s.label}>
-                            <div className="font-display text-4xl md:text-5xl text-ink mb-4">{s.num}</div>
-                            <div className="text-xs uppercase text-zinc-500 font-mono tracking-widest">{s.label}</div>
+                        <div data-aos="fade-up" data-aos-delay={i * 100} className="text-center" key={i}>
+                            <div className="text-4xl md:text-5xl text-ink mb-4">{s.num}</div>
+                            <div className="text-xs uppercase text-zinc-500 tracking-widest">{s.label}</div>
                         </div>
                     ))}
                 </div>
             </section>
             {/* MISSION & VISION */}
-            <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-16 md:py-24">
+            <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                     {/* Mission */}
                     <div data-aos="fade-right">
-                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Our Mission</span>
-                        <h2 className="font-display text-3xl md:text-4xl text-ink mb-8">What drives us forward</h2>
+                        <span className="text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Our Mission</span>
+                        <h2 className="text-3xl md:text-4xl text-ink mb-8">What drives us forward</h2>
                         <div className="space-y-6">
                             <div className="flex gap-4">
                                 <div className="text-rust mt-1 flex-shrink-0">
@@ -128,9 +125,9 @@ export default function About() {
                     <div
                         data-aos="fade-left"
                         className="bg-paper-dim p-8 md:p-12 rounded-2xl flex flex-col justify-center h-full border border-zinc-200">
-                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Our Vision</span>
-                        <h2 className="font-display text-3xl md:text-4xl text-ink mb-6">Setting the benchmark</h2>
-                        <p className="text-zinc-600 font-light leading-relaxed text-lg">
+                        <span className="text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Our Vision</span>
+                        <h2 className="text-3xl md:text-4xl text-ink mb-6">Setting the benchmark</h2>
+                        <p className="text-zinc-600 font-light leading-relaxed text-md">
                             To become India’s most trusted and preferred travel service provider, setting the benchmark in tourism through
                             personalized itineraries, responsible travel practices, and exceptional service standards.
                         </p>
@@ -139,15 +136,15 @@ export default function About() {
             </section>
 
             {/* WHY CHOOSE US */}
-            <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-12 md:py-20">
+            <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
                 <div data-aos="fade-up" className="mb-12">
-                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-6 block text-center">Timeline</span>
-                    <h2 className="font-display text-4xl md:text-6xl text-center">Why choose us ?</h2>
+                    <span className="text-xs uppercase tracking-[0.2em] text-rust mb-6 block text-center">Timeline</span>
+                    <h2 className="text-4xl md:text-6xl text-center">Why choose us ?</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 md:gap-x-20 gap-y-10 max-w-4xl mx-auto">
                     {whyUs.map((t, i) => (
-                        <div data-aos="fade-up" data-aos-delay={i * 100} key={t.year} className="flex flex-col">
+                        <div data-aos="fade-up" data-aos-delay={i * 100} key={i} className="flex flex-col">
                             <h4 className="text-xl font-medium mb-3 text-rust">{t.title}</h4>
                             <p className="text-zinc-500 font-light leading-relaxed">{t.desc}</p>
                         </div>
@@ -156,25 +153,22 @@ export default function About() {
             </section>
 
             {/* TEAM */}
-            <section className="bg-ink text-white py-16 md:py-24">
+            <section className="bg-ink text-white py-16 md:py-24 border-b-2 border-gray-400">
                 <div className="max-w-[1200px] mx-auto px-4 md:px-8">
                     <div data-aos="fade-up" className="mb-12 text-center">
-                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-6 block">The Desk</span>
-                        <h2 className="font-display text-4xl md:text-6xl">People behind the routes</h2>
+                        <span className="text-xs uppercase tracking-[0.2em] text-rust mb-6 block">The Desk</span>
+                        <h2 className="text-4xl md:text-6xl">Our happy customers</h2>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
-                        {team.map((m, i) => (
+                        {images.map((m, i) => (
                             <div data-aos="fade-up" data-aos-delay={i * 100} className="group" key={m.name}>
                                 <div className="aspect-[3/4] relative overflow-hidden mb-6 bg-zinc-800">
                                     <img
-                                        src={m.img}
-                                        alt={m.name}
-                                        className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                                        src={m}
+                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700"
                                     />
                                 </div>
-                                <div className="text-xl font-display mb-1">{m.name}</div>
-                                <div className="text-xs text-zinc-400 font-mono uppercase tracking-widest">{m.role}</div>
                             </div>
                         ))}
                     </div>

@@ -64,7 +64,7 @@ export default function Packages() {
     };
 
     return (
-        <main className="pb-16 min-h-screen bg-paper select-non">
+        <main className="pb-16 min-h-screen bg-paper select-none overflow-x-clip">
             <div className="relative w-full h-screen min-h-[700px] flex flex-col justify-center overflow-hidden bg-ink">
                 <div className="absolute inset-0 z-0">
                     <div className="w-full h-full">
@@ -90,7 +90,7 @@ export default function Packages() {
             </div>
 
             <div data-aos="fade-up" className="max-w-[1200px] mx-auto my-8 px-4 md:px-8 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
-                <h2 className="font-display text-3xl text-rust">All Packages</h2>
+                <h2 className="text-3xl text-rust">All Packages</h2>
             </div>
 
             <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 mb-10">
@@ -228,7 +228,7 @@ export default function Packages() {
                             <button
                                 type="button"
                                 onClick={resetFilters}
-                                className="self-start sm:self-auto font-mono uppercase tracking-widest text-rust hover:text-ink transition-colors">
+                                className="self-start sm:self-auto uppercase tracking-widest text-rust hover:text-ink transition-colors">
                                 Clear filters
                             </button>
                         )}
@@ -240,12 +240,12 @@ export default function Packages() {
                 {error ? (
                     <div className="col-span-full border border-rust/30 bg-white px-6 py-10 md:px-10 md:py-12 text-center select-none">
                         <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-red-500/40 text-red-500">
-                            <span className="font-display text-2xl" aria-hidden="true">
+                            <span className="text-2xl" aria-hidden="true">
                                 !
                             </span>
                         </div>
-                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-3">Unable to load packages</p>
-                        <h3 className="font-display text-2xl md:text-3xl text-ink mb-3">The departure board is taking a pause.</h3>
+                        <p className="text-xs uppercase tracking-[0.2em] text-rust mb-3">Unable to load packages</p>
+                        <h3 className="text-2xl md:text-3xl text-ink mb-3">The departure board is taking a pause.</h3>
                         <p className="mx-auto max-w-md text-sm leading-relaxed text-zinc-500">{error}</p>
                         <button
                             type="button"
@@ -271,7 +271,7 @@ export default function Packages() {
                     ))
                 ) : (
                     <div className="col-span-full border border-zinc-200 bg-white px-6 py-12 text-center">
-                        <h3 className="font-display text-2xl text-ink mb-2">No journeys match those filters.</h3>
+                        <h3 className="text-2xl text-ink mb-2">No journeys match those filters.</h3>
                         <p className="text-sm text-zinc-500 mb-5">Try a broader search or clear one of the filters.</p>
                         <button type="button" onClick={resetFilters} className="btn btn-secondary">
                             Clear filters

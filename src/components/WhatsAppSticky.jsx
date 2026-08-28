@@ -11,7 +11,7 @@ export default function WhatsAppSticky() {
             rel="noopener noreferrer"
             className="whatsapp-sticky fixed bottom-6 right-6 z-[100] text-white rounded-full shadow-lg shadow-[#25D366]/30 hover:shadow-xl hover:scale-110 transition-all duration-300"
             aria-label="Chat on WhatsApp">
-            <img src={icon} alt="" className="w-12 h-12" />
+            <img src={icon} alt="" className="w-14 h-14" />
         </a>
     );
 }

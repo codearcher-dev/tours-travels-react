@@ -37,11 +37,16 @@ export default function Navbar() {
                             ? "bg-white backdrop-blur-md shadow-md w-[95%] md:w-[90%] max-w-[1000px] rounded-full"
                             : "bg-transparent w-full max-w-[1200px]"
                     }`}>
-                    <NavLink to="/" className="flex items-center gap-2">
-                        <img src={logo} alt="Prime Traveller Logo" className="h-12" />
-                        <span className={`tracking-tight whitespace-nowrap ${useLightText ? "text-white" : "text-ink"}`}>
-                            <p className="font-sans font-bold uppercase text-xl">Prime Traveller</p>
-                            <p className="font-display font-semibold italic text-xs text-center">All over India tour package</p>
+                    <NavLink to="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                        <img src={logo} alt="Prime Traveller Logo" className="h-10 sm:h-12 w-auto shrink-0" />
+                        <span
+                            className={`tracking-tight flex flex-col justify-center whitespace-nowrap shrink-0 ${useLightText ? "text-white" : "text-ink"}`}>
+                            <p className={`font-sans font-bold uppercase text-[20px] sm:text-xl ${mobileOpen ? "text-black" : ""} `}>
+                                Prime Traveller
+                            </p>
+                            <p className={`font-display font-semibold italic text-[10px] sm:text-xs ${mobileOpen ? "text-black" : ""}`}>
+                                All over India tour package
+                            </p>
                         </span>
                     </NavLink>
 
@@ -52,7 +57,7 @@ export default function Navbar() {
                                 to={link.path}
                                 end={link.path === "/"}
                                 className={({ isActive }) => `
-                                    px-5 py-2 text-[14px] font-sans transition-colors rounded-full
+                                    px-3 lg:px-5 py-2 text-[13px] lg:text-[14px] font-sans transition-colors rounded-full
                                     ${
                                         isActive
                                             ? useLightText
@@ -71,7 +76,7 @@ export default function Navbar() {
                     <div className="hidden md:block">
                         <NavLink
                             to="/contact"
-                            className={`text-[13px] font-medium tracking-wide uppercase px-6 py-2.5 rounded-full border transition-colors shadow-sm ${
+                            className={`text-[12px] lg:text-[13px] font-medium tracking-wide uppercase px-4 lg:px-6 py-2 lg:py-2.5 rounded-full border transition-colors shadow-sm shrink-0 ${
                                 useLightText
                                     ? "bg-transparent text-white border-white hover:bg-white hover:text-ink"
                                     : "bg-ink text-paper border-ink hover:bg-transparent hover:text-ink"
@@ -80,7 +85,9 @@ export default function Navbar() {
                         </NavLink>
                     </div>
 
-                    <button className={`md:hidden p-2 ${useLightText ? "text-white" : "text-ink"}`} onClick={() => setMobileOpen(!mobileOpen)}>
+                    <button
+                        className={`md:hidden p-2 shrink-0 ${useLightText ? "text-white" : "text-ink"}`}
+                        onClick={() => setMobileOpen(!mobileOpen)}>
                         {mobileOpen ? <X size={24} color="black" className="cursor-pointer" /> : <Menu size={24} className="cursor-pointer" />}
                     </button>
                 </div>

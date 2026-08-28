@@ -16,7 +16,7 @@ export default function Footer() {
                                     <span className="text-gold italic">Traveller.</span>
                                 </h2>
                             </div>
-                            <p className="text-zinc-400 text-lg max-w-md font-sans font-light leading-relaxed">
+                            <p className="text-zinc-400 text-md max-w-md font-sans font-light leading-relaxed">
                                 Hand-plotted tour itineraries across the globe. Route design, ground logistics and traveler support, handled with
                                 care.
                             </p>
@@ -78,7 +78,7 @@ export default function Footer() {
                         <h3 className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2 lg:mb-6 select-none">Contact</h3>
                         <ul className="flex lg:flex-col gap-4 font-sans text-sm text-zinc-300">
                             <li className="">
-                                <a href="mailto:primetraveller2773@gmail.com" className="hover:text-gold transition-colors">
+                                <a href="mailto:primetraveler2773@gmail.com" className="hover:text-gold transition-colors">
                                     primetraveler2773@gmail.com
                                 </a>
                             </li>
