@@ -61,12 +61,12 @@ export default function PackageDetail() {
             <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
                 <img
                     key={currentImageIndex}
-                    src={images[currentImageIndex].url}
+                    src={images[currentImageIndex]?.url}
                     alt={`${pkg.name} - ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover absolute inset-0 opacity-50"
                 />
 
-                {images.length > 1 && (
+                {images?.length > 1 && (
                     <div className="absolute bottom-8 right-4 md:bottom-12 md:right-12 flex gap-4 z-20">
                         <button
                             onClick={prevImage}
@@ -126,9 +126,7 @@ export default function PackageDetail() {
 
                     <div data-aos="fade-up" className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <div>
-                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">
-                                What's Included
-                            </h3>
+                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">What's Included</h3>
                             <ul className="flex flex-col gap-3">
                                 {pkg.inclusions && pkg.inclusions.length > 0 ? (
                                     pkg.inclusions.map((inc, index) => (

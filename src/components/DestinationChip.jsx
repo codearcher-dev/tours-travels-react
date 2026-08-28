@@ -12,8 +12,8 @@ export default function DestinationChip({ dest }) {
             <div className="absolute inset-0 z-0">
                 {!imgError ? (
                     <img
-                        src={dest.img}
-                        alt={dest.name}
+                        src={dest?.img}
+                        alt={dest?.name}
                         onError={() => setImgError(true)}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -28,7 +28,7 @@ export default function DestinationChip({ dest }) {
 
             <div className="absolute inset-x-0 bottom-0 z-20 p-6 flex flex-col justify-end">
                 <div className="text-[10px] text-white/60 uppercase tracking-widest mb-2">Featured</div>
-                <h3 className="text-white text-3xl font-medium mb-1">{dest.name}</h3>
+                <h3 className="text-white text-3xl font-medium mb-1">{dest?.name}</h3>
             </div>
         </button>
     );

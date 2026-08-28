@@ -46,11 +46,15 @@ const Timeline = ({ itinerary, className, style }) => {
                                                 {item.mealsIncluded && (
                                                     <li className="flex flex-wrap items-start gap-1 text-zinc-700 text-xs">
                                                         <span className="w-1 h-1 bg-rust rounded-full mt-2 shrink-0"></span>
-                                                        <div className="flex gap-0.5">
+                                                        <div className="flex gap-0.5 items-center">
                                                             Breakfast{item.mealsIncluded.breakfast ? <Tick /> : <Cross />}
                                                         </div>
-                                                        <div className="flex gap-0.5">Lunch {item.mealsIncluded.lunch ? <Tick /> : <Cross />}</div>
-                                                        <div className="flex gap-0.5">Dinner {item.mealsIncluded.dinner ? <Tick /> : <Cross />}</div>
+                                                        <div className="flex gap-0.5 items-center">
+                                                            Lunch {item.mealsIncluded.lunch ? <Tick /> : <Cross />}
+                                                        </div>
+                                                        <div className="flex gap-0.5 items-center">
+                                                            Dinner {item.mealsIncluded.dinner ? <Tick /> : <Cross />}
+                                                        </div>
                                                     </li>
                                                 )}
                                             </ul>
