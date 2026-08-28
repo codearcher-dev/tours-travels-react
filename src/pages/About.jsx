@@ -51,7 +51,7 @@ export default function About() {
             </section>
 
             {/* STATS STRIP */}
-            <section className="border-y border-zinc-200 bg-paper-dim pt-8">
+            <section className="border-y border-zinc-200 bg-paper-dim">
                 <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-10 grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                     {stats.map((s, i) => (
                         <div data-aos="fade-up" data-aos-delay={i * 100} className="text-center" key={s.label}>

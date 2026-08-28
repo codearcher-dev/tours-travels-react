@@ -17,8 +17,6 @@ export const PackageProvider = ({ children }) => {
         try {
             const packagesData = await getAllPackages();
             const destinationData = await getDestinations();
-            console.log(destinationData);
-
             setPackages(packagesData.packages);
             setDestinations(destinationData.destinations);
         } catch (error) {
@@ -32,7 +30,9 @@ export const PackageProvider = ({ children }) => {
         fetch();
     }, []);
 
-    return <PackageContext.Provider value={{ packages, destinations, loading, error, retry: fetch }}>{children}</PackageContext.Provider>;
+    return (
+        <PackageContext.Provider value={{ packages, destinations, setPackages, loading, error, retry: fetch }}>{children}</PackageContext.Provider>
+    );
 };
 
 export const usePackages = () => useContext(PackageContext);

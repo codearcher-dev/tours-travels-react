@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import icon from "../assets/whatsapp-icon.png";
 import { usePackages } from "../context/PackageContext";
 import coverImage from "../assets/contact-cover.png";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { sendEnquiry } from "../services/enquiry.services";
 
 export default function Contact() {
-    const [submitted, setSubmitted] = useState(false);
+    const [submitted, setSubmitted] = useState(Boolean(localStorage.getItem("submitted")) || false);
     const { packages, loading } = usePackages();
+    const navigate = useNavigate();
+    const phoneNumber = "916299915927";
 
     const [searchParams] = useSearchParams();
-    const id = searchParams.get("for");
+    const id = searchParams.get("enq");
     const p = packages.find((item) => item.slug === id);
 
     const [name, setName] = useState("");
@@ -17,26 +20,62 @@ export default function Contact() {
     const [phone, setPhone] = useState("");
     const [adults, setAdults] = useState();
     const [kids, setKids] = useState();
-    const [packageName, setPackageName] = useState("");
+    const [pkg, setPkg] = useState("");
     const [message, setMessage] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (submitted) {
+            return;
+        }
         const formData = {
             name,
             email,
             phone,
-            package: packageName,
+            package: pkg,
             adults,
             kids,
             message,
         };
-        console.log(formData);
-        setSubmitted(true);
+
+        try {
+            const data = await sendEnquiry(formData);
+            setName("");
+            setEmail("");
+            setPhone("");
+            setPkg("");
+            setAdults();
+            setKids();
+            setMessage("");
+            localStorage.setItem("submitted", true);
+            setSubmitted(true);
+            if (id) {
+                navigate("/contact");
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
     };
+
+    const handleWhatsAppEnquiry = (e) => {
+        e.preventDefault();
+        const whatsappMessage = `Hey! I am *_${name}_* and I want to enquire about a package.\nPackage : *_${pkg}_*\nAdults : ${adults}\nKids :${kids}\nPhone no. : ${phone}`;
+        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`, "_blank");
+        setName("");
+        setEmail("");
+        setPhone("");
+        setPkg("");
+        setAdults();
+        setKids();
+        setMessage("");
+        if (id) {
+            navigate("/contact");
+        }
+    };
+
     useEffect(() => {
         console.log("Setting ", p);
-        setPackageName(p?.name);
+        setPkg(p?.name);
     }, [p]);
 
     return (
@@ -131,12 +170,11 @@ export default function Contact() {
                                             className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                             type="email"
                                             placeholder="Email Address"
-                                            required
                                         />
                                         <label
                                             htmlFor="email"
                                             className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] font-mono uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                            Email Address
+                                            Email Address {"(Optional)"}
                                         </label>
                                     </div>
                                     <div className="relative">
@@ -147,6 +185,7 @@ export default function Contact() {
                                             className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                             type="tel"
                                             placeholder="Phone Number"
+                                            required
                                         />
                                         <label
                                             htmlFor="phone"
@@ -160,9 +199,10 @@ export default function Contact() {
                                     <div className="relative">
                                         <select
                                             id="destination"
-                                            value={packageName}
+                                            value={pkg}
                                             disabled={id && p ? true : false}
-                                            onChange={(e) => setPackageName(e.target.value)}
+                                            onChange={(e) => setPkg(e.target.value)}
+                                            required
                                             className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors appearance-none cursor-pointer disabled:bg-gray-300">
                                             <option value="" disabled selected>
                                                 Select Package
@@ -188,6 +228,7 @@ export default function Contact() {
                                                 className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                                 type="number"
                                                 min="1"
+                                                required
                                                 placeholder="Adults"
                                             />
                                             <label
@@ -232,9 +273,10 @@ export default function Contact() {
 
                                 <div className="flex flex-col gap-3 pt-1">
                                     <button
-                                        className="w-full bg-ink text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest hover:bg-rust transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer"
-                                        type="submit">
-                                        {submitted ? "Enquiry Sent ✓" : "Submit Enquiry"}
+                                        className={`w-full text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
+                                        type="submit"
+                                        disabled={submitted}>
+                                        {submitted ? "Enquiry Completed ✓" : "Submit Enquiry"}
                                         {!submitted && (
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                 <path d="M5 12h14M12 5l7 7-7 7" />
@@ -248,14 +290,13 @@ export default function Contact() {
                                         <div className="h-px bg-zinc-200 flex-1"></div>
                                     </div>
 
-                                    <a
-                                        href="https://wa.me/919142234213?text=Hello!%20I'm%20interested%20in%20booking%20a%20journey%20with%20Prime%20Traveller."
-                                        target="_blank"
+                                    <button
+                                        onClick={handleWhatsAppEnquiry}
                                         rel="noopener noreferrer"
                                         className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 font-mono text-xs uppercase tracking-widest bg-white hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
-                                        Enquire via WhatsApp
                                         <img src={icon} alt="" className="w-6 h-6" />
-                                    </a>
+                                        Enquire via WhatsApp
+                                    </button>
                                 </div>
                             </form>
                         </div>

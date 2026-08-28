@@ -34,11 +34,12 @@ export default function PackageDetail() {
             });
         };
 
-        Promise.all(images.map((src) => getImageDimensions(src.url))).then((data) => {
-            setGalleryPhotos(data);
-            // Yahan aapko har image ki width aur height mil jayegi
-        });
-    }, []);
+        if (packages.length > 0) {
+            Promise.all(images.map((src) => getImageDimensions(src.url))).then((data) => {
+                setGalleryPhotos(data);
+            });
+        }
+    }, [packages]);
 
     const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
     const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
@@ -96,12 +97,12 @@ export default function PackageDetail() {
             <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 md:pt-12 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
                 {/* Main Narrative (Left) */}
                 <div className="min-w-0 flex-1 lg:max-w-3xl flex flex-col gap-6 md:gap-4">
-                    <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <h2 className="font-mono text-xs mb-3 uppercase text-rust">Overview</h2>
                         <p className="text-zinc-600 font-sans leading-relaxed text-md font-light">{pkg.description}</p>
                     </div>
 
-                    <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 gap-8 bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <div>
                             <div className="font-mono text-xs uppercase tracking-widest text-rust mb-2">Duration</div>
                             <div className="font-light text-lgl">
@@ -120,7 +121,7 @@ export default function PackageDetail() {
                         </div> */}
                     </div>
 
-                    <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6">Destinations Covered</h3>
                         <div className="flex flex-wrap gap-3">
                             {pkg.destinations.map((dest, index) => (
@@ -133,7 +134,7 @@ export default function PackageDetail() {
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div data-aos="fade-up" className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <div>
                             <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">
                                 What's Included
@@ -168,13 +169,13 @@ export default function PackageDetail() {
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                         <Timeline itinerary={pkg.itinerary} />
                     </div>
 
                     {/* Image Gallery */}
                     {images.length > 1 && (
-                        <div data-aos="fade-up" className="bg-white rounded-2xl p-6 md:p-8 shadow-sm">
+                        <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
                             <h3 className="font-mono text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Gallery</h3>
                             <PhotoAlbum
                                 layout="rows"
@@ -196,7 +197,7 @@ export default function PackageDetail() {
                 <div className="min-w-0 lg:w-[380px] shrink-0">
                     <div
                         data-aos="fade-left"
-                        className="sticky top-32 bg-white rounded-2xl border border-zinc-200 p-6 md:p-8 shadow-xl shadow-zinc-200/50">
+                        className="sticky top-32 bg-paper-dim rounded-2xl border border-zinc-200 p-6 md:p-8 shadow-xl shadow-zinc-200/50">
                         <div className="font-mono text-xs uppercase tracking-widest text-rust mb-2">Starting Price</div>
                         <div className="flex items-baseline gap-3 mb-8 border-b border-zinc-100 pb-6">
                             <span className="font-display text-4xl">₹{pkg.price.discounted.toLocaleString()}</span>
@@ -209,7 +210,7 @@ export default function PackageDetail() {
                         </p>
 
                         <Link
-                            to={`/contact?for=${pkg.slug}`}
+                            to={`/contact?enq=${pkg.slug}`}
                             className="block w-full text-center bg-ink text-white py-4 px-6 font-mono text-xs uppercase tracking-widest hover:bg-rust transition-colors mb-4">
                             Request Quote
                         </Link>

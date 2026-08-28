@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 import coverImage from "../assets/package-cover.png";
 
 export default function Packages() {
-    const { packages, loading, error, retry } = usePackages();
+    const { packages, loading, error, retry, setPackages } = usePackages();
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedState, setSelectedState] = useState("all");
     const [selectedPrice, setSelectedPrice] = useState("all");
     const [selectedType, setSelectedType] = useState("all");
     const [filtersOpen, setFiltersOpen] = useState(false);
+    const [sortBy, setSortBy] = useState("none");
+    const [reverseClicked, setReverseClicked] = useState(false);
+
+    const sortType = ["price", "latest"];
 
     const states = [...new Set(packages.map((pkg) => pkg.location?.name).filter(Boolean))].sort();
     const priceRanges = [
@@ -34,6 +38,21 @@ export default function Packages() {
             (selectedType === "all" || packageType?.toLowerCase() === selectedType.toLowerCase())
         );
     });
+
+    const sortPackages = (e) => {
+        const value = e.target.value;
+        setSortBy(value);
+        console.log(sortBy);
+        if (value === "price") {
+            packages.sort((a, b) => a.price.discounted - b.price.discounted);
+        } else if (value === "latest") {
+            packages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+    };
+
+    const reverse = (pkg) => {
+        setPackages(pkg.toReversed());
+    };
 
     const hasActiveFilters = searchTerm || selectedState !== "all" || selectedPrice !== "all" || selectedType !== "all";
 
@@ -75,7 +94,7 @@ export default function Packages() {
             </div>
 
             <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 mb-10">
-                <div className="bg-white border border-zinc-200 p-4 md:p-5 rounded-md">
+                <div className="bg-paper-dim border border-zinc-200 p-4 md:p-5 rounded-md">
                     <div className="flex flex-col lg:grid lg:grid-cols-4 gap-3">
                         <label className="relative lg:col-span-1">
                             <span className="sr-only">Search packages</span>
@@ -151,6 +170,45 @@ export default function Packages() {
                                     className="w-full appearance-none bg-paper border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink focus:outline-none focus:border-ink">
                                     <option value="all">All travel styles</option>
                                     {packageTypes.map((type) => (
+                                        <option key={type} value={type}>
+                                            {type}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label className="relative">
+                                <span className="sr-only">Sort by</span>
+                                <svg
+                                    width="16px"
+                                    height="16px"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="absolute right-3 top-3.5 text-zinc-400 cursor-pointer"
+                                    onClick={() => reverse(filteredPackages)}>
+                                    <path
+                                        d="M8 3.5L8 16.5M8 3.5L3.5 7.83333M8 3.5L12.5 7.83333"
+                                        stroke="#9f9fa9"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                    <path
+                                        d="M17 20.5L17 7.5M17 20.5L21.5 16.1667M17 20.5L12.5 16.1667"
+                                        stroke="#9f9fa9"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                                <select
+                                    value={sortBy}
+                                    onChange={sortPackages}
+                                    className="w-full appearance-none bg-paper border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink focus:outline-none focus:border-ink">
+                                    <option value="none" disabled>
+                                        Sort by
+                                    </option>
+                                    {sortType.map((type) => (
                                         <option key={type} value={type}>
                                             {type}
                                         </option>

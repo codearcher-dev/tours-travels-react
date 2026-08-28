@@ -7,8 +7,6 @@ export default function DestinationChip({ dest }) {
     useEffect(() => {
         setImgError(!dest?.img);
     }, [dest?.img]);
-
-    console.log("dest : ", dest);
     return (
         <button className="group relative w-full h-[400px] rounded-sm overflow-hidden cursor-pointer">
             <div className="absolute inset-0 z-0">

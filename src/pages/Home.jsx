@@ -10,6 +10,7 @@ import PhotoAlbum from "react-photo-album";
 import "react-photo-album/styles.css";
 import Verified from "../components/ui/icons/Verified";
 import ShinyText from "../components/ui/animations/ShinyText";
+import { useEffect, useState } from "react";
 
 const testimonials = [
     {
@@ -62,12 +63,7 @@ const images = [
     "https://images.unsplash.com/photo-1671711847762-b8308b444a42?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1671984247482-1acf238bba0c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8TW91bnRhaW5zfGVufDB8MnwwfHx8MA%3D%3D",
 ];
-const galleryPhotos = images.map((src, index) => ({
-    src,
-    width: 1200,
-    height: 800,
-    alt: `Mountain destination ${index + 1}`,
-}));
+
 const galleryFadeDirections = ["fade-left", "fade-up", "fade-down", "fade-right"];
 
 function PackageErrorState({ error, loading, retry }) {
@@ -90,6 +86,26 @@ function PackageErrorState({ error, loading, retry }) {
 
 export default function Home() {
     const { packages, destinations, loading, error, retry } = usePackages();
+    const [galleryPhotos, setGalleryPhotos] = useState([]);
+
+    useEffect(() => {
+        const getImageDimensions = (src) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    resolve({
+                        src,
+                        width: img.naturalWidth,
+                        height: img.naturalHeight,
+                    });
+                };
+                img.src = src;
+            });
+        };
+        Promise.all(images.map((src) => getImageDimensions(src))).then((data) => {
+            setGalleryPhotos(data);
+        });
+    }, []);
 
     return (
         <main className="select-none">
@@ -228,9 +244,9 @@ export default function Home() {
 
                     <div className="mt-16 text-center">
                         <Link
-                            className="inline-flex items-center gap-2 font-mono text-xs uppercase font-semibold tracking-widest transition-colors hover:text-rust border-b border-ink pb-1 hover:border-rust"
+                            className="inline-flex items-center gap-2 font-mono text-md uppercase font-semibold tracking-widest transition-colors hover:text-rust border-b border-ink pb-1 hover:border-rust"
                             to="/packages">
-                            View All Journeys
+                            View All Packages
                         </Link>
                     </div>
                 </div>
