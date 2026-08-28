@@ -17,38 +17,39 @@ const timeline = [
 
 export default function About() {
     return (
-        <main className="pt-20 pb-16 select-none relative">
+        <main className="select-none">
             {/* HERO / STORY */}
-            <div className="absolute inset-0 z-0 w-full h-screen bg-ink">
-                <div className="w-full h-full">
-                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-80 inset-0" />
+            <div className="relative w-full min-h-screen flex items-center pt-28 pb-20">
+                <div className="absolute inset-0 z-0 bg-ink">
+                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-80" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                 </div>
+                
+                <section className="w-full max-w-[1200px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center relative z-10">
+                    <div className="lg:col-span-7">
+                        <h1
+                            data-aos="fade-up"
+                            data-aos-delay="100"
+                            className="font-display text-4xl sm:text-5xl md:text-7xl font-medium leading-[1.1] tracking-[-0.01em] mb-10 text-rust">
+                            Started with one
+                            <br />
+                            <span className="italic text-zinc-200">overpacked backpack.</span>
+                        </h1>
+                        <p data-aos="fade-up" data-aos-delay="200" className="text-white leading-relaxed text-md font-light max-w-xl">
+                            Meridian Journeys began in 2016 as two friends plotting a single route across Southeast Asia for other backpackers. A decade
+                            on, we've drawn over 4,000 itineraries — but the rule hasn't changed: every trip is plotted by a person who has actually stood
+                            at that coordinate.
+                        </p>
+                    </div>
+                    <div data-aos="fade-left" className="lg:col-span-5 relative h-[300px] md:h-[400px] w-full">
+                        <img
+                            src="https://images.unsplash.com/photo-1670020112207-0e3592080eac?q=80&w=711&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Team planning a route"
+                            className="w-full h-full object-cover rounded-md"
+                        />
+                    </div>
+                </section>
             </div>
-            <section className="max-w-[1200px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center mb-16 md:mb-24 relative">
-                <div className="lg:col-span-7">
-                    <h1
-                        data-aos="fade-up"
-                        data-aos-delay="100"
-                        className="font-display text-4xl sm:text-5xl md:text-7xl font-medium leading-[1.1] tracking-[-0.01em] mb-10 text-rust">
-                        Started with one
-                        <br />
-                        <span className="italic text-zinc-200">overpacked backpack.</span>
-                    </h1>
-                    <p data-aos="fade-up" data-aos-delay="200" className="text-white leading-relaxed text-lg font-light max-w-xl">
-                        Meridian Journeys began in 2016 as two friends plotting a single route across Southeast Asia for other backpackers. A decade
-                        on, we've drawn over 4,000 itineraries — but the rule hasn't changed: every trip is plotted by a person who has actually stood
-                        at that coordinate.
-                    </p>
-                </div>
-                <div data-aos="fade-left" className="lg:col-span-5 relative h-[400px] md:h-[600px] w-full">
-                    <img
-                        src="https://images.unsplash.com/photo-1670020112207-0e3592080eac?q=80&w=711&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        alt="Team planning a route"
-                        className="w-full h-full object-cover rounded-md"
-                    />
-                </div>
-            </section>
 
             {/* STATS STRIP */}
             <section className="border-y border-zinc-200 bg-paper-dim">
