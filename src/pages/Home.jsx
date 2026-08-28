@@ -11,27 +11,7 @@ import "react-photo-album/styles.css";
 import Verified from "../components/ui/icons/Verified";
 import ShinyText from "../components/ui/animations/ShinyText";
 import { useEffect, useState } from "react";
-
-const testimonials = [
-    {
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-        name: "Ananya Sharma",
-        trip: "Kyoto in Bloom",
-        quote: "The Kyoto itinerary felt hand-written for us — not a single wasted afternoon, and the machiya stay was the highlight of the year.",
-    },
-    {
-        avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop",
-        name: "Rohan Kapoor",
-        trip: "Andes Explorer",
-        quote: "Enquiry to boarding pass took four days. Every hotel matched the photos, every guide showed up early.",
-    },
-    {
-        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
-        name: "Priya Mehta",
-        trip: "Sunset Escape",
-        quote: "Booked the Santorini escape for our anniversary. The catamaran sunset sail alone was worth the trip.",
-    },
-];
+import { getFeedbacks } from "../services/feedback.services";
 
 const steps = [
     { num: "01", title: "Pick a coordinate", desc: "Browse packages by destination, budget or trip length." },
@@ -39,22 +19,6 @@ const steps = [
     { num: "03", title: "Send an enquiry", desc: "Our travel desk replies within a working day with a quote." },
     { num: "04", title: "Book your slot", desc: "We handle logistics — you just go ahead." },
 ];
-
-const pageVariants = {
-    initial: { opacity: 0 },
-    in: { opacity: 1, transition: { duration: 0.2, ease: "easeOut", staggerChildren: 0.025 } },
-    out: { opacity: 0, transition: { duration: 0.125 } },
-};
-
-const sectionVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut", staggerChildren: 0.1 } },
-};
-
-const childVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.15, ease: "easeOut" } },
-};
 
 const images = [
     "https://images.unsplash.com/photo-1600402808924-9c591a6dace8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8U2lra2ltfGVufDB8fDB8fHww",
@@ -88,6 +52,8 @@ export default function Home() {
     const { packages, destinations, loading, error, retry } = usePackages();
     const [galleryPhotos, setGalleryPhotos] = useState([]);
 
+    const [testimonials, setTestimonials] = useState([]);
+
     useEffect(() => {
         const getImageDimensions = (src) => {
             return new Promise((resolve) => {
@@ -102,9 +68,21 @@ export default function Home() {
                 img.src = src;
             });
         };
+
+        const fetchTestimonials = async () => {
+            try {
+                const data = await getFeedbacks(3, Math.floor(Math.random() * 10));
+                setTestimonials(data.feedbacks.map((f) => ({ name: f.name, trip: f.package.name, quote: f.review })));
+            } catch (error) {
+                console.error(error.message);
+            }
+        };
+
         Promise.all(images.map((src) => getImageDimensions(src))).then((data) => {
             setGalleryPhotos(data);
         });
+
+        fetchTestimonials();
     }, []);
 
     return (
@@ -303,7 +281,6 @@ export default function Home() {
                                 </div>
                                 <p className="text-base leading-[1.7] font-sans font-light mb-10 text-ink-soft flex-grow">"{t.quote}"</p>
                                 <div className="flex items-center gap-4 border-t border-zinc-100 pt-6">
-                                    <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full object-cover grayscale opacity-90" />
                                     <div>
                                         <div className="text-sm font-medium font-sans text-ink">{t.name}</div>
                                         <div className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase mt-1">{t.trip}</div>
