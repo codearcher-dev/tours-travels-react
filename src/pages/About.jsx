@@ -8,11 +8,11 @@ const stats = [
     { num: "10", label: "Years Plotting Routes" },
 ];
 
-const timeline = [
-    { year: "2016", title: "One route, two founders", desc: "A hand-drawn Southeast Asia itinerary, shared with 12 travelers in year one." },
-    { year: "2019", title: "First overseas desk", desc: "Opened a coordinator office in Bali to run ground logistics in-region." },
-    { year: "2022", title: "Crossed 30 countries", desc: "Expanded into Europe and the Americas with dedicated route specialists." },
-    { year: "2026", title: "4,000th itinerary shipped", desc: "Today's desk plots routes across 42 countries, still one traveler at a time." },
+const whyUs = [
+    { title: "Curated Itineraries", desc: "Expertly designed packages covering iconic landmarks as well as hidden gems." },
+    { year: "2019", title: "Comfort First", desc: "Verified hotel stays, reliable transportation, and vetted local guides." },
+    { title: "Personalized Packages", desc: "Flexible plans customized for solo explorers, couples, families, and corporate groups." },
+    { title: "24/7 Dedicated Assistance", desc: "Real-time help from booking to your safe return home." },
 ];
 
 export default function About() {
@@ -24,7 +24,7 @@ export default function About() {
                     <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-80" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                 </div>
-                
+
                 <section className="w-full max-w-[1200px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center relative z-10">
                     <div className="lg:col-span-7">
                         <h1
@@ -36,9 +36,10 @@ export default function About() {
                             <span className="italic text-zinc-200">overpacked backpack.</span>
                         </h1>
                         <p data-aos="fade-up" data-aos-delay="200" className="text-white leading-relaxed text-md font-light max-w-xl">
-                            Meridian Journeys began in 2016 as two friends plotting a single route across Southeast Asia for other backpackers. A decade
-                            on, we've drawn over 4,000 itineraries — but the rule hasn't changed: every trip is plotted by a person who has actually stood
-                            at that coordinate.
+                            Discover the extraordinary with Prime Traveller, your trusted travel partner dedicated to curating seamless,
+                            budget-friendly, and unforgettable journeys. Specializing in breathtaking Himalayan getaways—including Darjeeling,
+                            Gangtok, and North Sikkim. Whether you seek serene mountain escapes, cultural expeditions, or thrilling adventures, we
+                            ensure every detail ofyour trip is planned to perfection.
                         </p>
                     </div>
                     <div data-aos="fade-left" className="lg:col-span-5 relative h-[300px] md:h-[400px] w-full">
@@ -62,19 +63,92 @@ export default function About() {
                     ))}
                 </div>
             </section>
+            {/* MISSION & VISION */}
+            <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-16 md:py-24">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                    {/* Mission */}
+                    <div data-aos="fade-right">
+                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Our Mission</span>
+                        <h2 className="font-display text-3xl md:text-4xl text-ink mb-8">What drives us forward</h2>
+                        <div className="space-y-6">
+                            <div className="flex gap-4">
+                                <div className="text-rust mt-1 flex-shrink-0">
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-medium text-ink mb-1">Affordable & Accessible</h4>
+                                    <p className="text-zinc-500 font-light leading-relaxed">
+                                        Deliver value-driven, transparent pricing without compromising on comfort or safety.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="text-rust mt-1 flex-shrink-0">
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-medium text-ink mb-1">Memorable Experiences</h4>
+                                    <p className="text-zinc-500 font-light leading-relaxed">
+                                        Create enriching, authentic travel memories tailored to every traveler's unique pace.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="text-rust mt-1 flex-shrink-0">
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-medium text-ink mb-1">Seamless Support</h4>
+                                    <p className="text-zinc-500 font-light leading-relaxed">
+                                        Provide reliable, end-to-end customer care and premium on-ground logistics for a truly hassle-free journey.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Vision */}
+                    <div
+                        data-aos="fade-left"
+                        className="bg-paper-dim p-8 md:p-12 rounded-2xl flex flex-col justify-center h-full border border-zinc-200">
+                        <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-4 block">Our Vision</span>
+                        <h2 className="font-display text-3xl md:text-4xl text-ink mb-6">Setting the benchmark</h2>
+                        <p className="text-zinc-600 font-light leading-relaxed text-lg">
+                            To become India’s most trusted and preferred travel service provider, setting the benchmark in tourism through
+                            personalized itineraries, responsible travel practices, and exceptional service standards.
+                        </p>
+                    </div>
+                </div>
+            </section>
 
-            {/* TIMELINE (Magazine style) */}
+            {/* WHY CHOOSE US */}
             <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-12 md:py-20">
                 <div data-aos="fade-up" className="mb-12">
                     <span className="font-mono text-xs uppercase tracking-[0.2em] text-rust mb-6 block text-center">Timeline</span>
-                    <h2 className="font-display text-4xl md:text-6xl text-center">How the map grew</h2>
+                    <h2 className="font-display text-4xl md:text-6xl text-center">Why choose us ?</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 md:gap-x-20 gap-y-10 max-w-4xl mx-auto">
-                    {timeline.map((t, i) => (
+                    {whyUs.map((t, i) => (
                         <div data-aos="fade-up" data-aos-delay={i * 100} key={t.year} className="flex flex-col">
-                            <div className="font-display text-4xl text-rust mb-4">{t.year}</div>
-                            <h4 className="text-xl font-medium mb-3">{t.title}</h4>
+                            <h4 className="text-xl font-medium mb-3 text-rust">{t.title}</h4>
                             <p className="text-zinc-500 font-light leading-relaxed">{t.desc}</p>
                         </div>
                     ))}

@@ -268,7 +268,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory hide-scrollbar">
-                        {testimonials.map((t, i) => (
+                        {testimonials?.map((t, i) => (
                             <div
                                 data-aos="fade-up"
                                 data-aos-delay={i * 100}
