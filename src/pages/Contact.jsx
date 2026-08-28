@@ -9,7 +9,7 @@ export default function Contact() {
     const [submitted, setSubmitted] = useState(Boolean(localStorage.getItem("submitted")) || false);
     const { packages, loading } = usePackages();
     const navigate = useNavigate();
-    const phoneNumber = "916299915927";
+    const phoneNumber = "919142234213";
 
     const [searchParams] = useSearchParams();
     const id = searchParams.get("enq");
