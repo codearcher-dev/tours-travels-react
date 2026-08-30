@@ -2,18 +2,22 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { usePackages } from "../context/PackageContext";
 import Timeline from "../components/Itinerary";
-import { MapPin, ArrowLeft, ArrowRight, X } from "lucide-react";
+import { MapPin, X } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import PhotoAlbum from "react-photo-album";
 import "react-photo-album/styles.css";
 import Tick from "../components/ui/icons/Tick.jsx";
 import Cross from "../components/ui/icons/Cross.jsx";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export default function PackageDetail() {
     const { packages } = usePackages();
     const { slug } = useParams();
     const pkg = packages.find((p) => p.slug === slug);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
     const [galleryPhotos, setGalleryPhotos] = useState([]);
 
@@ -41,9 +45,6 @@ export default function PackageDetail() {
         }
     }, [packages]);
 
-    const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-
     if (!pkg) {
         return (
             <main className="min-h-screen flex flex-col items-center justify-center px-4 md:px-8">
@@ -59,27 +60,28 @@ export default function PackageDetail() {
         <main className="bg-paper min-h-screen pb-16 overflow-x-clip select-none">
             {/* FULL BLEED EDITORIAL HERO */}
             <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
-                <img
-                    key={currentImageIndex}
-                    src={images[currentImageIndex]?.url}
-                    alt={`${pkg.name} - ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover absolute inset-0 opacity-50"
-                />
-
-                {images?.length > 1 && (
-                    <div className="absolute bottom-8 right-4 md:bottom-12 md:right-12 flex gap-4 z-20">
-                        <button
-                            onClick={prevImage}
-                            className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white backdrop-blur-md hover:bg-white hover:text-ink transition-colors">
-                            <ArrowLeft size={20} />
-                        </button>
-                        <button
-                            onClick={nextImage}
-                            className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white backdrop-blur-md hover:bg-white hover:text-ink transition-colors">
-                            <ArrowRight size={20} />
-                        </button>
-                    </div>
-                )}
+                <Swiper
+                    modules={[Navigation, Pagination, Autoplay]}
+                    navigation={images.length > 1}
+                    pagination={images.length > 1 ? { clickable: true } : false}
+                    autoplay={{ delay: 5000, disableOnInteraction: false }}
+                    loop={images.length > 1}
+                    className="w-full h-full absolute inset-0 z-0"
+                    style={{
+                        "--swiper-navigation-color": "#fff",
+                        "--swiper-pagination-color": "#fff",
+                    }}
+                >
+                    {images.map((img, index) => (
+                        <SwiperSlide key={index}>
+                            <img
+                                src={img?.url}
+                                alt={`${pkg.name} - ${index + 1}`}
+                                className="w-full h-full object-cover opacity-50"
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
 
