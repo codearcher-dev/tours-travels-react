@@ -25,7 +25,7 @@ export default function PackageCard({ pkg }) {
                 {/* Top: Duration Badge */}
                 <div className="flex justify-end">
                     <div className="bg-white text-ink px-5 py-2 rounded-full text-sm font-extrabold tracking-wide shadow-xl transform translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500">
-                        {pkg.duration.days} Days / {pkg.duration.nights} Nights
+                        {pkg.duration.nights} Nights / {pkg.duration.days} Days
                     </div>
                 </div>
 

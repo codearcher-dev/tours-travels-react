@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
-import coverImage from "../assets/package-cover.png";
+import coverImage from "../assets/package-cover.avif";
 
 export default function Packages() {
     const { packages, loading, error, retry, setPackages } = usePackages();
