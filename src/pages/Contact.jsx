@@ -10,6 +10,7 @@ export default function Contact() {
     const { packages, loading } = usePackages();
     const navigate = useNavigate();
     const phoneNumber = "919142234213";
+    const [error, setError] = useState("");
 
     const [searchParams] = useSearchParams();
     const id = searchParams.get("enq");
@@ -25,6 +26,7 @@ export default function Contact() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
         if (submitted) {
             return;
         }
@@ -54,19 +56,26 @@ export default function Contact() {
             }
         } catch (error) {
             console.error(error.message);
+            setError(error.message);
         }
     };
 
     const handleWhatsAppEnquiry = (e) => {
         e.preventDefault();
+        setError("");
+        if (!name || !pkg || !adults || !kids || !phone || !message) {
+            setError("All fields are required");
+            return;
+        }
+
         const whatsappMessage = `Hey! I am *_${name}_* and I want to enquire about a package.\nPackage : *_${pkg}_*\nAdults : ${adults}\nKids :${kids}\nPhone no. : ${phone}`;
         window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`, "_blank");
         setName("");
         setEmail("");
         setPhone("");
         setPkg("");
-        setAdults();
-        setKids();
+        setAdults("");
+        setKids("");
         setMessage("");
         if (id) {
             navigate("/contact");
@@ -269,6 +278,12 @@ export default function Contact() {
                                         Tell us about the trip (Dates, occasion, budget...)
                                     </label>
                                 </div>
+
+                                {error && (
+                                    <div>
+                                        <span className="text-red-600">{error}</span>
+                                    </div>
+                                )}
 
                                 <div className="flex flex-col gap-3 pt-1">
                                     <button
