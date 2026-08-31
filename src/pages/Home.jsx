@@ -12,6 +12,7 @@ import Verified from "../components/ui/icons/Verified";
 import ShinyText from "../components/ui/animations/ShinyText";
 import { useEffect, useState } from "react";
 import { getFeedbacks } from "../services/feedback.services";
+import { countPagevisit } from "../services/initial.services";
 
 const steps = [
     { num: "01", title: "Pick a coordinate", desc: "Browse packages by destination, budget or trip length." },
@@ -78,11 +79,20 @@ export default function Home() {
             }
         };
 
+        const visit = async () => {
+            try {
+                await countPagevisit();
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
         Promise.all(images.map((src) => getImageDimensions(src))).then((data) => {
             setGalleryPhotos(data);
         });
 
         fetchTestimonials();
+        visit();
     }, []);
 
     return (

@@ -1,6 +1,8 @@
 import images from "../data/customerImages.js";
 import coverImage from "../assets/about-cover.png";
 import photo6 from "../assets/about/photo6.jpeg";
+import { useEffect } from "react";
+import { countPagevisit } from "../services/initial.services.js";
 
 const stats = [
     { num: "1000+", label: "Happy Customers" },
@@ -17,6 +19,17 @@ const whyUs = [
 ];
 
 export default function About() {
+    useEffect(() => {
+        const visit = async () => {
+            try {
+                await countPagevisit();
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        visit();
+    }, []);
     return (
         <main className="select-none overflow-x-clip">
             {/* HERO / STORY */}

@@ -3,6 +3,7 @@ import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 import coverImage from "../assets/package-cover.avif";
+import { countPagevisit } from "../services/initial.services";
 
 export default function Packages() {
     const { packages, loading, error, retry, setPackages } = usePackages();
@@ -62,6 +63,18 @@ export default function Packages() {
         setSelectedPrice("all");
         setSelectedType("all");
     };
+
+    useEffect(() => {
+        const visit = async () => {
+            try {
+                await countPagevisit();
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        visit();
+    }, []);
 
     return (
         <main className="pb-16 min-h-screen bg-paper select-none overflow-x-clip">

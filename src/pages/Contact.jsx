@@ -3,7 +3,8 @@ import icon from "../assets/whatsapp-icon.png";
 import { usePackages } from "../context/PackageContext";
 import coverImage from "../assets/contact-cover.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { sendEnquiry } from "../services/enquiry.services";
+import { countWhatsappClicks, sendEnquiry } from "../services/enquiry.services";
+import { countPagevisit } from "../services/initial.services";
 
 export default function Contact() {
     const [submitted, setSubmitted] = useState(Boolean(localStorage.getItem("submitted")) || false);
@@ -46,8 +47,8 @@ export default function Contact() {
             setEmail("");
             setPhone("");
             setPkg("");
-            setAdults();
-            setKids();
+            setAdults("");
+            setKids("");
             setMessage("");
             localStorage.setItem("submitted", true);
             setSubmitted(true);
@@ -60,7 +61,7 @@ export default function Contact() {
         }
     };
 
-    const handleWhatsAppEnquiry = (e) => {
+    const handleWhatsAppEnquiry = async (e) => {
         e.preventDefault();
         setError("");
         if (!name || !pkg || !adults || !kids || !phone || !message) {
@@ -68,15 +69,21 @@ export default function Contact() {
             return;
         }
 
-        const whatsappMessage = `Hey! I am *_${name}_* and I want to enquire about a package.\nPackage : *_${pkg}_*\nAdults : ${adults}\nKids :${kids}\nPhone no. : ${phone}`;
-        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`, "_blank");
-        setName("");
-        setEmail("");
-        setPhone("");
-        setPkg("");
-        setAdults("");
-        setKids("");
-        setMessage("");
+        try {
+            const whatsappMessage = `Hey! I am *_${name}_* and I want to enquire about a package.\nPackage : *_${pkg}_*\nAdults : ${adults}\nKids :${kids}\nPhone no. : ${phone}`;
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`, "_blank");
+            await countWhatsappClicks();
+            setName("");
+            setEmail("");
+            setPhone("");
+            setPkg("");
+            setAdults("");
+            setKids("");
+            setMessage("");
+        } catch (error) {
+            console.error(error.message);
+        }
+
         if (id) {
             navigate("/contact");
         }
@@ -85,6 +92,18 @@ export default function Contact() {
     useEffect(() => {
         setPkg(p?.name);
     }, [p]);
+
+    useEffect(() => {
+        const visit = async () => {
+            try {
+                await countPagevisit();
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        visit();
+    }, []);
 
     return (
         <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative overflow-x-clip">

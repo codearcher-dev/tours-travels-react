@@ -8,11 +8,12 @@ import PhotoAlbum from "react-photo-album";
 import "react-photo-album/styles.css";
 import Tick from "../components/ui/icons/Tick.jsx";
 import Cross from "../components/ui/icons/Cross.jsx";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { countPagevisit } from "../services/initial.services.js";
 
 export default function PackageDetail() {
     const { packages } = usePackages();
@@ -44,6 +45,17 @@ export default function PackageDetail() {
             });
         }
     }, [packages]);
+    useEffect(() => {
+        const visit = async () => {
+            try {
+                await countPagevisit();
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        visit();
+    }, []);
 
     if (!pkg) {
         return (
@@ -70,15 +82,10 @@ export default function PackageDetail() {
                     style={{
                         "--swiper-navigation-color": "#fff",
                         "--swiper-pagination-color": "#fff",
-                    }}
-                >
+                    }}>
                     {images.map((img, index) => (
                         <SwiperSlide key={index}>
-                            <img
-                                src={img?.url}
-                                alt={`${pkg.name} - ${index + 1}`}
-                                className="w-full h-full object-cover opacity-50"
-                            />
+                            <img src={img?.url} alt={`${pkg.name} - ${index + 1}`} className="w-full h-full object-cover opacity-50" />
                         </SwiperSlide>
                     ))}
                 </Swiper>
