@@ -90,7 +90,7 @@ export default function Contact() {
         <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative overflow-x-clip">
             <div className="absolute inset-0 z-0 w-full bg-ink">
                 <div className="w-full h-full">
-                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-70" />
+                    <img src={coverImage} alt="Cover" className="bg-breathe w-full h-full object-cover opacity-70" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                 </div>
             </div>

@@ -22,7 +22,7 @@ export default function About() {
             {/* HERO / STORY */}
             <div className="relative w-full min-h-screen flex items-center pt-28 pb-20">
                 <div className="absolute inset-0 z-0 bg-ink">
-                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-80" />
+                    <img src={coverImage} alt="Cover" className="bg-breathe w-full h-full object-cover opacity-80" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                 </div>
 

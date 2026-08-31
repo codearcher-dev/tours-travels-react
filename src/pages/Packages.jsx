@@ -68,7 +68,7 @@ export default function Packages() {
             <div className="relative w-full h-screen min-h-[700px] flex flex-col justify-center overflow-hidden bg-ink">
                 <div className="absolute inset-0 z-0">
                     <div className="w-full h-full">
-                        <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-80 inset-0" />
+                        <img src={coverImage} alt="Cover" className="bg-breathe w-full h-full object-cover opacity-80 inset-0" />
                         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
                     </div>
                 </div>
