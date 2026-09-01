@@ -73,7 +73,7 @@ export default function Home() {
         const fetchTestimonials = async () => {
             try {
                 const data = await getFeedbacks(3, Math.floor(Math.random() * 10));
-                setTestimonials(data.feedbacks.map((f) => ({ name: f.name, trip: f.package.name, quote: f.review })));
+                setTestimonials(data.feedbacks.map((f) => ({ name: f.name, trip: f.package, quote: f.review })));
             } catch (error) {
                 console.error(error.message);
             }
@@ -192,7 +192,7 @@ export default function Home() {
                             (d, i) =>
                                 i < 4 && (
                                     <div data-aos="fade-left" key={d._id || i} className="snap-start shrink-0 w-[280px] md:w-[350px]">
-                                        <DestinationChip dest={{ name: d.name, img: d.images?.[0].url, desc: d.description }} />
+                                        <DestinationChip dest={{ name: d.name, img: d.images?.[0]?.url, desc: d.description }} />
                                     </div>
                                 ),
                         )
