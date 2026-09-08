@@ -209,7 +209,7 @@ export default function PackageDetail() {
                         <Link
                             to={`/contact?enq=${pkg.slug}`}
                             className="block w-full text-center bg-ink text-white py-4 px-6 text-xs uppercase tracking-widest hover:bg-rust transition-colors mb-4">
-                            Request Quote
+                            Enquire Now
                         </Link>
 
                         <div className="text-center text-xs text-zinc-400">No commitment required.</div>
