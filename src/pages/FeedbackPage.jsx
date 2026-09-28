@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getLinkByToken, submitFeedback } from "../services/feedback.services";
 
 /* ── star rating ─────────────────────────────────────────── */
+const colors = ["", "#ef4444", "#f97316", "#facc15", "#22c55e", "#16a34a"];
 function StarRating({ value, onChange, disabled }) {
     const [hovered, setHovered] = useState(0);
     const active = hovered || value;
@@ -26,8 +27,8 @@ function StarRating({ value, onChange, disabled }) {
                             width="28"
                             height="28"
                             viewBox="0 0 24 24"
-                            fill={star <= active ? "#e07a5f" : "none"}
-                            stroke={star <= active ? "#e07a5f" : "#cbd5e1"}
+                            fill={star <= active ? colors[active] : "none"}
+                            stroke={star <= active ? colors[active] : "#cbd5e1"}
                             strokeWidth="1.5"
                             className="transition-colors duration-150">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -35,7 +36,11 @@ function StarRating({ value, onChange, disabled }) {
                     </button>
                 ))}
             </div>
-            {active > 0 && <span className="text-[11px] uppercase tracking-widest text-rust font-mono">{labels[active]}</span>}
+            {active === 1 && <span className="text-[11px] uppercase tracking-widest text-red-600 font-mono">{labels[active]}</span>}
+            {active === 2 && <span className="text-[11px] uppercase tracking-widest text-orange-500 font-mono">{labels[active]}</span>}
+            {active === 3 && <span className="text-[11px] uppercase tracking-widest text-yellow-500 font-mono">{labels[active]}</span>}
+            {active === 4 && <span className="text-[11px] uppercase tracking-widest text-green-400 font-mono">{labels[active]}</span>}
+            {active === 5 && <span className="text-[11px] uppercase tracking-widest text-green-600 font-mono">{labels[active]}</span>}
         </div>
     );
 }
@@ -83,7 +88,7 @@ export default function FeedbackPage() {
     const overallRating = (() => {
         const values = Object.values(ratings).filter(Boolean);
         if (!values.length) return 0;
-        return Math.round(values.reduce((a, b) => a + b, 0)) / values.length;
+        return Number((values.reduce((a, b) => a + b, 0) / values.length).toFixed(1));
     })();
 
     const handleSubmit = async (e) => {
@@ -206,7 +211,7 @@ export default function FeedbackPage() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             disabled={isSubmitting}
-                            placeholder="e.g. Priya Sharma"
+                            placeholder="Full Name"
                             className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors disabled:opacity-60"
                         />
                     </div>
@@ -240,14 +245,14 @@ export default function FeedbackPage() {
                     {overallRating > 0 && (
                         <div className="rounded-xl bg-paper-dim px-5 py-4 flex items-center gap-4">
                             <div className="flex gap-0.5">
-                                {[1, 2, 3, 4, 5].map((s) => (
+                                {[1, 2, 3, 4, 5].map((s, i) => (
                                     <svg
-                                        key={s}
+                                        key={i}
                                         width="18"
                                         height="18"
                                         viewBox="0 0 24 24"
-                                        fill={s <= overallRating ? "#e07a5f" : "none"}
-                                        stroke={s <= overallRating ? "#e07a5f" : "#cbd5e1"}
+                                        fill={s <= overallRating ? colors[Math.floor(overallRating)] : "none"}
+                                        stroke={s <= overallRating ? colors[Math.floor(overallRating)] : "#cbd5e1"}
                                         strokeWidth="1.5">
                                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                     </svg>
