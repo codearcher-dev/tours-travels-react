@@ -7,7 +7,7 @@ import { countPagevisit } from "../services/initial.services.js";
 const stats = [
     { num: "1000+", label: "Happy Customers" },
     { num: "700+", label: "Tours Completed" },
-    { num: "4.6/5.0", label: "Avg. Traveler Rating" },
+    { num: "4.9/5.0", label: "Avg. Traveler Rating" },
     // { num: "10", label: "Years Plotting Routes" },
 ];
 
