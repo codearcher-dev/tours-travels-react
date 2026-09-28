@@ -43,7 +43,6 @@ export default function Packages() {
     const sortPackages = (e) => {
         const value = e.target.value;
         setSortBy(value);
-        console.log(sortBy);
         if (value === "price") {
             packages.sort((a, b) => a.price.discounted - b.price.discounted);
         } else if (value === "latest") {

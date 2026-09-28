@@ -9,6 +9,7 @@ import Packages from "./pages/Packages";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import PackageDetail from "./pages/PackageDetail";
+import FeedbackPage from "./pages/FeedbackPage";
 import WhatsAppSticky from "./components/WhatsAppSticky";
 
 function ScrollToTop() {
@@ -38,19 +39,24 @@ export default function App() {
         }, 100);
     }, [location.pathname]);
 
+    // Hide Navbar/Footer on the standalone feedback page
+    const isFeedback = location.pathname.startsWith("/feedback/");
+
     return (
         <>
             <ScrollToTop />
-            <Navbar />
+            {!isFeedback && <Navbar />}
             <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<Home />} />
                 <Route path="/packages" element={<Packages />} />
                 <Route path="/package/:slug" element={<PackageDetail />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/feedback/:token" element={<FeedbackPage />} />
             </Routes>
-            <Footer />
-            <WhatsAppSticky />
+            {!isFeedback && <Footer />}
+            {!isFeedback && <WhatsAppSticky />}
         </>
     );
 }
+
