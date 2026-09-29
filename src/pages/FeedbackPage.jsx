@@ -183,7 +183,7 @@ export default function FeedbackPage() {
     const isSubmitting = state === STATE.SUBMITTING;
 
     return (
-        <main className="min-h-screen bg-paper-dim select-none py-16 px-4">
+        <main className="min-h-screen bg-paper-dim select-none py-8 px-4">
             <div className="max-w-[680px] mx-auto flex flex-col gap-8">
                 {/* header */}
                 <div data-aos="fade-down" className="text-center flex flex-col gap-2">
