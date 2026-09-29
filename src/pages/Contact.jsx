@@ -5,8 +5,10 @@ import coverImage from "../assets/contact-cover.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { countWhatsappClicks, sendEnquiry } from "../services/enquiry.services";
 import { countPagevisit } from "../services/initial.services";
+import Spinner from "../components/ui/loading-state/Spinner";
 
 export default function Contact() {
+    const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(Boolean(localStorage.getItem("submitted")) || false);
     const { packages, loading } = usePackages();
     const navigate = useNavigate();
@@ -31,6 +33,26 @@ export default function Contact() {
         if (submitted) {
             return;
         }
+        if (!name) {
+            setError("Name is required");
+            return;
+        }
+        if (!phone) {
+            setError("Phone number is required");
+            return;
+        }
+        if (!pkg) {
+            setError("Choose a package first");
+            return;
+        }
+        if (!adults) {
+            setError("Number of adults is required");
+            return;
+        }
+        if (!message) {
+            setError("Message is required");
+            return;
+        }
         const formData = {
             name,
             email,
@@ -41,6 +63,7 @@ export default function Contact() {
             message,
         };
 
+        setSubmitting(true);
         try {
             const data = await sendEnquiry(formData);
             setName("");
@@ -59,6 +82,7 @@ export default function Contact() {
             console.error(error.message);
             setError(error.message);
         }
+        setSubmitting(false);
     };
 
     const handleWhatsAppEnquiry = async (e) => {
@@ -150,7 +174,7 @@ export default function Contact() {
                                 <div>
                                     <div className="text-[10px] uppercase text-rust tracking-widest mb-1">Studio</div>
                                     <div className="text-sm font-medium text-white leading-snug">
-                                        Maithon, Dhanbad
+                                        New Colony, Amkura Basti, Maithon
                                         <br />
                                         Jharkhand, India
                                     </div>
@@ -161,8 +185,8 @@ export default function Contact() {
 
                     {/* RIGHT COLUMN: The Form */}
                     <div className="lg:col-span-8" data-aos="fade-left" data-aos-delay="200">
-                        <div className="bg-white/80 rounded-xl p-5 sm:p-8 shadow-sm border border-zinc-100">
-                            <div className="flex items-end justify-between gap-4 mb-7">
+                        <div className="bg-white/80 rounded-xl p-4 sm:p-6 md:p-8 shadow-sm border border-zinc-100">
+                            <div className="flex items-end justify-between gap-4 mb-2 lg:mb-4">
                                 <div>
                                     <p className="text-[10px] uppercase tracking-[0.2em] text-rust mb-2">Plan your escape</p>
                                     <h3 className="text-2xl sm:text-3xl font-medium text-ink">Send an enquiry</h3>
@@ -170,13 +194,13 @@ export default function Contact() {
                                 <span className="hidden sm:block text-xs text-zinc-400">We reply within one working day.</span>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                            <form onSubmit={handleSubmit} className="flex flex-col gap-2 lg:gap-4" noValidate>
                                 <div className="relative">
                                     <input
                                         id="name"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
+                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                         type="text"
                                         placeholder="Your Name"
                                         required
@@ -188,13 +212,13 @@ export default function Contact() {
                                     </label>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
                                     <div className="relative">
                                         <input
                                             id="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
+                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                             type="email"
                                             placeholder="Email Address"
                                         />
@@ -209,8 +233,9 @@ export default function Contact() {
                                             id="phone"
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
+                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                             type="tel"
+                                            maxLength={10}
                                             placeholder="Phone Number"
                                             required
                                         />
@@ -222,7 +247,7 @@ export default function Contact() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
                                     <div className="relative">
                                         <select
                                             id="destination"
@@ -230,7 +255,7 @@ export default function Contact() {
                                             disabled={id && p ? true : false}
                                             onChange={(e) => setPkg(e.target.value)}
                                             required
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors appearance-none cursor-pointer disabled:bg-gray-300">
+                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors appearance-none cursor-pointer disabled:bg-gray-300">
                                             <option value="" disabled selected>
                                                 Select Package
                                             </option>
@@ -246,13 +271,13 @@ export default function Contact() {
                                             </svg>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-2 lg:gap-4">
                                         <div className="relative">
                                             <input
                                                 id="adults"
                                                 value={adults}
                                                 onChange={(e) => setAdults(e.target.value)}
-                                                className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
+                                                className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                                 type="number"
                                                 min="1"
                                                 required
@@ -269,7 +294,7 @@ export default function Contact() {
                                                 id="kids"
                                                 value={kids}
                                                 onChange={(e) => setKids(e.target.value)}
-                                                className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
+                                                className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
                                                 type="number"
                                                 min="0"
                                                 placeholder="Kids"
@@ -288,7 +313,7 @@ export default function Contact() {
                                         id="message"
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent resize-y"
+                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent resize-n"
                                         rows="3"
                                         placeholder="Tell us about the trip"></textarea>
                                     <label
@@ -309,8 +334,16 @@ export default function Contact() {
                                         className={`w-full text-white py-3.5 px-6 text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
                                         type="submit"
                                         disabled={submitted}>
-                                        {submitted ? "Enquiry Completed ✓" : "Submit Enquiry"}
-                                        {!submitted && (
+                                        {submitted ? (
+                                            "Enquiry Completed ✓"
+                                        ) : submitting ? (
+                                            <>
+                                                Submitting <Spinner />
+                                            </>
+                                        ) : (
+                                            "Submit Enquiry"
+                                        )}
+                                        {!submitted && !submitting && (
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                 <path d="M5 12h14M12 5l7 7-7 7" />
                                             </svg>
@@ -327,7 +360,7 @@ export default function Contact() {
                                         onClick={handleWhatsAppEnquiry}
                                         rel="noopener noreferrer"
                                         className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 text-xs uppercase tracking-widest bg-white hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
-                                        <img src={icon} alt="" className="w-6 h-6" />
+                                        <img src={icon} alt="" className="w-5 h-5" />
                                         Enquire via WhatsApp
                                     </button>
                                 </div>
