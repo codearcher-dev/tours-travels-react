@@ -82,8 +82,7 @@ export default function Contact() {
                 body: `Name: ${formData.name}\nPhone: ${formData.phone}\nPackage: ${formData.package}\nAdults: ${formData.adults}\nKids: ${formData.kids}\nMessage: ${formData.message}`,
             });
         } catch (error) {
-            console.error(error.message);
-            setError(error.message);
+            console.error(error.response?.data?.message);
         }
         setSubmitting(false);
     };
