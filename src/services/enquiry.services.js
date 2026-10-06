@@ -5,6 +5,11 @@ export const sendEnquiry = async (data) => {
     return res.data;
 }
 
+export const initiateNotification = async (data) => {
+    const res = await api.post('/push-notification', data);
+    return res.data;
+}
+
 export const countWhatsappClicks = async () => {
     const res = await api.patch('/insight/click', {});
     return res.data;

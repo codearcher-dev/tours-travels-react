@@ -3,13 +3,13 @@ import icon from "../assets/whatsapp-icon.png";
 import { usePackages } from "../context/PackageContext";
 import coverImage from "../assets/contact-cover.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { countWhatsappClicks, sendEnquiry } from "../services/enquiry.services";
+import { countWhatsappClicks, initiateNotification, sendEnquiry } from "../services/enquiry.services";
 import { countPagevisit } from "../services/initial.services";
 import Spinner from "../components/ui/loading-state/Spinner";
 
 export default function Contact() {
     const [submitting, setSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(Boolean(localStorage.getItem("submitted")) || false);
+    const [submitted, setSubmitted] = useState(Boolean(false));
     const { packages, loading } = usePackages();
     const navigate = useNavigate();
     const phoneNumber = "919142234213";
@@ -33,9 +33,6 @@ export default function Contact() {
             return;
         }
         setError("");
-        if (submitted) {
-            return;
-        }
         if (!name) {
             setError("Name is required");
             return;
@@ -76,11 +73,14 @@ export default function Contact() {
             setAdults("");
             setKids("");
             setMessage("");
-            localStorage.setItem("submitted", true);
             setSubmitted(true);
             if (id) {
                 navigate("/contact");
             }
+            await initiateNotification({
+                title: "New Enquiry Received",
+                body: `Name: ${formData.name}\nPhone: ${formData.phone}\nPackage: ${formData.package}\nAdults: ${formData.adults}\nKids: ${formData.kids}\nMessage: ${formData.message}`,
+            });
         } catch (error) {
             console.error(error.message);
             setError(error.message);
@@ -335,8 +335,7 @@ export default function Contact() {
                                 <div className="flex flex-col gap-3 pt-1">
                                     <button
                                         className={`w-full text-white py-3.5 px-6 text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
-                                        type="submit"
-                                        disabled={submitted}>
+                                        type="submit">
                                         {submitted ? (
                                             "Enquiry Completed ✓"
                                         ) : submitting ? (
