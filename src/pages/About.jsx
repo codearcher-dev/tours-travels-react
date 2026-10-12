@@ -57,11 +57,7 @@ export default function About() {
                         </p>
                     </div>
                     <div data-aos="fade-left" className="lg:col-span-5 relative h-[300px] md:h-[400px] w-full">
-                        <img
-                            src={photo6}
-                            alt="group image"
-                            className="w-full h-full object-cover rounded-[60%_40%_30%_70%_/_60%_30%_70%_40%] bg-blue-500"
-                        />
+                        <img src={photo6} alt="group image" className="w-full h-full object-cover rounded-[60%_40%_30%_70%_/_60%_30%_70%_40%]" />
                     </div>
                 </section>
             </div>

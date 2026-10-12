@@ -146,18 +146,18 @@ export default function Home() {
                             text={"VERIFIED BY SIKKIM GOVERNMENT"}
                             color="#bcbcbc"
                             shineColor="#ffffff"
-                            className="font-extrabold text-xl font-mono"
+                            className="font-extrabold text-lg sm:text-xl font-mono"
                         />
                     </div>
 
                     <div data-aos="fade-up" data-aos-delay="200" className="flex gap-4 justify-center">
                         <Link
-                            className="px-2 md:px-4 lg:px-8 py-4 bg-white text-ink text-xs md:text-sm font-medium tracking-wide uppercase hover:bg-zinc-200 transition-colors"
+                            className="px-2 md:px-4 lg:px-8 py-4 bg-white text-ink text-[11px] md:text-sm font-medium tracking-wide uppercase hover:bg-zinc-200 transition-colors"
                             to="/packages">
                             Explore Destinations
                         </Link>
                         <Link
-                            className="px-2 md:px-4 lg:px-8 py-4 bg-transparent border border-white text-white text-xs md:text-sm font-medium tracking-wide uppercase hover:bg-white hover:text-ink transition-colors"
+                            className="px-2 md:px-4 lg:px-8 py-4 bg-transparent border border-white text-white text-[11px] md:text-sm font-medium tracking-wide uppercase hover:bg-white hover:text-ink transition-colors"
                             to="/contact">
                             Plan A Custom Route
                         </Link>
