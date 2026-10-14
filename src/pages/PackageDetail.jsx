@@ -93,8 +93,8 @@ export default function PackageDetail() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
 
                 <div className="absolute bottom-8 left-4 md:bottom-12 md:left-16 z-20 max-w-3xl pr-4">
-                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/80 mb-4 block">{pkg.location.name}</span>
-                    <h1 className="font-display text-4xl sm:text-5xl md:text-7xl text-white mb-4 drop-shadow-md">{pkg.name}</h1>
+                    <span className="font-mono text-[10px] md:text-sm uppercase tracking-[0.2em] text-white/80 mb-4 block">{pkg.location.name}</span>
+                    <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-white mb-4 drop-shadow-md">{pkg.name}</h1>
                 </div>
             </div>
 
