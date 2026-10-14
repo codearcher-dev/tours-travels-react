@@ -4,6 +4,7 @@ import { usePackages } from "../context/PackageContext";
 import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
 import coverImage from "../assets/package-cover.avif";
 import { countPagevisit } from "../services/initial.services";
+import { FilterDropdown } from "../components/ui/CustomDropdown";
 
 export default function Packages() {
     const { packages, loading, error, retry, setPackages } = usePackages();
@@ -40,8 +41,7 @@ export default function Packages() {
         );
     });
 
-    const sortPackages = (e) => {
-        const value = e.target.value;
+    const sortPackages = (value) => {
         setSortBy(value);
         if (value === "price") {
             packages.sort((a, b) => a.price.discounted - b.price.discounted);
@@ -105,7 +105,7 @@ export default function Packages() {
                 <h2 className="text-3xl text-rust">All Packages</h2>
             </div>
 
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 mb-10">
+            <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 mb-10 relative z-20">
                 <div className="bg-paper-dim border border-zinc-200 p-4 md:p-5 rounded-md">
                     <div className="flex flex-col lg:grid lg:grid-cols-4 gap-3">
                         <label className="relative lg:col-span-1">
@@ -144,89 +144,65 @@ export default function Packages() {
                         </button>
 
                         <div className={`${filtersOpen ? "flex" : "hidden"} flex-col lg:contents gap-3`}>
-                            <label>
-                                <span className="sr-only">Filter by state or destination</span>
-                                <select
-                                    value={selectedState}
-                                    onChange={(event) => setSelectedState(event.target.value)}
-                                    className="w-full appearance-none bg-paper border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink focus:outline-none focus:border-ink">
-                                    <option value="all">All destinations</option>
-                                    {states.map((state) => (
-                                        <option key={state} value={state}>
-                                            {state}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
+                            {/* Destination filter */}
+                            <FilterDropdown
+                                value={selectedState}
+                                onChange={setSelectedState}
+                                placeholder="All destinations"
+                                options={[{ label: "All destinations", value: "all" }, ...states.map((s) => ({ label: s, value: s }))]}
+                            />
 
-                            <label>
-                                <span className="sr-only">Filter by price range</span>
-                                <select
-                                    value={selectedPrice}
-                                    onChange={(event) => setSelectedPrice(event.target.value)}
-                                    className="w-full appearance-none bg-paper border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink focus:outline-none focus:border-ink">
-                                    <option value="all">All prices</option>
-                                    {priceRanges.map((range) => (
-                                        <option key={range.value} value={range.value}>
-                                            {range.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
+                            {/* Price filter */}
+                            <FilterDropdown
+                                value={selectedPrice}
+                                onChange={setSelectedPrice}
+                                placeholder="All prices"
+                                options={[{ label: "All prices", value: "all" }, ...priceRanges.map((r) => ({ label: r.label, value: r.value }))]}
+                            />
 
-                            <label>
-                                <span className="sr-only">Filter by package type</span>
-                                <select
-                                    value={selectedType}
-                                    onChange={(event) => setSelectedType(event.target.value)}
-                                    className="w-full appearance-none bg-paper border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink focus:outline-none focus:border-ink">
-                                    <option value="all">All travel styles</option>
-                                    {packageTypes.map((type) => (
-                                        <option key={type} value={type}>
-                                            {type}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
-                            <label className="relative">
-                                <span className="sr-only">Sort by</span>
-                                <svg
-                                    width="16px"
-                                    height="16px"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="absolute right-3 top-3.5 text-zinc-400 cursor-pointer"
-                                    onClick={() => reverse(filteredPackages)}>
-                                    <path
-                                        d="M8 3.5L8 16.5M8 3.5L3.5 7.83333M8 3.5L12.5 7.83333"
-                                        stroke="#9f9fa9"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                    <path
-                                        d="M17 20.5L17 7.5M17 20.5L21.5 16.1667M17 20.5L12.5 16.1667"
-                                        stroke="#9f9fa9"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                                <select
-                                    value={sortBy}
-                                    onChange={sortPackages}
-                                    className="w-full appearance-none bg-paper border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink focus:outline-none focus:border-ink">
-                                    <option value="none" disabled>
-                                        Sort by
-                                    </option>
-                                    {sortType.map((type) => (
-                                        <option key={type} value={type}>
-                                            {type}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
+                            {/* Type filter */}
+                            <FilterDropdown
+                                value={selectedType}
+                                onChange={setSelectedType}
+                                placeholder="All travel styles"
+                                options={[{ label: "All travel styles", value: "all" }, ...packageTypes.map((t) => ({ label: t, value: t }))]}
+                            />
+
+                            {/* Sort */}
+                            <FilterDropdown
+                                value={sortBy}
+                                onChange={sortPackages}
+                                placeholder="Sort by"
+                                options={[...sortType.map((t) => ({ label: t.charAt(0).toUpperCase() + t.slice(1), value: t }))]}
+                                icon={
+                                    <svg
+                                        width="16px"
+                                        height="16px"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="text-zinc-400 cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            reverse(filteredPackages);
+                                        }}>
+                                        <path
+                                            d="M8 3.5L8 16.5M8 3.5L3.5 7.83333M8 3.5L12.5 7.83333"
+                                            stroke="#9f9fa9"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                        <path
+                                            d="M17 20.5L17 7.5M17 20.5L21.5 16.1667M17 20.5L12.5 16.1667"
+                                            stroke="#9f9fa9"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                }
+                            />
                         </div>
                     </div>
 
@@ -291,17 +267,6 @@ export default function Packages() {
                     </div>
                 )}
             </div>
-
-            {/* <div data-aos="fade-up" data-aos-delay="200" className="flex justify-center gap-4 mt-12">
-                {[1, 2, 3, 4].map((n) => (
-                    <button
-                        key={n}
-                        className={`w-12 h-12 rounded-full font-mono text-sm transition-colors ${activePage === n ? "bg-ink text-white" : "bg-transparent border border-zinc-200 text-zinc-500 hover:border-ink hover:text-ink"}`}
-                        onClick={() => setActivePage(n)}>
-                        {n}
-                    </button>
-                ))}
-            </div> */}
         </main>
     );
 }

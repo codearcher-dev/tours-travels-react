@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import icon from "../assets/whatsapp-icon.png";
 import { usePackages } from "../context/PackageContext";
 import coverImage from "../assets/contact-cover.png";
@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { countWhatsappClicks, initiateNotification, sendEnquiry } from "../services/enquiry.services";
 import { countPagevisit } from "../services/initial.services";
 import Spinner from "../components/ui/loading-state/Spinner";
+import { PackageDropdown, CountryCodeDropdown, DatePickerDropdown, todayStr } from "../components/ui/CustomDropdown";
 
 export default function Contact() {
     const [submitting, setSubmitting] = useState(false);
@@ -22,9 +23,12 @@ export default function Contact() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [adults, setAdults] = useState();
-    const [kids, setKids] = useState();
+    const [adults, setAdults] = useState("");
+    const [kids, setKids] = useState("");
     const [pkg, setPkg] = useState("");
+    const [countryCode, setCountryCode] = useState("91");
+    const [arrivalDate, setArrivalDate] = useState("");
+    const [returnDate, setReturnDate] = useState("");
     const [message, setMessage] = useState("");
 
     const handleSubmit = async (e) => {
@@ -49,6 +53,11 @@ export default function Contact() {
             setError("Number of adults is required");
             return;
         }
+
+        if (!arrivalDate) {
+            setError("Arrival date is required");
+            return;
+        }
         if (!message) {
             setError("Message is required");
             return;
@@ -59,8 +68,11 @@ export default function Contact() {
             phone,
             package: pkg,
             adults,
-            kids,
+            kids: kids || 0,
+            arrivalDate,
+            returnDate,
             message,
+            countryCode,
         };
 
         setSubmitting(true);
@@ -72,6 +84,8 @@ export default function Contact() {
             setPkg("");
             setAdults("");
             setKids("");
+            setArrivalDate("");
+            setReturnDate("");
             setMessage("");
             setSubmitted(true);
             if (id) {
@@ -230,49 +244,34 @@ export default function Contact() {
                                             Email Address {"(Optional)"}
                                         </label>
                                     </div>
-                                    <div className="relative">
-                                        <input
-                                            id="phone"
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
-                                            type="tel"
-                                            maxLength={10}
-                                            placeholder="Phone Number"
-                                            required
-                                        />
-                                        <label
-                                            htmlFor="phone"
-                                            className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                            Phone Number
-                                        </label>
+
+                                    <div className="flex gap-1">
+                                        <CountryCodeDropdown value={countryCode} onChange={setCountryCode} />
+
+                                        <div className="relative w-full">
+                                            <input
+                                                id="phone"
+                                                value={phone}
+                                                onChange={(e) => setPhone(e.target.value)}
+                                                className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
+                                                type="tel"
+                                                maxLength={10}
+                                                placeholder="Phone Number"
+                                                required
+                                            />
+                                            <label
+                                                htmlFor="phone"
+                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
+                                                Phone Number
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
-                                    <div className="relative">
-                                        <select
-                                            id="destination"
-                                            value={pkg}
-                                            disabled={id && p ? true : false}
-                                            onChange={(e) => setPkg(e.target.value)}
-                                            required
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors appearance-none cursor-pointer disabled:bg-gray-300">
-                                            <option value="" disabled selected>
-                                                Select Package
-                                            </option>
-                                            {packages.map((pkg, idx) => (
-                                                <option value={pkg.name} key={idx}>
-                                                    {pkg.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute right-3 top-3.5 pointer-events-none text-zinc-400">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M6 9l6 6 6-6" />
-                                            </svg>
-                                        </div>
-                                    </div>
+                                    {/* â”€â”€ Custom Package Dropdown â”€â”€ */}
+                                    <PackageDropdown packages={packages} value={pkg} onChange={setPkg} disabled={id && p ? true : false} />
+
                                     <div className="grid grid-cols-2 gap-2 lg:gap-4">
                                         <div className="relative">
                                             <input
@@ -310,6 +309,26 @@ export default function Contact() {
                                     </div>
                                 </div>
 
+                                {/* â”€â”€ Custom Date Pickers â”€â”€ */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
+                                    <DatePickerDropdown
+                                        label="Arrival Date"
+                                        value={arrivalDate}
+                                        onChange={(val) => {
+                                            setArrivalDate(val);
+                                            // auto-clear return date if it falls before the new arrival
+                                            if (returnDate && returnDate < val) setReturnDate("");
+                                        }}
+                                        minDate={todayStr()}
+                                    />
+                                    <DatePickerDropdown
+                                        label="Return Date"
+                                        value={returnDate}
+                                        onChange={setReturnDate}
+                                        minDate={arrivalDate || todayStr()}
+                                    />
+                                </div>
+
                                 <div className="relative">
                                     <textarea
                                         id="message"
@@ -336,7 +355,7 @@ export default function Contact() {
                                         className={`w-full text-white py-3.5 px-6 text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
                                         type="submit">
                                         {submitted ? (
-                                            "Enquiry Completed ✓"
+                                            "✓ Enquiry Completed"
                                         ) : submitting ? (
                                             <>
                                                 Submitting <Spinner />

@@ -7,7 +7,7 @@ const itemVariants = {
 
 export default function PackageCard({ pkg }) {
     return (
-        <article className="group block w-full h-[400px] md:h-[500px] relative overflow-hidden">
+        <article className="group block w-full h-[400px] md:h-[500px] relative overflow-hidden z-0">
             <Link to={`/package/${pkg.slug}`} className="absolute inset-0 z-20">
                 <span className="sr-only">View Details for {pkg.name}</span>
             </Link>
