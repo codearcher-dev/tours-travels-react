@@ -71,4 +71,24 @@ describe("Navbar Component", () => {
         fireEvent.click(closeBtn);
         expect(document.body.style.overflow).toBe("");
     });
+
+    it("applies slide-in animation when opened and slide-out animation when closed", () => {
+        render(
+            <MemoryRouter>
+                <Navbar />
+            </MemoryRouter>
+        );
+
+        const hamburgerBtn = screen.getByLabelText(/Open Navigation Menu/i);
+        fireEvent.click(hamburgerBtn);
+
+        const drawer = screen.getByText(/Direct Travel Desk/i).closest("div[class*='fixed']");
+        expect(drawer).toHaveClass("animate-slide-in-left");
+        expect(drawer).toHaveClass("left-0");
+
+        const closeBtn = screen.getByLabelText(/Close menu/i);
+        fireEvent.click(closeBtn);
+
+        expect(drawer).toHaveClass("animate-slide-out-left");
+    });
 });

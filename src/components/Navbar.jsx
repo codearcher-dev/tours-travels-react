@@ -1,21 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { NavLink, useLocation, Link } from "react-router-dom";
 import { Menu, X, Phone, MessageCircle, ArrowRight } from "lucide-react";
 import logo from "../assets/logo.png";
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [isClosing, setIsClosing] = useState(false);
+    const closeTimerRef = useRef(null);
     const location = useLocation();
 
-    // Close mobile menu on route change
+    const openMobileMenu = () => {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current);
+            closeTimerRef.current = null;
+        }
+        setIsClosing(false);
+        setMobileOpen(true);
+    };
+
+    const closeMobileMenu = () => {
+        if (!mobileOpen || isClosing) return;
+        setIsClosing(true);
+        // Clear body scroll lock immediately
+        document.body.style.overflow = "";
+
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current);
+        }
+        closeTimerRef.current = setTimeout(() => {
+            setMobileOpen(false);
+            setIsClosing(false);
+            closeTimerRef.current = null;
+        }, 250);
+    };
+
+    // Close mobile menu immediately on route change
     useEffect(() => {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current);
+            closeTimerRef.current = null;
+        }
         setMobileOpen(false);
+        setIsClosing(false);
         document.body.style.overflow = "";
     }, [location.pathname]);
 
-    // Lock body scroll when mobile drawer is open
+    // Lock body scroll when mobile drawer is open and actively presented
     useEffect(() => {
-        if (mobileOpen) {
+        if (mobileOpen && !isClosing) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "";
@@ -23,7 +55,16 @@ export default function Navbar() {
         return () => {
             document.body.style.overflow = "";
         };
-    }, [mobileOpen]);
+    }, [mobileOpen, isClosing]);
+
+    // Cleanup timer on unmount
+    useEffect(() => {
+        return () => {
+            if (closeTimerRef.current) {
+                clearTimeout(closeTimerRef.current);
+            }
+        };
+    }, []);
 
     const navLinks = [
         { path: "/", label: "Home" },
@@ -92,37 +133,41 @@ export default function Navbar() {
                             </NavLink>
                         </div>
 
-                        {/* Mobile & Tablet Quick Enquire Button */}
-                        {/* <NavLink
-                            to="/contact"
-                            className="btn btn-blue text-xs py-1.5 px-3 sm:py-2 sm:px-3.5 font-bold shadow-2xs hidden xs:inline-flex lg:hidden">
-                            Enquire
-                        </NavLink> */}
-
                         {/* Mobile Hamburger Toggle */}
                         <div className="flex items-center lg:hidden">
                             <button
                                 type="button"
-                                aria-label={mobileOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
-                                onClick={() => setMobileOpen(!mobileOpen)}
+                                aria-label={mobileOpen && !isClosing ? "Close Navigation Menu" : "Open Navigation Menu"}
+                                onClick={() => {
+                                    if (mobileOpen && !isClosing) {
+                                        closeMobileMenu();
+                                    } else {
+                                        openMobileMenu();
+                                    }
+                                }}
                                 className="p-2 sm:p-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none">
-                                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                                {mobileOpen && !isClosing ? <X size={20} /> : <Menu size={20} />}
                             </button>
                         </div>
                     </div>
                 </div>
             </header>
 
-            {/* Mobile Navigation Drawer & Backdrop */}
+            {/* Mobile Navigation Drawer & Backdrop with Slide-In & Slide-Out Animations */}
             {mobileOpen && (
                 <>
                     <div
-                        className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs lg:hidden transition-opacity"
-                        onClick={() => setMobileOpen(false)}
+                        className={`fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs lg:hidden ${
+                            isClosing ? "animate-fade-out" : "animate-fade-in"
+                        }`}
+                        onClick={closeMobileMenu}
                         aria-hidden="true"
                     />
 
-                    <div className="fixed top-0 right-0 bottom-0 w-[85%] max-w-[320px] sm:max-w-[340px] z-50 bg-white border-l border-slate-200 shadow-2xl flex flex-col justify-between p-4 sm:p-6 lg:hidden overflow-y-auto">
+                    <div
+                        className={`fixed top-0 left-0 bottom-0 w-[85%] max-w-[320px] sm:max-w-[340px] z-50 bg-white border-r border-slate-200 shadow-2xl flex flex-col justify-between p-4 sm:p-6 lg:hidden overflow-y-auto ${
+                            isClosing ? "animate-slide-out-left" : "animate-slide-in-left"
+                        }`}>
                         {/* Drawer Header */}
                         <div>
                             <div className="flex items-center justify-between pb-5 border-b border-slate-100">
@@ -134,7 +179,7 @@ export default function Navbar() {
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() => setMobileOpen(false)}
+                                    onClick={closeMobileMenu}
                                     aria-label="Close menu"
                                     className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600">
                                     <X size={20} />
@@ -148,6 +193,7 @@ export default function Navbar() {
                                         key={link.path}
                                         to={link.path}
                                         end={link.path === "/"}
+                                        onClick={closeMobileMenu}
                                         className={({ isActive }) => `
                                             flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-sm transition-colors
                                             ${isActive ? "bg-slate-900 text-white shadow-xs" : "text-slate-700 hover:bg-slate-100"}
@@ -179,7 +225,10 @@ export default function Navbar() {
                                 </a>
                             </div>
 
-                            <Link to="/contact" className="btn btn-primary w-full py-3 text-xs sm:text-sm font-bold mt-1">
+                            <Link
+                                to="/contact"
+                                onClick={closeMobileMenu}
+                                className="btn btn-primary w-full py-3 text-xs sm:text-sm font-bold mt-1">
                                 Plan Custom Trip
                             </Link>
                         </div>
