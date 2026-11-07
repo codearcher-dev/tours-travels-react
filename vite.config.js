@@ -4,11 +4,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
     plugins: [react(), tailwindcss()],
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './src/test/setup.js',
+    },
     server: {
         allowedHosts: true, // Allow ngrok tunneling
         proxy: {
             '/api': {
-                target: "http://localhost:3000",
+                target: "https://api.primetraveller.in",
                 changeOrigin: true,
                 secure: false
             }

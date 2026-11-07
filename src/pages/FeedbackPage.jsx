@@ -12,7 +12,7 @@ function StarRating({ value, onChange, disabled }) {
 
     return (
         <div className="flex flex-col gap-1">
-            <div className="flex gap-1.5 items-center">
+            <div className="flex gap-1 sm:gap-1.5 items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
                     <button
                         key={star}
@@ -22,25 +22,23 @@ function StarRating({ value, onChange, disabled }) {
                         onMouseEnter={() => !disabled && setHovered(star)}
                         onMouseLeave={() => !disabled && setHovered(0)}
                         aria-label={`Rate ${star} out of 5`}
-                        className="focus:outline-none disabled:cursor-not-allowed transition-transform hover:scale-110">
+                        className="focus:outline-none disabled:cursor-not-allowed transition-transform hover:scale-110 p-0.5">
                         <svg
-                            width="28"
-                            height="28"
                             viewBox="0 0 24 24"
                             fill={star <= active ? colors[active] : "none"}
                             stroke={star <= active ? colors[active] : "#cbd5e1"}
                             strokeWidth="1.5"
-                            className="transition-colors duration-150">
+                            className="w-6 h-6 sm:w-7 sm:h-7 transition-colors duration-150">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                         </svg>
                     </button>
                 ))}
             </div>
-            {active === 1 && <span className="text-[11px] uppercase tracking-widest text-red-600 font-mono">{labels[active]}</span>}
-            {active === 2 && <span className="text-[11px] uppercase tracking-widest text-orange-500 font-mono">{labels[active]}</span>}
-            {active === 3 && <span className="text-[11px] uppercase tracking-widest text-yellow-500 font-mono">{labels[active]}</span>}
-            {active === 4 && <span className="text-[11px] uppercase tracking-widest text-green-400 font-mono">{labels[active]}</span>}
-            {active === 5 && <span className="text-[11px] uppercase tracking-widest text-green-600 font-mono">{labels[active]}</span>}
+            {active === 1 && <span className="text-[11px] uppercase tracking-widest text-red-600 font-semibold">{labels[active]}</span>}
+            {active === 2 && <span className="text-[11px] uppercase tracking-widest text-orange-500 font-semibold">{labels[active]}</span>}
+            {active === 3 && <span className="text-[11px] uppercase tracking-widest text-yellow-500 font-semibold">{labels[active]}</span>}
+            {active === 4 && <span className="text-[11px] uppercase tracking-widest text-green-500 font-semibold">{labels[active]}</span>}
+            {active === 5 && <span className="text-[11px] uppercase tracking-widest text-green-600 font-semibold">{labels[active]}</span>}
         </div>
     );
 }
@@ -117,7 +115,12 @@ export default function FeedbackPage() {
             await submitFeedback(payload, token);
             setState(STATE.SUCCESS);
         } catch (err) {
-            setErrorMsg(err?.response?.data?.message || "Something went wrong. Please try again.");
+            const rawMsg = err?.response?.data?.message || err?.message || "";
+            const cleanMsg =
+                !rawMsg || /status code/i.test(rawMsg) || /request failed/i.test(rawMsg) || /network error/i.test(rawMsg)
+                    ? "Unable to submit your feedback right now. Please try again in a moment."
+                    : rawMsg;
+            setErrorMsg(cleanMsg);
             setState(STATE.ERROR);
         }
     };
@@ -125,10 +128,10 @@ export default function FeedbackPage() {
     /* ── render helpers ───────────────────────────────────── */
     if (state === STATE.LOADING) {
         return (
-            <main className="min-h-screen flex items-center justify-center bg-paper-dim select-none">
+            <main className="min-h-screen flex items-center justify-center bg-slate-50 select-none">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-2 border-rust border-t-transparent rounded-full animate-spin" />
-                    <p className="text-sm text-zinc-400 font-mono uppercase tracking-widest">Loading…</p>
+                    <div className="w-10 h-10 border-2 border-sky-600 border-t-transparent rounded-full animate-spin" />
+                    <p className="text-sm text-slate-400 font-semibold uppercase tracking-widest">Loading…</p>
                 </div>
             </main>
         );
@@ -136,13 +139,13 @@ export default function FeedbackPage() {
 
     if (state === STATE.INVALID) {
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-paper-dim select-none px-4">
+            <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-slate-50 select-none px-4">
                 <div className="text-5xl">⚠️</div>
-                <h1 className="font-display text-3xl text-ink text-center">This link is no longer valid</h1>
-                <p className="text-sm text-zinc-500 text-center max-w-sm">
+                <h1 className="font-display text-2xl sm:text-3xl text-slate-900 text-center">This link is no longer valid</h1>
+                <p className="text-xs sm:text-sm text-slate-500 text-center max-w-sm">
                     The feedback link has expired or has already been used. Please contact us if you think this is a mistake.
                 </p>
-                <Link to="/" className="btn btn-primary text-sm">
+                <Link to="/" className="btn btn-primary text-xs sm:text-sm">
                     Go Home
                 </Link>
             </main>
@@ -151,15 +154,15 @@ export default function FeedbackPage() {
 
     if (state === STATE.SUCCESS) {
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-paper-dim select-none px-4">
-                <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5">
+            <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-slate-50 select-none px-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5">
                         <path d="M20 6L9 17l-5-5" />
                     </svg>
                 </div>
-                <h1 className="font-display text-3xl text-ink text-center">Thank you for your feedback!</h1>
-                <p className="text-sm text-zinc-500 text-center max-w-sm">Your response has been recorded. We truly appreciate your time.</p>
-                <Link to="/" className="btn btn-primary text-sm">
+                <h1 className="font-display text-2xl sm:text-3xl text-slate-900 text-center">Thank you for your feedback!</h1>
+                <p className="text-xs sm:text-sm text-slate-500 text-center max-w-sm">Your response has been recorded. We truly appreciate your time.</p>
+                <Link to="/" className="btn btn-primary text-xs sm:text-sm">
                     Explore More Packages
                 </Link>
             </main>
@@ -168,11 +171,11 @@ export default function FeedbackPage() {
 
     if (state === STATE.ERROR) {
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-paper-dim select-none px-4">
+            <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-slate-50 select-none px-4">
                 <div className="text-5xl">😕</div>
-                <h1 className="font-display text-3xl text-ink text-center">Submission Failed</h1>
-                <p className="text-sm text-red-500 text-center max-w-sm">{errorMsg}</p>
-                <button onClick={() => setState(STATE.FORM)} className="btn btn-primary text-sm cursor-pointer">
+                <h1 className="font-display text-2xl sm:text-3xl text-slate-900 text-center">Submission Failed</h1>
+                <p className="text-xs sm:text-sm text-red-500 text-center max-w-sm">{errorMsg}</p>
+                <button onClick={() => setState(STATE.FORM)} className="btn btn-primary text-xs sm:text-sm cursor-pointer">
                     Try Again
                 </button>
             </main>
@@ -183,16 +186,16 @@ export default function FeedbackPage() {
     const isSubmitting = state === STATE.SUBMITTING;
 
     return (
-        <main className="min-h-screen bg-paper-dim select-none py-8 px-4">
-            <div className="max-w-[680px] mx-auto flex flex-col gap-8">
+        <main className="min-h-screen bg-slate-50 select-none py-8 sm:py-12 px-3.5 sm:px-6">
+            <div className="max-w-[680px] mx-auto flex flex-col gap-6 sm:gap-8">
                 {/* header */}
                 <div data-aos="fade-down" className="text-center flex flex-col gap-2">
-                    <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-rust">Your Experience Matters</span>
-                    <h1 className="font-display text-4xl sm:text-5xl font-medium text-ink leading-tight">
-                        Share Your <span className="italic text-rust">Feedback</span>
+                    <span className="font-semibold text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-sky-600">Your Experience Matters</span>
+                    <h1 className="font-display text-2xl xs:text-3xl sm:text-5xl font-bold text-slate-900 leading-tight">
+                        Share Your <span className="italic text-sky-600">Feedback</span>
                     </h1>
-                    <p className="text-sm text-zinc-500 font-light mt-1">
-                        Package: <span className="font-medium text-ink">{linkData?.package}</span>
+                    <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
+                        Package: <span className="font-semibold text-slate-900">{linkData?.package}</span>
                     </p>
                 </div>
 
@@ -200,11 +203,11 @@ export default function FeedbackPage() {
                 <form
                     onSubmit={handleSubmit}
                     data-aos="fade-up"
-                    className="bg-white rounded-2xl shadow-sm border border-zinc-100 p-6 sm:p-8 flex flex-col gap-7">
+                    className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200 p-4 sm:p-8 flex flex-col gap-5 sm:gap-7">
                     {/* name */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-mono">
-                            Your Name <span className="text-rust">*</span>
+                        <label className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                            Your Name <span className="text-sky-600">*</span>
                         </label>
                         <input
                             type="text"
@@ -212,23 +215,23 @@ export default function FeedbackPage() {
                             onChange={(e) => setName(e.target.value)}
                             disabled={isSubmitting}
                             placeholder="Full Name"
-                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors disabled:opacity-60"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition-colors disabled:opacity-60"
                         />
                     </div>
 
                     {/* divider */}
-                    <div className="border-t border-zinc-100" />
+                    <div className="border-t border-slate-100" />
 
                     {/* per-question ratings */}
                     {(linkData?.questions || []).length > 0 && (
-                        <div className="flex flex-col gap-6">
-                            <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-mono">
-                                Rate Each Aspect <span className="text-rust">*</span>
+                        <div className="flex flex-col gap-5 sm:gap-6">
+                            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                                Rate Each Aspect <span className="text-sky-600">*</span>
                             </p>
                             {linkData.questions.map((question, idx) => (
                                 <div key={idx} className="flex flex-col gap-2">
-                                    <p className="text-sm text-ink font-medium leading-snug">
-                                        <span className="text-rust mr-1.5 font-mono text-xs">{String(idx + 1).padStart(2, "0")}.</span>
+                                    <p className="text-xs sm:text-sm text-slate-900 font-medium leading-snug">
+                                        <span className="text-sky-600 mr-1.5 font-bold text-xs">{String(idx + 1).padStart(2, "0")}.</span>
                                         {question}
                                     </p>
                                     <StarRating
@@ -243,7 +246,7 @@ export default function FeedbackPage() {
 
                     {/* overall rating display */}
                     {overallRating > 0 && (
-                        <div className="rounded-xl bg-paper-dim px-5 py-4 flex items-center gap-4">
+                        <div className="rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 px-4 sm:px-5 py-3 sm:py-4 flex items-center gap-3 sm:gap-4">
                             <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map((s, i) => (
                                     <svg
@@ -259,19 +262,19 @@ export default function FeedbackPage() {
                                 ))}
                             </div>
                             <div>
-                                <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">Overall Rating</span>
-                                <p className="text-sm font-medium text-ink">{overallRating} / 5</p>
+                                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 font-semibold">Overall Rating</span>
+                                <p className="text-xs sm:text-sm font-semibold text-slate-900">{overallRating} / 5</p>
                             </div>
                         </div>
                     )}
 
                     {/* divider */}
-                    <div className="border-t border-zinc-100" />
+                    <div className="border-t border-slate-100" />
 
                     {/* written review */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-mono">
-                            Written Review <span className="text-zinc-300">(Optional)</span>
+                        <label className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                            Written Review <span className="text-slate-400 font-normal">(Optional)</span>
                         </label>
                         <textarea
                             value={review}
@@ -279,27 +282,27 @@ export default function FeedbackPage() {
                             disabled={isSubmitting}
                             rows={4}
                             placeholder="Tell us more about your experience — what you loved, what could be improved..."
-                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-3.5 py-3 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors resize-y disabled:opacity-60"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition-colors resize-y disabled:opacity-60"
                         />
                     </div>
 
                     {/* error */}
-                    {formError && <p className="text-sm text-red-500">{formError}</p>}
+                    {formError && <p className="text-xs sm:text-sm text-red-500">{formError}</p>}
 
                     {/* submit */}
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-slate-700 hover:bg-rust text-white py-3.5 px-6 text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-70">
+                        className="btn btn-blue w-full py-3 sm:py-3.5 px-6 text-xs uppercase tracking-wider font-bold transition-colors flex items-center justify-center gap-2.5 rounded-xl cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 shadow-md">
                         {isSubmitting ? (
                             <>
                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Submitting…
+                                <span>Submitting…</span>
                             </>
                         ) : (
                             <>
-                                Submit Feedback
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <span>Submit Feedback</span>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M5 12h14M12 5l7 7-7 7" />
                                 </svg>
                             </>
@@ -307,7 +310,7 @@ export default function FeedbackPage() {
                     </button>
                 </form>
 
-                <p className="text-center text-xs text-zinc-400 pb-4">Your feedback is anonymous and helps us improve future journeys.</p>
+                <p className="text-center text-xs text-slate-400 pb-4">Your feedback is anonymous and helps us improve future journeys.</p>
             </div>
         </main>
     );

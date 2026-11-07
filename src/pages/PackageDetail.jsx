@@ -1,244 +1,359 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { usePackages } from "../context/PackageContext";
 import Timeline from "../components/Itinerary";
-import { MapPin, X } from "lucide-react";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import PhotoAlbum from "react-photo-album";
-import "react-photo-album/styles.css";
-import Tick from "../components/ui/icons/Tick.jsx";
-import Cross from "../components/ui/icons/Cross.jsx";
+import { SkeletonPackageDetail } from "../components/ui/LoadingState";
+import { MapPin, Check, X, MessageCircle, ArrowLeft } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { countPagevisit } from "../services/initial.services.js";
+import { countPagevisit } from "../services/initial.services";
 
 export default function PackageDetail() {
-    const { packages } = usePackages();
+    const { packages, loading } = usePackages();
     const { slug } = useParams();
-    const pkg = packages.find((p) => p.slug === slug);
-    const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
-    const [galleryPhotos, setGalleryPhotos] = useState([]);
+    const navigate = useNavigate();
 
-    const images = pkg ? pkg.images || [pkg.img] : [];
+    const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-    useEffect(() => {
-        const getImageDimensions = (src) => {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    resolve({
-                        src,
-                        width: img.naturalWidth,
-                        height: img.naturalHeight,
-                    });
-                };
-                img.src = src;
-            });
-        };
+    const pkg = packages.find((p) => p.slug === slug || p.id === slug || String(p._id) === slug);
 
-        if (packages.length > 0) {
-            Promise.all(images.map((src) => getImageDimensions(src.url))).then((data) => {
-                setGalleryPhotos(data);
-            });
-        }
-    }, [packages]);
     useEffect(() => {
         const visit = async () => {
             try {
                 await countPagevisit();
-            } catch (error) {
-                console.log(error.message);
+            } catch {
+                // Ignore tracking error
             }
         };
-
         visit();
     }, []);
 
+    if (loading) {
+        return <SkeletonPackageDetail />;
+    }
+
     if (!pkg) {
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center px-4 md:px-8">
-                <h1 className="text-4xl mb-4">Journey not found</h1>
-                <Link to="/packages" className="btn btn-primary">
-                    Return to Collection
+            <main className="min-h-screen flex flex-col items-center justify-center px-4 py-20 text-center bg-slate-50">
+                <div className="w-16 h-16 rounded-3xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4 border border-amber-200">
+                    <MapPin size={32} />
+                </div>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Journey Not Found</h1>
+                <p className="text-slate-500 text-xs sm:text-sm max-w-md mb-6 font-normal">
+                    The requested tour package may have moved or been updated. Explore our available collection of Himalayan routes.
+                </p>
+                <Link to="/packages" className="btn btn-primary text-xs">
+                    Return to Packages
                 </Link>
             </main>
         );
     }
 
+    const imgUrl =
+        typeof pkg.img === "string"
+            ? pkg.img
+            : pkg.img?.url ||
+              (pkg.images && typeof pkg.images[0] === "string" ? pkg.images[0] : pkg.images?.[0]?.url) ||
+              "";
+
+    const images =
+        Array.isArray(pkg.images) && pkg.images.length > 0
+            ? pkg.images.map((im) => (typeof im === "string" ? { url: im } : im))
+            : imgUrl
+            ? [{ url: imgUrl }]
+            : [];
+
+    const nights = pkg.duration?.nights ?? 3;
+    const days = pkg.duration?.days ?? 4;
+    const actualPrice = Number(pkg.price?.actual || pkg.price?.originalPrice || 0);
+    const discountedPrice = Number(pkg.price?.discounted || pkg.price?.discountedPrice || actualPrice);
+    const savingsPercent = actualPrice > discountedPrice ? Math.round(((actualPrice - discountedPrice) / actualPrice) * 100) : 0;
+
+    const whatsappText = encodeURIComponent(
+        `Hi Prime Traveller! I am interested in booking the "${pkg.name}" (${nights}N/${days}D) starting at ₹${discountedPrice}. Please share itinerary and availability.`,
+    );
+    const whatsappUrl = `https://wa.me/919142234213?text=${whatsappText}`;
+
     return (
-        <main className="bg-paper min-h-screen pb-16 overflow-x-clip select-none">
-            {/* FULL BLEED EDITORIAL HERO */}
-            <div className="w-full h-[70vh] relative overflow-hidden bg-ink">
-                <Swiper
-                    modules={[Navigation, Pagination, Autoplay]}
-                    navigation={images.length > 1}
-                    pagination={images.length > 1 ? { clickable: true } : false}
-                    autoplay={{ delay: 5000, disableOnInteraction: false }}
-                    loop={images.length > 1}
-                    className="w-full h-full absolute inset-0 z-0"
-                    style={{
-                        "--swiper-navigation-color": "#fff",
-                        "--swiper-pagination-color": "#fff",
-                    }}>
-                    {images.map((img, index) => (
-                        <SwiperSlide key={index}>
-                            <img src={img?.url} alt={`${pkg.name} - ${index + 1}`} className="w-full h-full object-cover opacity-50" />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none"></div>
-
-                <div className="absolute bottom-8 left-4 md:bottom-12 md:left-16 z-20 max-w-3xl pr-4">
-                    <span className="font-mono text-[10px] md:text-sm uppercase tracking-[0.2em] text-white/80 mb-4 block">{pkg.location.name}</span>
-                    <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-white mb-4 drop-shadow-md">{pkg.name}</h1>
+        <main className="bg-slate-50 min-h-screen pb-28 md:pb-20 select-none overflow-x-hidden">
+            {/* BREADCRUMB */}
+            <div className="pt-5 sm:pt-8 pb-3 sm:pb-4 max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8">
+                <div
+                    // to="/packages"
+                    onClick={() => navigate(-1)}
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-sky-600 transition-colors">
+                    <ArrowLeft size={14} />
+                    <span>Back to all packages</span>
                 </div>
             </div>
 
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 md:pt-12 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
-                <h2 className="text-3xl text-rust">Package Detail</h2>
+            {/* HERO CAROUSEL */}
+            <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8">
+                <div className="relative w-full h-[240px] xs:h-[300px] sm:h-[420px] md:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg bg-slate-950">
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        navigation={images.length > 1}
+                        pagination={images.length > 1 ? { clickable: true } : false}
+                        autoplay={{ delay: 4500, disableOnInteraction: false }}
+                        loop={images.length > 1}
+                        className="w-full h-full"
+                        style={{
+                            "--swiper-navigation-color": "#ffffff",
+                            "--swiper-pagination-color": "#0284c7",
+                        }}>
+                        {images.map((img, index) => (
+                            <SwiperSlide key={index}>
+                                <img src={img?.url || img} alt={`${pkg.name} view ${index + 1}`} className="w-full h-full object-cover opacity-85" />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent pointer-events-none z-10" />
+
+                    {/* Title & Location details pinned on hero bottom */}
+                    <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 md:bottom-8 md:left-8 md:right-8 z-20 pointer-events-none">
+                        <div className="inline-flex items-center gap-1 sm:gap-1.5 bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full mb-1.5 sm:mb-2">
+                            <MapPin size={13} className="text-amber-400 shrink-0" />
+                            <span>{pkg.location?.name || "Himalayas"}</span>
+                        </div>
+                        <h1 className="font-display text-lg xs:text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight max-w-3xl drop-shadow-sm">
+                            {pkg.name}
+                        </h1>
+                    </div>
+                </div>
             </div>
 
-            {/* EDITORIAL LAYOUT: Content (Left) + Sticky Booking (Right) */}
-            <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 md:pt-12 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
-                {/* Main Narrative (Left) */}
-                <div className="min-w-0 flex-1 lg:max-w-3xl flex flex-col gap-6 md:gap-4">
-                    <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                        <h2 className="text-xs mb-3 uppercase text-rust">Overview</h2>
-                        <p className="text-zinc-600 leading-relaxed text-md font-light">{pkg.description}</p>
+            {/* KEY METRICS STRIP */}
+            <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8 mt-4 sm:mt-6">
+                <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 border border-slate-200 shadow-xs grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 text-center">
+                    <div>
+                        <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Duration</span>
+                        <span className="font-bold text-xs sm:text-base text-slate-900 mt-0.5 block truncate">
+                            {nights}N / {days}D
+                        </span>
+                    </div>
+                    <div>
+                        <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Travel Style</span>
+                        <span className="font-bold text-xs sm:text-base text-slate-900 mt-0.5 block truncate">
+                            {pkg.type || pkg.packageType || "Custom Tour"}
+                        </span>
+                    </div>
+                    <div>
+                        <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Pickup & Drop</span>
+                        <span className="font-bold text-xs sm:text-base text-slate-900 mt-0.5 block truncate">Bagdogra / NJP</span>
+                    </div>
+                    <div>
+                        <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Permits</span>
+                        <span className="font-bold text-xs sm:text-base text-emerald-600 mt-0.5 block truncate">100% Handled</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* CONTENT + DESKTOP STICKY SIDEBAR */}
+            <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8 mt-6 sm:mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+                {/* Left Column: Narrative */}
+                <div className="lg:col-span-8 flex flex-col gap-5 sm:gap-6">
+                    {/* Overview Card */}
+                    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xs">
+                        <span className="text-xs uppercase tracking-wider text-sky-600 font-bold block mb-1">Overview</span>
+                        <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-slate-900 mb-2 sm:mb-3">About this Journey</h2>
+                        <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-normal">{pkg.description}</p>
                     </div>
 
-                    <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                        <div>
-                            <div className="text-xs uppercase tracking-widest text-rust mb-2">Duration</div>
-                            <div className="font-light text-lgl">
-                                {pkg.duration.nights} Nights / {pkg.duration.days} Days
+                    {/* Destinations Covered */}
+                    {pkg.destinations && pkg.destinations.length > 0 && (
+                        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xs">
+                            <span className="text-xs uppercase tracking-wider text-sky-600 font-bold block mb-1.5 sm:mb-2">Destinations Covered</span>
+                            <h3 className="font-display text-base sm:text-lg font-bold text-slate-900 mb-3 sm:mb-4">Places on this Tour</h3>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                                {pkg.destinations.map((dest, idx) => (
+                                    <span
+                                        key={idx}
+                                        className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-[11px] sm:text-xs font-semibold">
+                                        <MapPin size={13} className="text-sky-600 shrink-0" />
+                                        <span>{dest}</span>
+                                    </span>
+                                ))}
                             </div>
                         </div>
-                    </div>
+                    )}
 
-                    <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                        <h3 className="text-xs uppercase tracking-widest text-rust mb-6">Destinations Covered</h3>
-                        <div className="flex flex-wrap gap-3">
-                            {pkg.destinations.map((dest, index) => (
-                                <span
-                                    key={index}
-                                    className="px-4 py-2 border border-zinc-200 rounded-full text-sm font-medium text-zinc-700 bg-zinc-50 shadow-sm">
-                                    {dest}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                    {/* Inclusions & Exclusions */}
+                    {((pkg.inclusions && pkg.inclusions.length > 0) || (pkg.exclusions && pkg.exclusions.length > 0)) && (
+                        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xs">
+                            <span className="text-xs uppercase tracking-wider text-sky-600 font-bold block mb-1">Package Details</span>
+                            <h3 className="font-display text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-5">Inclusions & Exclusions</h3>
 
-                    <div data-aos="fade-up" className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                        <div>
-                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">What's Included</h3>
-                            <ul className="flex flex-col gap-3">
-                                {pkg.inclusions && pkg.inclusions.length > 0 ? (
-                                    pkg.inclusions.map((inc, index) => (
-                                        <li key={index} className="flex gap-3 text-zinc-600 text-sm">
-                                            <Tick className={"w-4 h-4 mt-0.5 shrink-0 text-green-600"} />
-                                            <span>{inc}</span>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="text-sm text-zinc-400 italic">No inclusions specified</li>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                                {/* Inclusions */}
+                                {pkg.inclusions && pkg.inclusions.length > 0 && (
+                                    <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-emerald-50/60 border border-emerald-100">
+                                        <h4 className="font-bold text-xs sm:text-sm text-emerald-900 mb-3 flex items-center gap-2">
+                                            <Check size={16} className="text-emerald-600 shrink-0" />
+                                            <span>What's Included</span>
+                                        </h4>
+                                        <ul className="flex flex-col gap-2 sm:gap-2.5 text-xs text-slate-700">
+                                            {pkg.inclusions.map((inc, i) => (
+                                                <li key={i} className="flex items-start gap-2">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0" />
+                                                    <span className="leading-snug">{inc}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 )}
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Not Included</h3>
-                            <ul className="flex flex-col gap-3">
-                                {pkg.exclusions && pkg.exclusions.length > 0 ? (
-                                    pkg.exclusions.map((exc, index) => (
-                                        <li key={index} className="flex gap-3 text-zinc-500 text-sm">
-                                            <Cross className={"w-4 h-4 mt-0.5 shrink-0 text-red-600"} />
-                                            <span>{exc}</span>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="text-sm text-zinc-400 italic">No exclusions specified</li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
 
-                    <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
+                                {/* Exclusions */}
+                                {pkg.exclusions && pkg.exclusions.length > 0 && (
+                                    <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-red-50/60 border border-red-100">
+                                        <h4 className="font-bold text-xs sm:text-sm text-red-900 mb-3 flex items-center gap-2">
+                                            <X size={16} className="text-red-500 shrink-0" />
+                                            <span>Not Included</span>
+                                        </h4>
+                                        <ul className="flex flex-col gap-2 sm:gap-2.5 text-xs text-slate-700">
+                                            {pkg.exclusions.map((exc, i) => (
+                                                <li key={i} className="flex items-start gap-2">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                                                    <span className="leading-snug">{exc}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Timeline Itinerary */}
+                    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xs">
                         <Timeline itinerary={pkg.itinerary} />
                     </div>
 
-                    {/* Image Gallery */}
+                    {/* Photo Gallery Grid */}
                     {images.length > 1 && (
-                        <div data-aos="fade-up" className="bg-paper-dim rounded-2xl p-6 md:p-8 shadow-sm">
-                            <h3 className="text-xs uppercase tracking-widest text-rust mb-6 border-b border-zinc-200 pb-2">Gallery</h3>
-                            <PhotoAlbum
-                                layout="rows"
-                                photos={galleryPhotos}
-                                targetRowHeight={220}
-                                spacing={16}
-                                onClick={({ photo }) => setSelectedGalleryImage(photo.src)}
-                                componentsProps={{
-                                    image: {
-                                        className: "rounded-sm hover:opacity-90 transition-opacity cursor-zoom-in",
-                                    },
-                                }}
-                            />
+                        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xs">
+                            <span className="text-xs uppercase tracking-wider text-sky-600 font-bold block mb-1">Gallery</span>
+                            <h3 className="font-display text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-5">Tour Photos</h3>
+
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                                {images.map((img, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => setSelectedPhoto(img?.url || img)}
+                                        className="relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer group bg-slate-100">
+                                        <img
+                                            src={img?.url || img}
+                                            alt={`Gallery view ${idx + 1}`}
+                                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
 
-                {/* Sticky Sidebar (Right) */}
-                <div className="min-w-0 lg:w-[380px] shrink-0">
-                    <div
-                        data-aos="fade-left"
-                        className="sticky top-32 bg-paper-dim rounded-2xl border border-zinc-200 p-6 md:p-8 shadow-xl shadow-zinc-200/50">
-                        <div className="text-xs uppercase tracking-widest text-rust mb-2">Starting Price</div>
-                        <div className="flex items-baseline gap-3 mb-8 border-b border-zinc-100 pb-6">
-                            <span className="text-4xl">₹{pkg.price.discounted.toLocaleString()}</span>
-                            <span className="text-red-600 line-through text-sm">₹{pkg.price.actual}</span>
-                            <span className="text-xs text-zinc-400 ml-auto uppercase">/ Person</span>
+                {/* Right Column: Desktop Sticky Booking Card */}
+                <div className="hidden lg:block lg:col-span-4">
+                    <div className="sticky top-24 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-md flex flex-col gap-5">
+                        <div>
+                            <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Starting From</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-3xl font-extrabold text-slate-900 tracking-tight">₹{discountedPrice.toLocaleString()}</span>
+                                {actualPrice > discountedPrice && (
+                                    <span className="text-sm text-slate-400 line-through">₹{actualPrice.toLocaleString()}</span>
+                                )}
+                                <span className="text-xs text-slate-500">/ person</span>
+                            </div>
+
+                            {savingsPercent > 0 && (
+                                <span className="inline-block mt-2 bg-orange-50 text-orange-700 border border-orange-200 text-xs font-bold px-3 py-1 rounded-full">
+                                    Special Offer: Save {savingsPercent}%
+                                </span>
+                            )}
                         </div>
 
-                        <p className="text-sm text-zinc-500 mb-8 font-light">
-                            Pricing depends on group size, exact dates, and customization requests.
+                        <div className="space-y-2.5 pt-4 border-t border-slate-100 text-xs text-slate-600">
+                            <div className="flex items-center gap-2">
+                                <Check size={15} className="text-emerald-600" />
+                                <span>No hidden vehicle charges</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Check size={15} className="text-emerald-600" />
+                                <span>Customizable dates & stays</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Check size={15} className="text-emerald-600" />
+                                <span>Dedicated mountain driver & vehicle</span>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3 pt-2">
+                            <Link
+                                to={`/contact?enq=${pkg.slug}`}
+                                className="btn btn-blue w-full py-3.5 text-xs sm:text-sm font-bold justify-center shadow-xs">
+                                Send Tour Enquiry
+                            </Link>
+
+                            <a
+                                href={whatsappUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-secondary w-full py-3.5 text-xs sm:text-sm font-semibold justify-center">
+                                <MessageCircle size={16} className="text-emerald-600" />
+                                <span>Quick WhatsApp Enquiry</span>
+                            </a>
+                        </div>
+
+                        <p className="text-[11px] text-slate-400 text-center font-normal">
+                            Enquiry responses provided within 24 business hours. No booking fee required.
                         </p>
-
-                        <Link
-                            to={`/contact?enq=${pkg.slug}`}
-                            className="block w-full text-center bg-ink text-white py-4 px-6 text-xs uppercase tracking-widest hover:bg-rust transition-colors mb-4">
-                            Enquire Now
-                        </Link>
-
-                        <div className="text-center text-xs text-zinc-400">No commitment required.</div>
                     </div>
                 </div>
             </div>
 
-            {/* LIGHTBOX MODAL */}
+            {/* MOBILE STICKY BOTTOM ACTION BAR */}
+            <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3.5 py-2.5 pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] sm:px-6 shadow-xl flex items-center justify-between lg:hidden">
+                <div className="min-w-0 pr-2">
+                    <span className="block text-[10px] text-slate-400 uppercase font-semibold">From</span>
+                    <div className="flex items-baseline gap-1">
+                        <span className="text-base xs:text-lg font-extrabold text-slate-900 tracking-tight">₹{discountedPrice.toLocaleString()}</span>
+                        <span className="text-[10px] text-slate-500 whitespace-nowrap">/ person</span>
+                    </div>
+                </div>
 
-            {selectedGalleryImage && (
-                <div className="fixed inset-0 z-[100] bg-ink/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-8">
-                    {/* The close button */}
+                <div className="flex items-center gap-1.5 xs:gap-2 shrink-0">
+                    <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[#25D366] text-white flex items-center justify-center shrink-0"
+                        aria-label="WhatsApp enquiry">
+                        <MessageCircle size={17} />
+                    </a>
+                    <Link to={`/contact?enq=${pkg.slug}`} className="btn btn-primary text-xs font-bold py-2 sm:py-2.5 px-3.5 sm:px-5 shrink-0">
+                        Enquire Now
+                    </Link>
+                </div>
+            </div>
+
+            {/* Photo Lightbox */}
+            {selectedPhoto && (
+                <div
+                    className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xs flex items-center justify-center p-4"
+                    onClick={() => setSelectedPhoto(null)}>
                     <button
-                        onClick={() => setSelectedGalleryImage(null)}
-                        className="absolute top-6 right-6 z-[110] text-white/70 hover:text-white transition-colors cursor-pointer p-2 bg-ink/20 rounded-full">
-                        <X size={32} />
+                        type="button"
+                        onClick={() => setSelectedPhoto(null)}
+                        className="absolute top-6 right-6 text-white p-2.5 rounded-2xl bg-white/10 hover:bg-white/20">
+                        <X size={22} />
                     </button>
-
-                    <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit={true}>
-                        {({ zoomIn, zoomOut, resetTransform }) => (
-                            <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
-                                <img
-                                    src={selectedGalleryImage}
-                                    alt="Expanded View"
-                                    className="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing rounded-sm shadow-2xl"
-                                />
-                            </TransformComponent>
-                        )}
-                    </TransformWrapper>
+                    <img src={selectedPhoto} alt="Enlarged view" className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl" />
                 </div>
             )}
         </main>

@@ -1,269 +1,346 @@
-import { useEffect, useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Search, SlidersHorizontal, X, RotateCcw } from "lucide-react";
 import PackageCard from "../components/PackageCard";
 import { usePackages } from "../context/PackageContext";
-import SkeletonPackageCard from "../components/ui/loading-state/SkeletonPackageCard";
+import { SkeletonPackageCard, EmptyState, ErrorState } from "../components/ui/LoadingState";
+import { CustomSelect } from "../components/ui/CustomControls";
 import coverImage from "../assets/package-cover.avif";
 import { countPagevisit } from "../services/initial.services";
-import { FilterDropdown } from "../components/ui/CustomDropdown";
+
+const destinationOptions = [
+    { label: "All Destinations", value: "all" },
+    { label: "Darjeeling", value: "Darjeeling" },
+    { label: "North Sikkim", value: "North Sikkim" },
+    { label: "Gangtok", value: "Gangtok" },
+    { label: "Kalimpong", value: "Kalimpong" },
+    { label: "Mirik", value: "Mirik" },
+];
+
+const priceOptions = [
+    { label: "All Budgets", value: "all" },
+    { label: "Under ₹10,000", value: "under-10k" },
+    { label: "₹10,000 - ₹20,000", value: "10k-20k" },
+    { label: "Above ₹20,000", value: "above-20k" },
+];
+
+const travelStyleOptions = [
+    { label: "All Travel Styles", value: "all" },
+    { label: "Couple / Honeymoon", value: "Couple" },
+    { label: "Family & Group", value: "Group" },
+    { label: "Solo Explorer", value: "Solo" },
+];
+
+const sortOptions = [
+    { label: "Sort: Recommended", value: "recommended" },
+    { label: "Price: Low to High", value: "price-asc" },
+    { label: "Price: High to Low", value: "price-desc" },
+    { label: "Duration: Shortest", value: "duration-asc" },
+    { label: "Duration: Longest", value: "duration-desc" },
+];
 
 export default function Packages() {
-    const { packages, loading, error, retry, setPackages } = usePackages();
+    const { packages, destinations, loading, error, retry } = usePackages();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const activeDestinationOptions = useMemo(() => {
+        if (!destinations || destinations.length === 0) return destinationOptions;
+        return [
+            { label: "All Destinations", value: "all" },
+            ...destinations.map((d) => ({ label: d.name, value: d.name })),
+        ];
+    }, [destinations]);
+
+    const initialDest = searchParams.get("dest") || "all";
+    const initialType = searchParams.get("type") || "all";
+
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedState, setSelectedState] = useState("all");
+    const [selectedDest, setSelectedDest] = useState(initialDest);
+    const [selectedStyle, setSelectedStyle] = useState(initialType);
     const [selectedPrice, setSelectedPrice] = useState("all");
-    const [selectedType, setSelectedType] = useState("all");
-    const [filtersOpen, setFiltersOpen] = useState(false);
-    const [sortBy, setSortBy] = useState("none");
-    const [reverseClicked, setReverseClicked] = useState(false);
+    const [sortBy, setSortBy] = useState("recommended");
+    const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-    const sortType = ["price", "latest"];
-
-    const states = [...new Set(packages.map((pkg) => pkg.location?.name).filter(Boolean))].sort();
-    const priceRanges = [
-        { label: "Under ₹10,000", value: "under-10000", min: 0, max: 10000 },
-        { label: "₹10,000 - ₹30,000", value: "10000-30000", min: 10000, max: 30000 },
-        { label: "Above ₹30,000", value: "above-30000", min: 30000, max: Infinity },
-    ];
-    const packageTypes = ["Solo", "Couple", "Group"];
-
-    const filteredPackages = packages.filter((pkg) => {
-        const searchText = searchTerm.trim().toLowerCase();
-        const searchableText = [pkg.name, pkg.description, pkg.location?.name, ...(pkg.destinations || [])].filter(Boolean).join(" ").toLowerCase();
-        const packagePrice = Number(pkg.price?.discounted || 0);
-        const packageType = pkg.type || pkg.packageType || pkg.travelType;
-        const selectedRange = priceRanges.find((range) => range.value === selectedPrice);
-
-        return (
-            (!searchText || searchableText.includes(searchText)) &&
-            (selectedState === "all" || pkg.location?.name === selectedState) &&
-            (!selectedRange || (packagePrice >= selectedRange.min && packagePrice < selectedRange.max)) &&
-            (selectedType === "all" || packageType?.toLowerCase() === selectedType.toLowerCase())
-        );
-    });
-
-    const sortPackages = (value) => {
-        setSortBy(value);
-        if (value === "price") {
-            packages.sort((a, b) => a.price.discounted - b.price.discounted);
-        } else if (value === "latest") {
-            packages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        }
-    };
-
-    const reverse = (pkg) => {
-        setPackages(pkg.toReversed());
-    };
-
-    const hasActiveFilters = searchTerm || selectedState !== "all" || selectedPrice !== "all" || selectedType !== "all";
-
-    const resetFilters = () => {
-        setSearchTerm("");
-        setSelectedState("all");
-        setSelectedPrice("all");
-        setSelectedType("all");
-    };
+    useEffect(() => {
+        const destParam = searchParams.get("dest");
+        const typeParam = searchParams.get("type");
+        if (destParam) setSelectedDest(destParam);
+        if (typeParam) setSelectedStyle(typeParam);
+    }, [searchParams]);
 
     useEffect(() => {
         const visit = async () => {
             try {
                 await countPagevisit();
-            } catch (error) {
-                console.log(error.message);
+            } catch {
+                // Ignore tracking error
             }
         };
-
         visit();
     }, []);
 
-    return (
-        <main className="pb-16 min-h-screen bg-paper select-none overflow-x-clip">
-            <div className="relative w-full h-screen min-h-[700px] flex flex-col justify-center overflow-hidden bg-ink">
-                <div className="absolute inset-0 z-0">
-                    <div className="w-full h-full">
-                        <img src={coverImage} alt="Cover" className="bg-breathe w-full h-full object-cover opacity-80 inset-0" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
-                    </div>
-                </div>
+    const filteredPackages = useMemo(() => {
+        const query = searchTerm.trim().toLowerCase();
 
-                <div
-                    data-aos="fade-up"
-                    className="relative z-10 max-w-[1200px] w-full pt-16 mx-auto px-4 sm:px-6 md:px-8 mb-10 text-center md:text-left">
-                    <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.2em] text-rust mt-6 block">Curated journeys</span>
-                    <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-medium leading-[1.05] tracking-[-0.01em] mb-6 text-rust">
-                        Find the route
-                        <br />
-                        <span className="italic text-zinc-200">that feels like yours.</span>
+        return packages.filter((pkg) => {
+            const searchableText = [
+                pkg.name,
+                pkg.description,
+                pkg.location?.name,
+                ...(pkg.destinations || []),
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+            const matchesQuery = !query || searchableText.includes(query);
+
+            const matchesDest =
+                selectedDest === "all" ||
+                pkg.location?.name?.toLowerCase().includes(selectedDest.toLowerCase()) ||
+                (pkg.destinations || []).some((d) => d.toLowerCase().includes(selectedDest.toLowerCase()));
+
+            const pkgStyle = (pkg.type || pkg.packageType || "all").toLowerCase();
+            const matchesStyle = selectedStyle === "all" || pkgStyle === selectedStyle.toLowerCase();
+
+            const price = Number(pkg.price?.discounted || pkg.price?.actual || 0);
+            let matchesPrice = true;
+            if (selectedPrice === "under-10k") matchesPrice = price < 10000;
+            else if (selectedPrice === "10k-20k") matchesPrice = price >= 10000 && price <= 20000;
+            else if (selectedPrice === "above-20k") matchesPrice = price > 20000;
+
+            return matchesQuery && matchesDest && matchesStyle && matchesPrice;
+        });
+    }, [packages, searchTerm, selectedDest, selectedStyle, selectedPrice]);
+
+    const sortedPackages = useMemo(() => {
+        const list = [...filteredPackages];
+        if (sortBy === "price-asc") {
+            list.sort((a, b) => (a.price?.discounted || 0) - (b.price?.discounted || 0));
+        } else if (sortBy === "price-desc") {
+            list.sort((a, b) => (b.price?.discounted || 0) - (a.price?.discounted || 0));
+        } else if (sortBy === "duration-asc") {
+            list.sort((a, b) => (a.duration?.days || 0) - (b.duration?.days || 0));
+        } else if (sortBy === "duration-desc") {
+            list.sort((a, b) => (b.duration?.days || 0) - (a.duration?.days || 0));
+        }
+        return list;
+    }, [filteredPackages, sortBy]);
+
+    const activeFilterCount =
+        (searchTerm ? 1 : 0) +
+        (selectedDest !== "all" ? 1 : 0) +
+        (selectedStyle !== "all" ? 1 : 0) +
+        (selectedPrice !== "all" ? 1 : 0);
+
+    const resetFilters = () => {
+        setSearchTerm("");
+        setSelectedDest("all");
+        setSelectedStyle("all");
+        setSelectedPrice("all");
+        setSortBy("recommended");
+        setSearchParams({});
+    };
+
+    return (
+        <main className="min-h-screen bg-slate-50 pb-16 sm:pb-20 select-none overflow-x-hidden">
+            {/* HERO BANNER */}
+            <div className="relative w-full min-h-[280px] xs:min-h-[320px] sm:min-h-[400px] flex items-center justify-center py-12 xs:py-14 sm:py-16 px-3.5 sm:px-6 md:px-8 bg-slate-950 overflow-hidden">
+                <img
+                    src={coverImage}
+                    alt="Scenic Mountain Road"
+                    className="absolute inset-0 w-full h-full object-cover opacity-40 bg-breathe"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/30" />
+
+                <div className="relative z-10 max-w-2xl mx-auto text-center">
+                    <span className="text-xs uppercase tracking-wider text-sky-400 font-bold block mb-1.5 sm:mb-2">
+                        Himalayan Tour Plans
+                    </span>
+                    <h1 className="font-display text-2xl xs:text-3xl sm:text-5xl font-bold text-white leading-tight">
+                        Curated Tour Packages
                     </h1>
-                    <p className="font-sans text-sm sm:text-base text-white/80 max-w-lg leading-relaxed md:ml-0 mx-auto">
-                        Browse handpicked escapes by destination, budget, or travel style. Every route includes thoughtful stays, local transfers, and
-                        a dedicated trip coordinator.
+                    <p className="mt-2 text-xs sm:text-sm text-slate-300 font-normal leading-relaxed max-w-lg mx-auto">
+                        Explore well-planned tours across Darjeeling, Sikkim, and India. Every package includes private cars, comfortable hotels, and 24/7 travel assistance.
                     </p>
                 </div>
             </div>
 
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto my-8 px-4 md:px-8 flex flex-col lg:flex-row gap-10 md:gap-12 relative">
-                <h2 className="text-3xl text-rust">All Packages</h2>
-            </div>
-
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 mb-10 relative z-20">
-                <div className="bg-paper-dim border border-zinc-200 p-4 md:p-5 rounded-md">
-                    <div className="flex flex-col lg:grid lg:grid-cols-4 gap-3">
-                        <label className="relative lg:col-span-1">
-                            <span className="sr-only">Search packages</span>
-                            <svg
-                                className="absolute left-3 top-3.5 text-zinc-400"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2">
-                                <circle cx="11" cy="11" r="7" />
-                                <path d="m20 20-4-4" />
-                            </svg>
+            {/* CUSTOM FILTER BAR (No native select used anywhere) */}
+            <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8 -mt-6 sm:-mt-8 relative z-20">
+                <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-lg border border-slate-200 flex flex-col gap-3.5 sm:gap-4">
+                    {/* Top Row: Search and Mobile Filter Toggle */}
+                    <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5 sm:gap-3">
+                        {/* Search Bar */}
+                        <div className="relative flex-1 min-w-0">
+                            <Search size={17} className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                             <input
-                                type="search"
+                                type="text"
                                 value={searchTerm}
-                                onChange={(event) => setSearchTerm(event.target.value)}
-                                placeholder="Search journeys"
-                                className="w-full bg-paper border border-zinc-200 rounded-md pl-10 pr-3 py-3 text-sm text-ink placeholder:text-zinc-400 focus:outline-none focus:border-ink"
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Search by destination, hill, monastery or keyword..."
+                                className="w-full bg-slate-50 pl-10 sm:pl-11 pr-9 sm:pr-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 transition-colors"
                             />
-                        </label>
+                            {searchTerm && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSearchTerm("")}
+                                    className="absolute right-3 sm:right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900">
+                                    <X size={15} />
+                                </button>
+                            )}
+                        </div>
 
-                        <button
-                            type="button"
-                            onClick={() => setFiltersOpen((isOpen) => !isOpen)}
-                            className="lg:hidden w-full border border-zinc-200 rounded-md px-3 py-3 text-sm text-ink flex items-center justify-between hover:border-ink transition-colors">
-                            <span className="flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M4 6h16M7 12h10M10 18h4" />
-                                </svg>
-                                Filters
-                            </span>
-                            <span className="text-xs text-zinc-400">{filtersOpen ? "Hide" : "Show"}</span>
-                        </button>
+                        {/* Mobile & Tablet Filter Toggle */}
+                        <div className="flex items-center gap-2 lg:hidden">
+                            <button
+                                type="button"
+                                onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+                                className="flex-1 btn btn-secondary py-2.5 text-xs font-semibold justify-center">
+                                <SlidersHorizontal size={14} className="text-slate-600" />
+                                <span>Filters {activeFilterCount > 0 && `(${activeFilterCount})`}</span>
+                            </button>
 
-                        <div className={`${filtersOpen ? "flex" : "hidden"} flex-col lg:contents gap-3`}>
-                            {/* Destination filter */}
-                            <FilterDropdown
-                                value={selectedState}
-                                onChange={setSelectedState}
-                                placeholder="All destinations"
-                                options={[{ label: "All destinations", value: "all" }, ...states.map((s) => ({ label: s, value: s }))]}
-                            />
+                            {activeFilterCount > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={resetFilters}
+                                    className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700"
+                                    title="Reset filters">
+                                    <RotateCcw size={15} />
+                                </button>
+                            )}
+                        </div>
 
-                            {/* Price filter */}
-                            <FilterDropdown
-                                value={selectedPrice}
-                                onChange={setSelectedPrice}
-                                placeholder="All prices"
-                                options={[{ label: "All prices", value: "all" }, ...priceRanges.map((r) => ({ label: r.label, value: r.value }))]}
-                            />
+                        {/* Desktop Custom Dropdown Filters */}
+                        <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 flex-wrap xl:flex-nowrap">
+                            <div className="w-32 xl:w-40 min-w-[120px]">
+                                <CustomSelect
+                                    value={selectedDest}
+                                    onChange={setSelectedDest}
+                                    options={activeDestinationOptions}
+                                />
+                            </div>
 
-                            {/* Type filter */}
-                            <FilterDropdown
-                                value={selectedType}
-                                onChange={setSelectedType}
-                                placeholder="All travel styles"
-                                options={[{ label: "All travel styles", value: "all" }, ...packageTypes.map((t) => ({ label: t, value: t }))]}
-                            />
+                            <div className="w-32 xl:w-36 min-w-[120px]">
+                                <CustomSelect
+                                    value={selectedPrice}
+                                    onChange={setSelectedPrice}
+                                    options={priceOptions}
+                                />
+                            </div>
 
-                            {/* Sort */}
-                            <FilterDropdown
-                                value={sortBy}
-                                onChange={sortPackages}
-                                placeholder="Sort by"
-                                options={[...sortType.map((t) => ({ label: t.charAt(0).toUpperCase() + t.slice(1), value: t }))]}
-                                icon={
-                                    <svg
-                                        width="16px"
-                                        height="16px"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="text-zinc-400 cursor-pointer"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            reverse(filteredPackages);
-                                        }}>
-                                        <path
-                                            d="M8 3.5L8 16.5M8 3.5L3.5 7.83333M8 3.5L12.5 7.83333"
-                                            stroke="#9f9fa9"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                        <path
-                                            d="M17 20.5L17 7.5M17 20.5L21.5 16.1667M17 20.5L12.5 16.1667"
-                                            stroke="#9f9fa9"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                }
-                            />
+                            <div className="w-32 xl:w-40 min-w-[120px]">
+                                <CustomSelect
+                                    value={selectedStyle}
+                                    onChange={setSelectedStyle}
+                                    options={travelStyleOptions}
+                                />
+                            </div>
+
+                            <div className="w-36 xl:w-44 min-w-[130px]">
+                                <CustomSelect
+                                    value={sortBy}
+                                    onChange={setSortBy}
+                                    options={sortOptions}
+                                />
+                            </div>
+
+                            {activeFilterCount > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={resetFilters}
+                                    className="text-xs text-sky-600 hover:text-sky-700 font-bold uppercase tracking-wider transition-colors shrink-0 px-2">
+                                    Reset ({activeFilterCount})
+                                </button>
+                            )}
                         </div>
                     </div>
 
-                    <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-zinc-500">
+                    {/* Mobile & Tablet Filter Panel (Collapsible) */}
+                    {mobileFilterOpen && (
+                        <div className="lg:hidden pt-3 sm:pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                            <CustomSelect
+                                label="Destination"
+                                value={selectedDest}
+                                onChange={setSelectedDest}
+                                options={activeDestinationOptions}
+                            />
+
+                            <CustomSelect
+                                label="Budget Range"
+                                value={selectedPrice}
+                                onChange={setSelectedPrice}
+                                options={priceOptions}
+                            />
+
+                            <CustomSelect
+                                label="Travel Style"
+                                value={selectedStyle}
+                                onChange={setSelectedStyle}
+                                options={travelStyleOptions}
+                            />
+
+                            <CustomSelect
+                                label="Sort Order"
+                                value={sortBy}
+                                onChange={setSortBy}
+                                options={sortOptions}
+                            />
+
+                            <div className="sm:col-span-2 pt-1">
+                                <button
+                                    type="button"
+                                    onClick={() => setMobileFilterOpen(false)}
+                                    className="btn btn-primary py-3 text-xs font-bold w-full">
+                                    Apply Filters ({sortedPackages.length} Available)
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Results count & active tags row */}
+                    <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
                         <span>
-                            {loading
-                                ? "Loading journeys..."
-                                : `${filteredPackages.length} ${filteredPackages.length === 1 ? "journey" : "journeys"} found`}
+                            Showing <strong className="text-slate-900">{sortedPackages.length}</strong> {sortedPackages.length === 1 ? "tour package" : "tour packages"}
                         </span>
-                        {hasActiveFilters && (
+
+                        {activeFilterCount > 0 && (
                             <button
                                 type="button"
                                 onClick={resetFilters}
-                                className="self-start sm:self-auto uppercase tracking-widest text-rust hover:text-ink transition-colors">
-                                Clear filters
+                                className="text-sky-600 hover:text-sky-700 font-bold uppercase tracking-wider transition-colors hidden sm:block">
+                                Clear all filters
                             </button>
                         )}
                     </div>
                 </div>
             </div>
 
-            <div data-aos="fade-up" className="max-w-[1200px] mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {error ? (
-                    <div className="col-span-full border border-rust/30 bg-white px-6 py-10 md:px-10 md:py-12 text-center select-none">
-                        <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-red-500/40 text-red-500">
-                            <span className="text-2xl" aria-hidden="true">
-                                !
-                            </span>
-                        </div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-rust mb-3">Unable to load packages</p>
-                        <h3 className="text-2xl md:text-3xl text-ink mb-3">The departure board is taking a pause.</h3>
-                        <p className="mx-auto max-w-md text-sm leading-relaxed text-zinc-500">{error}</p>
-                        <button
-                            type="button"
-                            onClick={retry}
-                            disabled={loading}
-                            className="btn btn-primary mt-6 disabled:cursor-not-allowed disabled:opacity-50">
-                            {loading ? "Retrying..." : "Try again"}
-                        </button>
+            {/* LEADING LOADING STATE & PACKAGES GRID */}
+            <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8 mt-6 sm:mt-8">
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                        {Array(6)
+                            .fill(0)
+                            .map((_, idx) => (
+                                <SkeletonPackageCard key={idx} />
+                            ))}
                     </div>
-                ) : loading ? (
-                    Array(6)
-                        .fill(0)
-                        .map((_, i) => (
-                            <div data-aos="fade-up" key={i}>
-                                <SkeletonPackageCard />
-                            </div>
-                        ))
-                ) : filteredPackages.length > 0 ? (
-                    filteredPackages.map((p) => (
-                        <div data-aos="fade-up" key={p._id}>
-                            <PackageCard pkg={p} />
-                        </div>
-                    ))
+                ) : error ? (
+                    <ErrorState title="Unable to load packages" error={error} onRetry={retry} />
+                ) : sortedPackages.length === 0 ? (
+                    <EmptyState
+                        title="No Journeys Match Your Search"
+                        message="Try clearing your search terms or resetting filters to discover more Himalayan tours."
+                        actionLabel="Reset All Filters"
+                        onAction={resetFilters}
+                    />
                 ) : (
-                    <div className="col-span-full border border-zinc-200 bg-white px-6 py-12 text-center">
-                        <h3 className="text-2xl text-ink mb-2">No journeys match those filters.</h3>
-                        <p className="text-sm text-zinc-500 mb-5">Try a broader search or clear one of the filters.</p>
-                        <button type="button" onClick={resetFilters} className="btn btn-secondary">
-                            Clear filters
-                        </button>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                        {sortedPackages.map((pkg, idx) => (
+                            <PackageCard key={pkg._id || idx} pkg={pkg} />
+                        ))}
                     </div>
                 )}
             </div>

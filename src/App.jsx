@@ -10,6 +10,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import PackageDetail from "./pages/PackageDetail";
 import FeedbackPage from "./pages/FeedbackPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 import WhatsAppSticky from "./components/WhatsAppSticky";
 
 function ScrollToTop() {
@@ -52,6 +54,10 @@ export default function App() {
                 <Route path="/package/:slug" element={<PackageDetail />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms-and-conditions" element={<TermsConditions />} />
+                <Route path="/terms" element={<TermsConditions />} />
                 <Route path="/feedback/:token" element={<FeedbackPage />} />
             </Routes>
             {!isFeedback && <Footer />}

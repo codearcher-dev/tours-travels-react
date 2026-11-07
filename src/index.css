@@ -1,23 +1,38 @@
 @import "tailwindcss";
 
 @theme {
-    --color-ink: #0a192f;
-    --color-ink-soft: #112240;
-    --color-paper: #f8f5f2;
-    --color-paper-dim: #eae3d9;
-    --color-gold: #d4af37;
-    --color-gold-deep: #b5952f;
-    --color-teal: #4a90e2;
-    --color-teal-deep: #357abd;
-    --color-rust: #e07a5f;
-    --color-white: #ffffff;
-    --color-line: #cbd5e1;
-    --font-display: 'Playfair Display', serif;
-    --font-mono: 'Space Grotesk', sans-serif;
-    --font-sans: 'Inter', sans-serif;
+    --breakpoint-xs: 30rem;
+
+    --color-canvas: #F8FAFC;
+    --color-canvas-subtle: #F1F5F9;
+    --color-canvas-card: #FFFFFF;
+
+    --color-ink: #090D16;
+    --color-ink-soft: #1E293B;
+    --color-ink-muted: #64748B;
+    --color-ink-subtle: #94A3B8;
+
+    --color-brand-primary: #0284C7;
+    --color-brand-primary-hover: #0369A1;
+    --color-brand-accent: #EA580C;
+    --color-brand-accent-hover: #C2410C;
+    --color-brand-emerald: #059669;
+    --color-brand-midnight: #0F172A;
+
+    --color-border: #E2E8F0;
+    --color-border-subtle: #F1F5F9;
+
+    --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-serif: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 @layer base {
+
+    *, ::before, ::after {
+        font-family: var(--font-sans);
+    }
 
     .contact-number::-webkit-inner-spin-button,
     .contact-number::-webkit-outer-spin-button {
@@ -31,41 +46,19 @@
 
     html {
         scroll-behavior: smooth;
+        text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
     }
 
     body {
-        @apply bg-paper text-ink m-0 antialiased selection:bg-gold selection:text-white;
-        position: relative;
-        isolation: isolate;
+        background-color: var(--color-canvas);
+        color: var(--color-ink);
+        margin: 0;
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         overflow-x: hidden;
-    }
-
-    body::before,
-    body::after {
-        content: "";
-        position: fixed;
-        inset: auto;
-        z-index: -1;
-        border-radius: 9999px;
-        pointer-events: none;
-        filter: blur(90px);
-        opacity: 0.55;
-        animation: breathe 9s ease-in-out infinite alternate;
-    }
-
-    body::before {
-        width: 36rem;
-        height: 36rem;
-        top: -8rem;
-        left: -6rem;
-    }
-
-    body::after {
-        width: 30rem;
-        height: 30rem;
-        right: -5rem;
-        bottom: 2rem;
-        animation-delay: 1.5s;
+        min-height: 100vh;
     }
 
     h1,
@@ -74,123 +67,196 @@
     h4,
     h5,
     h6 {
-        @apply tracking-tight;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        * {
-            animation-duration: 0.01ms !important;
-            transition-duration: 0.01ms !important;
-        }
-
-        html {
-            scroll-behavior: auto;
-        }
-
-        body::before,
-        body::after {
-            animation: none;
-        }
-    }
-}
-
-.bg-breathe {
-    animation: breathe 12s ease-in-out infinite alternate;
-    transform-origin: center;
-    will-change: transform, opacity;
-}
-
-@keyframes breathe {
-    0% {
-        transform: scale(1) translate3d(0, 0, 0);
-        opacity: 0.7;
-    }
-
-    50% {
-        transform: scale(1.06) translate3d(0.2rem, -0.2rem, 0);
-        opacity: 0.9;
-    }
-
-    100% {
-        transform: scale(1.12) translate3d(-0.2rem, 0.1rem, 0);
-        opacity: 0.8;
+        font-family: var(--font-display);
+        color: var(--color-ink);
+        letter-spacing: -0.025em;
     }
 }
 
 @layer utilities {
+    .font-serif,
+    .font-mono,
+    .font-display,
+    .font-sans {
+        font-family: var(--font-sans);
+    }
+
+    /* Modern Buttons */
     .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
         font-family: var(--font-sans);
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 9999px;
-        padding: 14px 28px;
-        transition: background-color .3s ease, color .3s ease, border-color .3s ease, transform .3s ease;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 0.875rem;
+        padding: 0.7rem 1.4rem;
+        transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        user-select: none;
+        line-height: 1.25;
+    }
+
+    .btn:active {
+        transform: scale(0.97);
     }
 
     .btn-primary {
-        background: var(--color-ink);
-        color: var(--color-white);
-        border: 1px solid var(--color-ink);
+        background: #0F172A;
+        color: #FFFFFF;
+        border: 1px solid #0F172A;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
     }
 
     .btn-primary:hover {
-        background: var(--color-white);
-        color: var(--color-ink);
+        background: #1E293B;
+        border-color: #1E293B;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.22);
+    }
+
+    .btn-blue {
+        background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+        color: #FFFFFF;
+        border: 1px solid #0284C7;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+    }
+
+    .btn-blue:hover {
+        background: linear-gradient(135deg, #0369A1 0%, #075985 100%);
+        border-color: #0369A1;
+        box-shadow: 0 6px 22px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-accent {
+        background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
+        color: #FFFFFF;
+        border: 1px solid #EA580C;
+        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25);
+    }
+
+    .btn-accent:hover {
+        background: linear-gradient(135deg, #C2410C 0%, #9A3412 100%);
+        box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35);
     }
 
     .btn-secondary {
-        background: transparent;
-        color: var(--color-ink);
-        border: 1px solid var(--color-line);
+        background-color: #FFFFFF;
+        color: #0F172A;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
 
     .btn-secondary:hover {
-        border-color: var(--color-ink);
-        background: var(--color-paper-dim);
+        background-color: #F8FAFC;
+        border-color: #CBD5E1;
     }
 
-    /* Minimal layout utilities */
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
+    /* Modern Soft Elevation */
+    .card-hover-elevation {
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .clip-image {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    .card-hover-elevation:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
     }
 
+    /* Skeleton Loading State Shimmer */
+    .skeleton-shimmer {
+        background: linear-gradient(90deg,
+                #F1F5F9 0%,
+                #E2E8F0 50%,
+                #F1F5F9 100%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite ease-in-out;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    /* Custom scrollbars */
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+        background: #F1F5F9;
+        border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: #CBD5E1;
+        border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: #94A3B8;
+    }
+
+    /* WhatsApp Pulse */
     .whatsapp-sticky {
-        animation: whatsapp-bounce 3s ease-in-out infinite;
+        animation: waPulse 3s ease-in-out infinite;
     }
 
-    @keyframes whatsapp-bounce {
+    @keyframes waPulse {
 
         0%,
-        70%,
         100% {
-            transform: translateY(0);
+            transform: scale(1);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
         }
 
-        76% {
-            transform: translateY(-8px);
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5);
         }
+    }
 
-        82% {
-            transform: translateY(0);
+    /* Swiper responsive adjustments */
+    @media (max-width: 640px) {
+        .swiper-button-next,
+        .swiper-button-prev {
+            display: none !important;
         }
+    }
 
-        88% {
-            transform: translateY(-4px);
-        }
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 9999px;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(4px);
+        transition: background-color 0.2s;
+    }
 
-        94% {
-            transform: translateY(0);
-        }
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+        background: rgba(15, 23, 42, 0.85);
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 14px !important;
+        font-weight: 700;
+        color: #ffffff;
     }
 }

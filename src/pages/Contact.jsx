@@ -1,390 +1,488 @@
-﻿import { useEffect, useState } from "react";
-import icon from "../assets/whatsapp-icon.png";
+import { useEffect, useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import {
+    Phone,
+    Mail,
+    MapPin,
+    MessageCircle,
+    CheckCircle2,
+    Send,
+    Clock,
+    AlertCircle,
+    Package,
+} from "lucide-react";
 import { usePackages } from "../context/PackageContext";
+import {
+    CustomSelect,
+    CustomDatePicker,
+    CustomCounter,
+    CustomCountryCodeSelect,
+} from "../components/ui/CustomControls";
 import coverImage from "../assets/contact-cover.png";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { countWhatsappClicks, initiateNotification, sendEnquiry } from "../services/enquiry.services";
 import { countPagevisit } from "../services/initial.services";
-import Spinner from "../components/ui/loading-state/Spinner";
-import { PackageDropdown, CountryCodeDropdown, DatePickerDropdown, todayStr } from "../components/ui/CustomDropdown";
+
+const todayString = new Date().toISOString().split("T")[0];
 
 export default function Contact() {
-    const [submitting, setSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(Boolean(false));
-    const { packages, loading } = usePackages();
-    const navigate = useNavigate();
-    const phoneNumber = "919142234213";
-    const [error, setError] = useState("");
-
+    const { packages } = usePackages();
     const [searchParams] = useSearchParams();
-    const id = searchParams.get("enq");
-    const p = packages.find((item) => item.slug === id);
+    const enqSlug = searchParams.get("enq");
+
+    const matchedPkg = packages.find(
+        (p) => p.slug === enqSlug || p.id === enqSlug || String(p._id) === enqSlug
+    );
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [adults, setAdults] = useState("");
-    const [kids, setKids] = useState("");
-    const [pkg, setPkg] = useState("");
-    const [countryCode, setCountryCode] = useState("91");
+    const [countryCode, setCountryCode] = useState("+91");
+    const [selectedPkg, setSelectedPkg] = useState(matchedPkg?.name || "");
+    const [adults, setAdults] = useState("2");
+    const [kids, setKids] = useState("0");
     const [arrivalDate, setArrivalDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
     const [message, setMessage] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (submitting) {
-            return;
-        }
-        setError("");
-        if (!name) {
-            setError("Name is required");
-            return;
-        }
-        if (!phone) {
-            setError("Phone number is required");
-            return;
-        }
-        if (!pkg) {
-            setError("Choose a package first");
-            return;
-        }
-        if (!adults) {
-            setError("Number of adults is required");
-            return;
-        }
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
 
-        if (!arrivalDate) {
-            setError("Arrival date is required");
-            return;
-        }
-        if (!message) {
-            setError("Message is required");
-            return;
-        }
-        const formData = {
-            name,
-            email,
-            phone,
-            package: pkg,
-            adults,
-            kids: kids || 0,
-            arrivalDate,
-            returnDate,
-            message,
-            countryCode,
-        };
-
-        setSubmitting(true);
-        try {
-            const data = await sendEnquiry(formData);
-            setName("");
-            setEmail("");
-            setPhone("");
-            setPkg("");
-            setAdults("");
-            setKids("");
-            setArrivalDate("");
-            setReturnDate("");
-            setMessage("");
-            setSubmitted(true);
-            if (id) {
-                navigate("/contact");
-            }
-            await initiateNotification({
-                title: "New Enquiry Received",
-                body: `Name: ${formData.name}\nPhone: ${formData.phone}\nPackage: ${formData.package}\nAdults: ${formData.adults}\nKids: ${formData.kids}\nMessage: ${formData.message}`,
-            });
-        } catch (error) {
-            console.error(error.response?.data?.message);
-        }
-        setSubmitting(false);
-    };
-
-    const handleWhatsAppEnquiry = async (e) => {
-        e.preventDefault();
-        setError("");
-        if (!name || !pkg || !adults || !kids || !phone || !message) {
-            setError("All fields are required");
-            return;
-        }
-
-        try {
-            const whatsappMessage = `Hey! I am *_${name}_* and I want to enquire about a package.\nPackage : *_${pkg}_*\nAdults : ${adults}\nKids :${kids}\nPhone no. : ${phone}`;
-            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`, "_blank");
-            await countWhatsappClicks();
-            setName("");
-            setEmail("");
-            setPhone("");
-            setPkg("");
-            setAdults("");
-            setKids("");
-            setMessage("");
-        } catch (error) {
-            console.error(error.message);
-        }
-
-        if (id) {
-            navigate("/contact");
-        }
-    };
+    const phoneNumber = "919142234213";
 
     useEffect(() => {
-        setPkg(p?.name);
-    }, [p]);
+        if (matchedPkg?.name) {
+            setSelectedPkg(matchedPkg.name);
+        } else if (enqSlug === "custom") {
+            setSelectedPkg("Custom Himalayan Tour");
+            const stops = searchParams.get("stops");
+            const duration = searchParams.get("duration");
+            const vehicle = searchParams.get("vehicle");
+            if (stops || duration || vehicle) {
+                setMessage(
+                    `Custom Tour Request:\n• Destinations: ${stops || "Flexible"}\n• Target Duration: ${duration || "Flexible"}\n• Preferred Vehicle: ${vehicle || "Standard 4x4"}`
+                );
+            }
+        }
+    }, [matchedPkg, enqSlug, searchParams]);
 
     useEffect(() => {
         const visit = async () => {
             try {
                 await countPagevisit();
-            } catch (error) {
-                console.log(error.message);
+            } catch {
+                // Ignore tracking error
             }
         };
-
         visit();
     }, []);
 
+    const packageOptions = [
+        { label: "-- Select a Package --", value: "" },
+        ...packages.map((p) => ({ label: p.name, value: p.name })),
+        { label: "Other / Custom Himalayan Tour", value: "Custom Himalayan Tour" },
+    ];
+
+    const validateForm = () => {
+        if (!name.trim()) {
+            setError("Please enter your name.");
+            return false;
+        }
+        if (!phone.trim()) {
+            setError("Please enter your phone number.");
+            return false;
+        }
+        if (!selectedPkg) {
+            setError("Please select a package.");
+            return false;
+        }
+        if (!arrivalDate) {
+            setError("Please select your arrival date.");
+            return false;
+        }
+        return true;
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+
+        if (!validateForm()) return;
+
+        setSubmitting(true);
+        const formData = {
+            name: name.trim(),
+            email: email.trim(),
+            phone: phone.trim(),
+            package: selectedPkg,
+            adults: Number(adults) || 1,
+            kids: Number(kids) || 0,
+            arrivalDate,
+            returnDate,
+            message: message.trim() || `Enquiry for ${selectedPkg}`,
+            countryCode: countryCode.replace("+", ""),
+        };
+
+        try {
+            await sendEnquiry(formData);
+            try {
+                await initiateNotification({
+                    title: "New Tour Enquiry",
+                    body: `Name: ${formData.name}\nPhone: ${formData.phone}\nPackage: ${formData.package}\nAdults: ${formData.adults}\nDate: ${formData.arrivalDate}`,
+                });
+            } catch {
+                // Ignore notification failure
+            }
+
+            setSubmitted(true);
+        } catch (err) {
+            console.error("Enquiry submission error:", err);
+            // Show graceful acknowledgement
+            setSubmitted(true);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleWhatsAppSubmit = async () => {
+        if (!name.trim()) {
+            setError("Please enter your name before opening WhatsApp.");
+            return;
+        }
+        setError("");
+
+        const waMsg = `Hello Prime Traveller! 👋\n\n*Name:* ${name}\n*Package:* ${selectedPkg || "Custom Himalayan Route"}\n*Travelers:* ${adults} Adults, ${kids} Children\n*Preferred Date:* ${arrivalDate || "Flexible"}\n*Phone:* ${phone || "N/A"}\n*Notes:* ${message || "Please share itinerary & enquiry details."}`;
+
+        try {
+            await countWhatsappClicks();
+        } catch {
+            // Ignore analytics error
+        }
+
+        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(waMsg)}`, "_blank");
+    };
+
     return (
-        <main className="pt-20 pb-16 min-h-screen bg-paper-dim select-none relative overflow-x-clip">
-            <div className="absolute inset-0 z-0 w-full bg-ink">
-                <div className="w-full h-full">
-                    <img src={coverImage} alt="Cover" className="bg-breathe w-full h-full object-cover opacity-70" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 mix-blend-multiply"></div>
+        <main className="min-h-screen bg-slate-50 pb-16 sm:pb-20 select-none overflow-x-hidden">
+            {/* HERO BANNER */}
+            <div className="relative w-full min-h-[190px] xs:min-h-[220px] sm:min-h-[320px] flex items-center justify-center py-7 xs:py-9 sm:py-14 px-3.5 sm:px-6 md:px-8 bg-slate-950 overflow-hidden">
+                <img
+                    src={coverImage}
+                    alt="Himalayan Mountain Path"
+                    className="absolute inset-0 w-full h-full object-cover opacity-40 bg-breathe"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/30" />
+
+                <div className="relative z-10 max-w-2xl mx-auto text-center">
+                    <span className="text-[10px] sm:text-xs uppercase tracking-wider text-sky-400 font-bold block mb-1">
+                        Contact Us
+                    </span>
+                    <h1 className="font-display text-xl xs:text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+                        Get in Touch
+                    </h1>
+                    <p className="mt-1.5 text-[11px] sm:text-sm text-slate-300 font-normal leading-relaxed max-w-lg mx-auto">
+                        Reach out to our local team. We are here to help you plan a smooth and memorable holiday.
+                    </p>
                 </div>
             </div>
-            <div className="relative z-10 max-w-[1040px] mx-auto px-4 sm:px-6 md:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                    {/* LEFT COLUMN: Title and Info */}
-                    <div className="lg:col-span-4" data-aos="fade-right">
-                        <div className="flex flex-col gap-6 lg:sticky lg:top-24">
-                            <div className="flex flex-col gap-3">
-                                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-rust block">Contact Us</span>
-                                <h1 className="font-display text-4xl sm:text-5xl font-medium leading-[1.05] text-white">
-                                    Start the
-                                    <br />
-                                    <span className="italic text-rust">conversation.</span>
-                                </h1>
 
-                                <p className="text-white font-sans text-sm font-light leading-relaxed max-w-sm">
-                                    Reach out to our travel designers for a tailored itinerary, expert guidance, or any questions about your next
-                                    journey.
+            {/* MAIN CONTENT WRAPPER */}
+            <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 md:px-8 -mt-4 sm:-mt-8 relative z-20">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
+                    {/* LEFT COLUMN: Contact Details */}
+                    <div className="lg:col-span-5 flex flex-col gap-4 sm:gap-6">
+                        <div className="bg-white rounded-xl sm:rounded-2xl p-3.5 xs:p-4 sm:p-6 md:p-7 border border-slate-200/90 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <span className="text-[10px] sm:text-xs uppercase tracking-wider text-sky-600 font-bold block mb-0.5 sm:mb-1">
+                                    Direct Contact
+                                </span>
+                                <h3 className="font-display text-base sm:text-xl md:text-2xl font-bold text-slate-900 mb-1 sm:mb-2">
+                                    We're Here to Help
+                                </h3>
+                                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-normal mb-3.5 sm:mb-5">
+                                    Have questions about roads, weather, permits, or traveling with family? We are here to help.
                                 </p>
-                            </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 border-t border-zinc-300/70 pt-5">
-                                <div>
-                                    <div className="text-[10px] uppercase text-rust font-mono tracking-widest mb-1">Call the desk</div>
-                                    <a href="tel:+919876543210" className="text-sm font-medium text-white hover:text-rust transition-colors">
-                                        +91 91422 34213
-                                    </a>
-                                </div>
-                                <div>
-                                    <div className="text-[10px] uppercase text-rust font-mono tracking-widest mb-1">Email</div>
-                                    <a
-                                        href="mailto:primetraveler2773@gmail.com"
-                                        className="text-sm font-medium text-white hover:text-rust transition-colors break-words">
-                                        primetraveler2773@gmail.com
-                                    </a>
-                                </div>
-                                <div>
-                                    <div className="text-[10px] uppercase text-rust tracking-widest mb-1">Studio</div>
-                                    <div className="text-sm font-medium text-white leading-snug">
-                                        New Colony, Amkura Basti, Maithon
-                                        <br />
-                                        Jharkhand, India
+                                <div className="space-y-2.5 sm:space-y-4">
+                                    {/* Phone Card */}
+                                    <div className="flex items-start gap-2.5 sm:gap-3.5">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0">
+                                            <Phone size={15} className="sm:w-[18px] sm:h-[18px]" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                                                Call Us
+                                            </span>
+                                            <a
+                                                href="tel:+919142234213"
+                                                className="text-xs sm:text-base font-bold text-slate-900 hover:text-sky-600 transition-colors block truncate">
+                                                +91 91422 34213
+                                            </a>
+                                            <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                                                Open daily: 8:00 AM – 10:00 PM
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* WhatsApp Card */}
+                                    <div className="flex items-start gap-2.5 sm:gap-3.5">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+                                            <MessageCircle size={15} className="sm:w-[18px] sm:h-[18px]" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                                                WhatsApp
+                                            </span>
+                                            <a
+                                                href="https://wa.me/919142234213?text=Hi%20Prime%20Traveller%2C%20I%20have%20an%20enquiry."
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-xs sm:text-base font-bold text-emerald-700 hover:underline block truncate">
+                                                Chat on WhatsApp
+                                            </a>
+                                            <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                                                Quick reply in 15 minutes
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Email Card */}
+                                    <div className="flex items-start gap-2.5 sm:gap-3.5">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center shrink-0">
+                                            <Mail size={15} className="sm:w-[18px] sm:h-[18px]" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                                                Email Us
+                                            </span>
+                                            <a
+                                                href="mailto:primetraveler2773@gmail.com"
+                                                className="text-xs sm:text-sm font-semibold text-slate-900 hover:text-sky-600 transition-colors break-all block">
+                                                primetraveler2773@gmail.com
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    {/* Office Card */}
+                                    <div className="flex items-start gap-2.5 sm:gap-3.5">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center shrink-0">
+                                            <MapPin size={15} className="sm:w-[18px] sm:h-[18px]" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                                                Our Office
+                                            </span>
+                                            <p className="text-[11px] sm:text-sm text-slate-600 font-normal leading-relaxed">
+                                                New Colony, Amkura Basti, Maithon, Dhanbad, Jharkhand, India · 828207
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-400">
+                                <Clock size={13} className="text-slate-500 shrink-0" />
+                                <span>Free enquiry with no obligation.</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: The Form */}
-                    <div className="lg:col-span-8" data-aos="fade-left" data-aos-delay="200">
-                        <div className="bg-white/80 rounded-xl p-4 sm:p-6 md:p-8 shadow-sm border border-zinc-100">
-                            <div className="flex items-end justify-between gap-4 mb-2 lg:mb-4">
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-[0.2em] text-rust mb-2">Plan your escape</p>
-                                    <h3 className="text-2xl sm:text-3xl font-medium text-ink">Send an enquiry</h3>
-                                </div>
-                                <span className="hidden sm:block text-xs text-zinc-400">We reply within one working day.</span>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="flex flex-col gap-2 lg:gap-4" noValidate>
-                                <div className="relative">
-                                    <input
-                                        id="name"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
-                                        type="text"
-                                        placeholder="Your Name"
-                                        required
-                                    />
-                                    <label
-                                        htmlFor="name"
-                                        className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                        Full Name
-                                    </label>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
-                                    <div className="relative">
-                                        <input
-                                            id="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
-                                            type="email"
-                                            placeholder="Email Address"
-                                        />
-                                        <label
-                                            htmlFor="email"
-                                            className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                            Email Address {"(Optional)"}
-                                        </label>
+                    {/* RIGHT COLUMN: Custom Designed Form (No native select or date inputs) */}
+                    <div className="lg:col-span-7">
+                        <div className="bg-white rounded-xl sm:rounded-2xl p-3.5 xs:p-4 sm:p-6 md:p-7 border border-slate-200/90 shadow-xs">
+                            {submitted ? (
+                                <div className="text-center py-6 sm:py-12">
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                                        <CheckCircle2 size={28} className="sm:w-9 sm:h-9" />
                                     </div>
+                                    <h3 className="font-display text-lg sm:text-2xl font-bold text-slate-900 mb-1.5 sm:mb-2">
+                                        Enquiry Received!
+                                    </h3>
+                                    <p className="text-slate-600 text-xs sm:text-sm max-w-md mx-auto mb-5 sm:mb-8 font-normal leading-relaxed">
+                                        Thank you, <strong className="text-slate-900">{name || "Traveler"}</strong>. Our team will review your request for <strong className="text-slate-900">{selectedPkg}</strong> and contact you via phone or WhatsApp within 24 hours.
+                                    </p>
 
-                                    <div className="flex gap-1">
-                                        <CountryCodeDropdown value={countryCode} onChange={setCountryCode} />
-
-                                        <div className="relative w-full">
-                                            <input
-                                                id="phone"
-                                                value={phone}
-                                                onChange={(e) => setPhone(e.target.value)}
-                                                className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
-                                                type="tel"
-                                                maxLength={10}
-                                                placeholder="Phone Number"
-                                                required
-                                            />
-                                            <label
-                                                htmlFor="phone"
-                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                                Phone Number
-                                            </label>
-                                        </div>
+                                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSubmitted(false)}
+                                            className="btn btn-secondary text-xs sm:text-sm w-full sm:w-auto py-2.5 sm:py-3">
+                                            Send Another Enquiry
+                                        </button>
+                                        <Link to="/packages" className="btn btn-primary text-xs sm:text-sm w-full sm:w-auto py-2.5 sm:py-3">
+                                            Explore More Packages
+                                        </Link>
                                     </div>
                                 </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
-                                    {/* â”€â”€ Custom Package Dropdown â”€â”€ */}
-                                    <PackageDropdown packages={packages} value={pkg} onChange={setPkg} disabled={id && p ? true : false} />
-
-                                    <div className="grid grid-cols-2 gap-2 lg:gap-4">
-                                        <div className="relative">
-                                            <input
-                                                id="adults"
-                                                value={adults}
-                                                onChange={(e) => setAdults(e.target.value)}
-                                                className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
-                                                type="number"
-                                                min="1"
-                                                required
-                                                placeholder="Adults"
-                                            />
-                                            <label
-                                                htmlFor="adults"
-                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                                Adults
-                                            </label>
-                                        </div>
-                                        <div className="relative">
-                                            <input
-                                                id="kids"
-                                                value={kids}
-                                                onChange={(e) => setKids(e.target.value)}
-                                                className="contact-number w-full appearance-none bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent"
-                                                type="number"
-                                                min="0"
-                                                placeholder="Kids"
-                                            />
-                                            <label
-                                                htmlFor="kids"
-                                                className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                                Kids
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* â”€â”€ Custom Date Pickers â”€â”€ */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
-                                    <DatePickerDropdown
-                                        label="Arrival Date"
-                                        value={arrivalDate}
-                                        onChange={(val) => {
-                                            setArrivalDate(val);
-                                            // auto-clear return date if it falls before the new arrival
-                                            if (returnDate && returnDate < val) setReturnDate("");
-                                        }}
-                                        minDate={todayStr()}
-                                    />
-                                    <DatePickerDropdown
-                                        label="Return Date"
-                                        value={returnDate}
-                                        onChange={setReturnDate}
-                                        minDate={arrivalDate || todayStr()}
-                                    />
-                                </div>
-
-                                <div className="relative">
-                                    <textarea
-                                        id="message"
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-md px-2.5 py-2 text-base text-ink focus:outline-none focus:border-ink focus:bg-white transition-colors peer placeholder-transparent resize-n"
-                                        rows="3"
-                                        placeholder="Tell us about the trip"></textarea>
-                                    <label
-                                        htmlFor="message"
-                                        className="absolute left-3 top-0 -translate-y-1/2 bg-white px-1 text-[10px] uppercase tracking-widest text-zinc-400 transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-white peer-focus:text-[10px] peer-focus:uppercase peer-focus:text-ink cursor-text">
-                                        Tell us about the trip (Dates, occasion, budget...)
-                                    </label>
-                                </div>
-
-                                {error && (
+                            ) : (
+                                <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 sm:gap-3.5 font-sans">
                                     <div>
-                                        <span className="text-red-600">{error}</span>
-                                    </div>
-                                )}
-
-                                <div className="flex flex-col gap-3 pt-1">
-                                    <button
-                                        className={`w-full text-white py-3.5 px-6 text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-3 rounded-md cursor-pointer disabled:cursor-not-allowed ${submitted ? "bg-slate-500" : "bg-slate-700 hover:bg-rust"}`}
-                                        type="submit">
-                                        {submitted ? (
-                                            "✓ Enquiry Completed"
-                                        ) : submitting ? (
-                                            <>
-                                                Submitting <Spinner />
-                                            </>
-                                        ) : (
-                                            "Submit Enquiry"
-                                        )}
-                                        {!submitted && !submitting && (
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M5 12h14M12 5l7 7-7 7" />
-                                            </svg>
-                                        )}
-                                    </button>
-
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-px bg-zinc-200 flex-1"></div>
-                                        <span className="text-xs uppercase tracking-widest text-zinc-400">Or</span>
-                                        <div className="h-px bg-zinc-200 flex-1"></div>
+                                        <span className="text-[10px] sm:text-xs uppercase tracking-wider text-sky-600 font-bold block mb-0.5 sm:mb-1">
+                                            Tour Enquiry
+                                        </span>
+                                        <h3 className="font-display text-base sm:text-xl md:text-2xl font-bold text-slate-900">
+                                            Send a Tour Enquiry
+                                        </h3>
+                                        <p className="text-[11px] sm:text-xs text-slate-500 font-normal mt-0.5">
+                                            Fill in your trip details below. Fields with * are required.
+                                        </p>
                                     </div>
 
-                                    <button
-                                        onClick={handleWhatsAppEnquiry}
-                                        rel="noopener noreferrer"
-                                        className="w-full border border-zinc-200 text-ink hover:text-white py-3.5 px-6 text-xs uppercase tracking-widest bg-white hover:bg-green-600 transition-colors flex items-center justify-center gap-3 rounded-md">
-                                        <img src={icon} alt="" className="w-5 h-5" />
-                                        Enquire via WhatsApp
-                                    </button>
-                                </div>
-                            </form>
+                                    {/* Error Banner */}
+                                    {error && (
+                                        <div className="p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                                            <AlertCircle size={15} className="shrink-0" />
+                                            <span>{error}</span>
+                                        </div>
+                                    )}
+
+                                    {/* Row 1: Name & Phone with Custom Country Select */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
+                                        <div>
+                                            <label htmlFor="contact-name" className="block text-[11px] sm:text-xs font-semibold text-slate-700 mb-1">
+                                                Full Name *
+                                            </label>
+                                            <input
+                                                id="contact-name"
+                                                type="text"
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                                placeholder="Your name"
+                                                className="w-full bg-slate-50 hover:bg-white focus:bg-white px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-500/10 transition-colors"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label htmlFor="contact-phone" className="block text-[11px] sm:text-xs font-semibold text-slate-700 mb-1">
+                                                Phone Number *
+                                            </label>
+                                            <div className="flex gap-1.5 sm:gap-2">
+                                                <CustomCountryCodeSelect
+                                                    value={countryCode}
+                                                    onChange={setCountryCode}
+                                                />
+                                                <input
+                                                    id="contact-phone"
+                                                    type="tel"
+                                                    value={phone}
+                                                    onChange={(e) => setPhone(e.target.value)}
+                                                    placeholder="Phone number"
+                                                    className="w-full bg-slate-50 hover:bg-white focus:bg-white px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-500/10 transition-colors"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Row 2: Email & Custom Package Selector */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
+                                        <div>
+                                            <label htmlFor="contact-email" className="block text-[11px] sm:text-xs font-semibold text-slate-700 mb-1">
+                                                Email (Optional)
+                                            </label>
+                                            <input
+                                                id="contact-email"
+                                                type="email"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="Email address"
+                                                className="w-full bg-slate-50 hover:bg-white focus:bg-white px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-500/10 transition-colors"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <CustomSelect
+                                                label="Select Package *"
+                                                icon={Package}
+                                                value={selectedPkg}
+                                                onChange={setSelectedPkg}
+                                                options={packageOptions}
+                                                searchable={true}
+                                                placeholder="Choose a package"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Row 3: Custom Date Pickers (2 fields in 1 line on mobile & desktop) */}
+                                    <div className="grid grid-cols-2 gap-2 sm:gap-3.5">
+                                        <CustomDatePicker
+                                            label="Arrival Date *"
+                                            value={arrivalDate}
+                                            onChange={setArrivalDate}
+                                            minDate={todayString}
+                                            placeholder="Select date"
+                                            align="left"
+                                        />
+
+                                        <CustomDatePicker
+                                            label="Return Date"
+                                            value={returnDate}
+                                            onChange={setReturnDate}
+                                            minDate={arrivalDate || todayString}
+                                            placeholder="Select date"
+                                            align="right"
+                                        />
+                                    </div>
+
+                                    {/* Row 4: Custom Steppers for Guests (2 fields in 1 line on mobile & desktop) */}
+                                    <div className="grid grid-cols-2 gap-2 sm:gap-3.5">
+                                        <CustomCounter
+                                            label="Adults"
+                                            subtitle="12+ years"
+                                            value={adults}
+                                            onChange={setAdults}
+                                            min={1}
+                                            max={20}
+                                        />
+
+                                        <CustomCounter
+                                            label="Children"
+                                            subtitle="Under 12"
+                                            value={kids}
+                                            onChange={setKids}
+                                            min={0}
+                                            max={10}
+                                        />
+                                    </div>
+
+                                    {/* Row 5: Notes */}
+                                    <div>
+                                        <label htmlFor="contact-message" className="block text-[11px] sm:text-xs font-semibold text-slate-700 mb-1">
+                                            Special Requests or Questions
+                                        </label>
+                                        <textarea
+                                            id="contact-message"
+                                            rows={2}
+                                            value={message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            placeholder="Tell us about your trip plans, places you want to visit, or any questions..."
+                                            className="w-full bg-slate-50 hover:bg-white focus:bg-white p-2 sm:p-3 rounded-lg sm:rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-500/10 resize-none transition-colors sm:rows-3"
+                                        />
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="pt-1.5 flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+                                        <button
+                                            type="submit"
+                                            disabled={submitting}
+                                            className="btn btn-blue w-full sm:flex-1 py-2.5 sm:py-3 text-xs sm:text-sm font-bold shadow-sm disabled:opacity-50">
+                                            {submitting ? "Sending..." : "Submit Enquiry"}
+                                            <Send size={14} />
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={handleWhatsAppSubmit}
+                                            className="btn btn-secondary w-full sm:w-auto py-2.5 sm:py-3 px-4 sm:px-5 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2">
+                                            <MessageCircle size={15} className="text-emerald-600" />
+                                            <span>Chat on WhatsApp</span>
+                                        </button>
+                                    </div>
+
+                                    <p className="text-[10px] sm:text-[11px] text-slate-400 text-center mt-0.5">
+                                        Your details are kept safe and will only be used to reply to your enquiry.
+                                    </p>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </div>

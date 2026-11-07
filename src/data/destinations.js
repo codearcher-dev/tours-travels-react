@@ -1,11 +1,49 @@
-const destinations = [
-    { id: 'darjeeling', name: 'Darjeeling', coord: '27.5242°N, 88.2636°E', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOSFm7-8OxOPoCuQBR73kmzQ-up9298Dr4JhFTy2NxUg&s=10' },
-    { id: 'bali', name: 'Bali', coord: '8.3405°S, 115.0920°E', img: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80' },
-    { id: 'santorini', name: 'Santorini', coord: '36.3932°N, 25.4615°E', img: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80' },
-    { id: 'kyoto', name: 'Kyoto', coord: '35.0116°N, 135.7681°E', img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80' },
-    { id: 'machu-picchu', name: 'Machu Picchu', coord: '13.1631°S, 72.5450°W', img: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=400&q=80' },
-    { id: 'marrakech', name: 'Marrakech', coord: '31.6295°N, 7.9811°W', img: 'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=400&q=80' },
-    { id: 'iceland', name: 'Iceland', coord: '64.9631°N, 19.0208°W', img: 'https://images.unsplash.com/photo-1490080885921-7b1b3f6a4980?w=400&q=80' },
+export const destinations = [
+    {
+        id: 'darjeeling',
+        name: 'Darjeeling',
+        tagline: 'The Queen of Hills',
+        coord: '27.0410° N, 88.2663° E',
+        img: 'https://images.unsplash.com/photo-1620903376453-25f5a6fd533e?w=800&q=80',
+        toursCount: 6,
+        description: 'Misty tea estates, British colonial heritage, and sunrise over Kanchenjunga.'
+    },
+    {
+        id: 'north-sikkim',
+        name: 'North Sikkim',
+        tagline: 'Snow Peaks & Lakes',
+        coord: '27.7025° N, 88.7431° E',
+        img: 'https://images.unsplash.com/photo-1632726823875-43dd9adad495?w=800&q=80',
+        toursCount: 5,
+        description: 'High mountain lakes, Yumthang valley of flowers, and snow views.'
+    },
+    {
+        id: 'gangtok',
+        name: 'Gangtok',
+        tagline: 'Capital of the Mountains',
+        coord: '27.3389° N, 88.6065° E',
+        img: 'https://images.unsplash.com/photo-1671984247482-1acf238bba0c?w=800&q=80',
+        toursCount: 8,
+        description: 'Vibrant cafes on MG Marg, sacred monasteries, and the crystal Tsomgo Lake.'
+    },
+    {
+        id: 'kalimpong',
+        name: 'Kalimpong',
+        tagline: 'Quiet Hills & Orchids',
+        coord: '27.0667° N, 88.4667° E',
+        img: 'https://images.unsplash.com/photo-1600402808924-9c591a6dace8?w=800&q=80',
+        toursCount: 4,
+        description: 'Colonial hill bungalows, sweeping river valleys, and flower nurseries.'
+    },
+    {
+        id: 'mirik',
+        name: 'Mirik',
+        tagline: 'Peaceful Lake Views',
+        coord: '26.8900° N, 88.1700° E',
+        img: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+        toursCount: 3,
+        description: 'Calm lake, pine forests, orange gardens, and boating.'
+    }
 ];
 
 export default destinations;
