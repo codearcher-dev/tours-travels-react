@@ -91,7 +91,7 @@ export default function Navbar() {
                             <span className="font-display font-extrabold tracking-tight text-base sm:text-xl text-slate-900 truncate">
                                 Prime <span className="text-sky-600">Traveller</span>
                             </span>
-                            <span className="text-[10px] font-semibold text-slate-500 tracking-wider uppercase hidden xs:block lg:hidden xl:block truncate">
+                            <span className="text-[9px] sm:text-[10px] font-semibold text-slate-500 tracking-wider uppercase block truncate">
                                 Himalayan & India Expeditions
                             </span>
                         </div>
@@ -173,9 +173,14 @@ export default function Navbar() {
                             <div className="flex items-center justify-between pb-5 border-b border-slate-100">
                                 <div className="flex items-center gap-2.5">
                                     <img src={logo} alt="Prime Traveller" className="h-8 w-auto" />
-                                    <span className="font-display font-bold text-base text-slate-900">
-                                        Prime <span className="text-sky-600">Traveller</span>
-                                    </span>
+                                    <div className="flex flex-col justify-center leading-tight min-w-0">
+                                        <span className="font-display font-bold text-base text-slate-900">
+                                            Prime <span className="text-sky-600">Traveller</span>
+                                        </span>
+                                        <span className="text-[9px] font-semibold text-slate-500 tracking-wider uppercase truncate">
+                                            Himalayan & India Expeditions
+                                        </span>
+                                    </div>
                                 </div>
                                 <button
                                     type="button"
